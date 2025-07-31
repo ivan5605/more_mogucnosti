@@ -1,0 +1,22 @@
+INSERT INTO grad (ime_grad) VALUES
+("Zadar"),
+("Trogir"),
+("Split"),
+("Biograd na Moru"),
+("Šibenik"),
+("Dubrovnik"),
+("Makarska"),
+("Rovinj"),
+("Pula"),
+("Opatija"),
+("Umag"),
+("Crikvenica"),
+("Vodice"),
+("Hvar"),
+("Korčula"),
+("Cavtat"),
+("Senj"),
+("Nin"),
+("Omiš"),
+("Rab");
+

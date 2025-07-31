@@ -1,0 +1,1 @@
+INSERT INTO korisnik (ime, prezime, email, lozinka, uloga_id) VALUES ('Ivan', 'Smesnik', 'ivan@gmail.com', 'Lozinka123', 2);
