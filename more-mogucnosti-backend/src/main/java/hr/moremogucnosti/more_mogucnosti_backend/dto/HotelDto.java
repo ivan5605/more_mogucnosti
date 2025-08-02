@@ -11,11 +11,12 @@ import lombok.Setter;
 @NoArgsConstructor
 
 public class HotelDto {
-    private Long id_hotel;
+    private Long id;
     private String naziv;
     private String grad;
     private String adresa;
     private boolean parking;
     private boolean wifi;
     private boolean bazen;
+    private String glavnaSlikaPutanja;
 }

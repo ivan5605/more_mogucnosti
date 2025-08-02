@@ -7,4 +7,5 @@ import java.util.List;
 public interface HotelService {
     HotelDto getHotel (Long id);
     List<HotelDto> getAllHotels ();
+    List<HotelDto> getRandomHotels();
 }

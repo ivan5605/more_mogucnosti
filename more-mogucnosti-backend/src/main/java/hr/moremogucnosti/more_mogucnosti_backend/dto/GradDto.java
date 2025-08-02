@@ -11,5 +11,5 @@ import lombok.Setter;
 @AllArgsConstructor
 
 public class GradDto {
-    private String ime_grad;
+    private String imeGrad;
 }

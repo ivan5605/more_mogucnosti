@@ -11,7 +11,7 @@ public class HotelMapper {
             return null;
         }
         HotelDto hotelDto = new HotelDto();
-        hotelDto.setId_hotel(hotel.getId_hotel());
+        hotelDto.setId(hotel.getId());
         hotelDto.setNaziv(hotel.getNaziv());
         //hotelDto.setGrad(hotelDto.getGrad()); to ide u serviceImpl
         hotelDto.setAdresa(hotel.getAdresa());

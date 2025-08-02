@@ -18,9 +18,16 @@ public class UlogaServiceImpl implements UlogaService {
     private final UlogaMapper ulogaMapper;
 
     @Override
-    public UlogaDto getUloga(Long id) {
+    public UlogaDto getUlogaById(Long id) {
         Uloga uloga = ulogaRepository.findById(id).
                 orElseThrow(() -> new ResourceNotFoundException("Uloga sa ID-jem " + id + " ne postoji!"));
         return ulogaMapper.mapToUlogaDto(uloga);
+    }
+
+    @Override
+    public Uloga getUlogaByNaziv(String naziv) {
+        Uloga uloga = ulogaRepository.findByNazivUloga(naziv)
+                .orElseThrow(() -> new ResourceNotFoundException("Uloga pod nazivom " + naziv + " ne postoji!"));
+        return uloga;
     }
 }

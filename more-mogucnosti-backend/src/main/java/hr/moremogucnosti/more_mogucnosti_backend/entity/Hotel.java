@@ -18,12 +18,12 @@ public class Hotel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_hotel")
-    private Long id_hotel;
+    private Long id;
 
     @Column(name = "naziv", nullable = false)
     private String naziv;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "grad_id", nullable = false)
     private Grad grad;
 

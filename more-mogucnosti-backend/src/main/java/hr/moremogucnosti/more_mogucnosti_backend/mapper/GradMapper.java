@@ -11,7 +11,7 @@ public class GradMapper {
             return null;
         }
         GradDto gradDto = new GradDto();
-        gradDto.setIme_grad(grad.getIme_grad());
+        gradDto.setImeGrad(grad.getImeGrad());
         return gradDto;
     }
 }

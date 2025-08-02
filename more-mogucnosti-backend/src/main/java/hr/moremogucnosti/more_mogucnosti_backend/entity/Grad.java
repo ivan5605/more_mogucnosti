@@ -18,8 +18,8 @@ public class Grad {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_grad")
-    private Long id_grad;
+    private Long idGrad;
 
     @Column(name = "ime_grad", nullable = false)
-    private String ime_grad;
+    private String imeGrad;
 }

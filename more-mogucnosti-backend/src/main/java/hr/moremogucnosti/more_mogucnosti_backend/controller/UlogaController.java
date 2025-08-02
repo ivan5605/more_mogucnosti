@@ -19,7 +19,7 @@ public class UlogaController {
 
     @GetMapping("{id}")
     public ResponseEntity<UlogaDto> getUloga(@PathVariable("id") Long id){
-        UlogaDto ulogaDto = ulogaService.getUloga(id);
+        UlogaDto ulogaDto = ulogaService.getUlogaById(id);
         return new ResponseEntity<>(ulogaDto, HttpStatus.OK);
     }
 

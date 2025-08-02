@@ -15,4 +15,14 @@ public class UlogaMapper {
         ulogaDto.setNazivUloga(uloga.getNazivUloga());
         return ulogaDto;
     }
+
+    public Uloga mapToUloga (UlogaDto ulogaDto){
+        if (ulogaDto==null){
+            return null;
+        }
+        Uloga uloga = new Uloga();
+        uloga.setIdUloga(ulogaDto.getIdUloga());
+        uloga.setNazivUloga(ulogaDto.getNazivUloga());
+        return uloga;
+    }
 }

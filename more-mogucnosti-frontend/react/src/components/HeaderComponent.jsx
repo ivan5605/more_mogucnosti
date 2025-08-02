@@ -18,13 +18,13 @@ const HeaderComponent = () => {
             <a href="/" className='nav-link px-2 link-secondary'>Početna</a>
           </li>
           <li>
-            <a href="#" className='nav-link px-2 link-dark'>Naši hoteli</a>
+            <a href="/nasiHoteli" className='nav-link px-2 link-dark'>Naši hoteli</a>
           </li>
           <li>
-            <a href="#" className='nav-link px-2 link-dark'>Kontakt</a>
+            <a href="/kontakt" className='nav-link px-2 link-dark'>Kontakt</a>
           </li>
           <li>
-            <a href="#" className='nav-link px-2 link-dark'>O nama</a>
+            <a href="/onama" className='nav-link px-2 link-dark'>O nama</a>
           </li>
         </ul>
         <div className='col-md-3 text-end'>

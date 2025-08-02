@@ -10,6 +10,7 @@ import RegistracijaComponent from './components/RegistracijaComponent'
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify'
+import NasiHoteliComponent from './components/NasiHoteliComponent'
 
 function App() {
   return (
@@ -24,6 +25,9 @@ function App() {
 
             {/* http://localhost:3000/registracija */}
             <Route path='/registracija' element={<RegistracijaComponent />}></Route>
+
+            {/* http://localhost:3000/nasiHoteli */}
+            <Route path='/nasiHoteli' element={<NasiHoteliComponent />}></Route>
           </Routes>
         </main>
         <FooterComponent />

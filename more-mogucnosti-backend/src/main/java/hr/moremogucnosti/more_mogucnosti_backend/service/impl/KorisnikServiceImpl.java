@@ -8,8 +8,8 @@ import hr.moremogucnosti.more_mogucnosti_backend.exception.DuplicateException;
 import hr.moremogucnosti.more_mogucnosti_backend.exception.LozinkeNePodudarajuException;
 import hr.moremogucnosti.more_mogucnosti_backend.mapper.KorisnikMapper;
 import hr.moremogucnosti.more_mogucnosti_backend.repository.KorisnikRepository;
-import hr.moremogucnosti.more_mogucnosti_backend.repository.UlogaRepository;
 import hr.moremogucnosti.more_mogucnosti_backend.service.KorisnikService;
+import hr.moremogucnosti.more_mogucnosti_backend.service.UlogaService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -21,7 +21,7 @@ public class KorisnikServiceImpl implements KorisnikService {
 
     private final KorisnikRepository korisnikRepository;
     private final KorisnikMapper korisnikMapper;
-    private final UlogaRepository ulogaRepository;
+    private final UlogaService ulogaService;
     private final PasswordEncoder passwordEncoder;
 
     @Override
@@ -33,8 +33,8 @@ public class KorisnikServiceImpl implements KorisnikService {
                 throw new DuplicateException("Ova email adresa se već koristi!");
             } else {
                 korisnik.setLozinka(passwordEncoder.encode(korisnik.getLozinka()));
-                Uloga userUloga = ulogaRepository.findByNazivUloga("USER");
-                korisnik.setUloga(userUloga);
+                Uloga uloga = ulogaService.getUlogaByNaziv("USER");
+                korisnik.setUloga(uloga);
 
                 Korisnik savedKorsinik = korisnikRepository.save(korisnik);
                 return korisnikMapper.toKorisnikDto(savedKorsinik);

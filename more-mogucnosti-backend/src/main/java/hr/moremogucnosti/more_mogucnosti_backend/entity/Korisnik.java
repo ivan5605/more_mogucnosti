@@ -32,7 +32,7 @@ public class Korisnik {
     @Column (nullable = false)
     private String lozinka;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "uloga_id", nullable = false)
     private Uloga uloga;
 }

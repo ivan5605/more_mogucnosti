@@ -30,4 +30,9 @@ public class HotelController {
         List<HotelDto> hoteliDto = hotelService.getAllHotels();
         return new ResponseEntity<>(hoteliDto, HttpStatus.OK);
     }
+
+    @GetMapping("/random")
+    public List<HotelDto> getRandomHotels(){
+        return hotelService.getRandomHotels();
+    }
 }
