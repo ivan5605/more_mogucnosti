@@ -10,8 +10,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 
-public class HotelSlikaDto {
+public class SlikaDto {
     private String putanja;
-    private boolean glavnaSlika;
     //vraćam samo to, putanju korsitim za prikaz, glavnaSlika za provjeru jel glavna slika
 }

@@ -11,6 +11,7 @@ import '@fortawesome/fontawesome-free/css/all.min.css';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify'
 import NasiHoteliComponent from './components/NasiHoteliComponent'
+import HotelComponent from './components/HotelComponent'
 
 function App() {
   return (
@@ -28,6 +29,9 @@ function App() {
 
             {/* http://localhost:3000/nasiHoteli */}
             <Route path='/nasiHoteli' element={<NasiHoteliComponent />}></Route>
+
+            {/* http://localhost:3000/hotel/idHotel */}
+            <Route path='/hotel/:idHotel' element={<HotelComponent />}></Route>
           </Routes>
         </main>
         <FooterComponent />

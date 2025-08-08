@@ -1,0 +1,18 @@
+INSERT INTO hotel_slika (hotel_id, putanja) VALUES
+(1, "https://res.cloudinary.com/dcolr4yi2/image/upload/v1754291551/natural-bathroom-elements-_mktnom.jpg"),
+(2, "https://res.cloudinary.com/dcolr4yi2/image/upload/v1754291551/hotel_bathroom_tkieho.jpg"),
+(3, "https://res.cloudinary.com/dcolr4yi2/image/upload/v1754291552/Ritz-Carlton-Sarasota-Bathroom-PUBLICITY-MAIN-2023_so1lik.jpg"),
+(4, "https://res.cloudinary.com/dcolr4yi2/image/upload/v1754291551/53435fdb-1308-4db5-b734-b813bde3ea31_ondjhg.jpg"),
+(5, "https://res.cloudinary.com/dcolr4yi2/image/upload/v1754291551/hotel_20bathroom_20mayfair_20king_20suite_swbpza.jpg"),
+(3, "https://res.cloudinary.com/dcolr4yi2/image/upload/v1754291521/hv_aptsuite-e1649880541353_qfqhst.jpg"),
+(4, "https://res.cloudinary.com/dcolr4yi2/image/upload/v1754291521/86e685af18659ee9ecca35c465603812_auwj77.jpg"),
+(4, "https://res.cloudinary.com/dcolr4yi2/image/upload/v1754291712/Salt-Room_pplrnl.jpg"),
+(5, "https://res.cloudinary.com/dcolr4yi2/image/upload/v1754291521/the-guitar-hotel-grand-suite-1-bed-3150x2150_ncvysy.jpg"),
+(5, "https://res.cloudinary.com/dcolr4yi2/image/upload/v1754291712/LDV_VDay_2025_Web-1_qhttjj.jpg"),
+(1, "https://res.cloudinary.com/dcolr4yi2/image/upload/v1754291712/SecheSpa_BeautyShot_MineralBath_1_Final-WEB-1920_uzulhc.jpg"),
+(1, "https://res.cloudinary.com/dcolr4yi2/image/upload/v1754291768/appro-monville-3-7_pfdjxj.jpg"),
+(2, "https://res.cloudinary.com/dcolr4yi2/image/upload/v1754291770/Hotel-Gym-1024x683_nicptl.jpg"),
+(2, "https://res.cloudinary.com/dcolr4yi2/image/upload/v1754291714/SSAM-Sweet-Endings-SPA-2_mqcbbv.png"),
+(3, "https://res.cloudinary.com/dcolr4yi2/image/upload/v1754291649/balcony-sea-view-2_resb9d.jpg"),
+(5, "https://res.cloudinary.com/dcolr4yi2/image/upload/v1754291650/325751499_x4fc0n.jpg"),
+(2, "https://res.cloudinary.com/dcolr4yi2/image/upload/v1754291650/372722789_w1g4ks.jpg")

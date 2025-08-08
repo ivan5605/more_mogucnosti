@@ -3,8 +3,15 @@ import pozadina from '../assets/pocetna3.jpg';
 import './PocetnaComponent.css';
 import { getAllHoteli, getRandomHoteli } from '../services/HotelService';
 import slika from '../assets/pocetna2.jpg';
+import { useNavigate } from 'react-router-dom';
 
 const PocetnaComponent = () => {
+
+  const navigator = useNavigate();
+
+  function detaljiHotel(idHotel) {
+    navigator(`/hotel/${idHotel}`);
+  }
 
   const handleClick = () => {
     const element = document.getElementById("istaknutiHoteli");
@@ -58,7 +65,7 @@ const PocetnaComponent = () => {
                       <>
                         <div className='col-md-5'>
                           <img
-                            src={hotel.glavnaSlikaPutanja}
+                            src={hotel.glavnaSlika.putanja}
                             alt="Slika hotela"
                             className='img-fluid h-100'
                             style={{ objectFit: 'cover', borderTopLeftRadius: '15px', borderBottomLeftRadius: '15px' }}
@@ -75,10 +82,12 @@ const PocetnaComponent = () => {
                             <p className='card-text text-muted mb-2'><strong>WiFi:</strong>{' '}
                               {hotel.wifi ? (<i className='fas fa-check text-success'></i>) : (<i className='fas fa-times fa-danger'></i>)}
                             </p>
-                            <p className='card-text text-muted'><strong>Bazen:</strong>{' '}
+                            <p className='card-text text-muted mb-5'><strong>Bazen:</strong>{' '}
                               {hotel.bazen ? (<i className='fas fa-check text-success'></i>) : (<i className='fas fa-times fa-danger'></i>)}
                             </p>
+                            <button type='button' className='btn btn-outline-secondary bottom-0 end-0 position-absolute m-3' onClick={() => detaljiHotel(hotel.id)}>Zanima me</button>
                           </div>
+
                         </div>
                       </>
                     ) : (
@@ -94,14 +103,16 @@ const PocetnaComponent = () => {
                             <p className='card-text text-muted mb-2'><strong>WiFi:</strong>{' '}
                               {hotel.wifi ? (<i className='fas fa-check text-success'></i>) : (<i className='fas fa-times fa-danger'></i>)}
                             </p>
-                            <p className='card-text text-muted'><strong>Bazen:</strong>{' '}
+                            <p className='card-text text-muted mb-5'><strong>Bazen:</strong>{' '}
                               {hotel.bazen ? (<i className='fas fa-check text-success'></i>) : (<i className='fas fa-times fa-danger'></i>)}
                             </p>
+                            <button type='button' className='btn btn-outline-secondary bottom-0 start-0 position-absolute m-3' onClick={() => detaljiHotel(hotel.id)}>Zanima me</button>
+
                           </div>
                         </div>
                         <div className='col-md-5'>
                           <img
-                            src={hotel.glavnaSlikaPutanja}
+                            src={hotel.glavnaSlika.putanja}
                             alt="Slika hotela"
                             className='img-fluid h-100'
                             style={{ objectFit: 'cover', borderTopRightRadius: '15px', borderBottomRightRadius: '15px' }}
