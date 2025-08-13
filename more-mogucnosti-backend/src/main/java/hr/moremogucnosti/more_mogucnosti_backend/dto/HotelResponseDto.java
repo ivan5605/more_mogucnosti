@@ -5,21 +5,21 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 
-public class SobaDto {
-    private Long idSoba;
-    private int kapacitet;
-    private BigDecimal cijenaNocenja;
-    private int brojSobe;
-    private boolean balkon;
-    private boolean petFriendly;
+public class HotelResponseDto {
+    private Long id;
+    private String naziv;
+    private GradDto grad;
+    private String adresa;
+    private boolean parking;
+    private boolean wifi;
+    private boolean bazen;
     private SlikaDto glavnaSlika;
     private List<SlikaDto> sporedneSlike;
 }

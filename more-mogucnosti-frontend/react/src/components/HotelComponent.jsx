@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getHotel } from '../services/HotelService';
-import { get2SobeHotela } from '../services/SobaService';
+import { getSobeHotela } from '../services/SobaService';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
 const HotelComponent = () => {
@@ -19,22 +19,27 @@ const HotelComponent = () => {
     parking: '',
     wifi: '',
     bazen: '',
-    glavnaSlikaPutanja: '',
-    sporedneSlike: []
+    slike: []
   });
 
   useEffect(() => {
     getHotel(idHotel).then((response) => {
+
+      const glavna = response.data.glavnaSlika?.putanja ? [{
+        putanja: response.data.glavnaSlika.putanja
+      }] : [];
+
+      const sporedne = Array.isArray(response.data.sporedneSlike)
+        ? response.data.sporedneSlike : [];
+
       setHotel({
         naziv: response.data.naziv,
-        grad: response.data.grad,
+        grad: response.data.grad.imeGrad,
         adresa: response.data.adresa,
         parking: response.data.parking,
         wifi: response.data.wifi,
         bazen: response.data.bazen,
-        glavnaSlikaPutanja: response.data.glavnaSlika.putanja,
-        sporedneSlike:
-          response.data.sporedneSlike
+        slike: [...glavna, ...sporedne]
       })
     }).catch(error => {
       console.error(error);
@@ -42,7 +47,7 @@ const HotelComponent = () => {
   }, [idHotel])
 
   function sobeHotela(id) {
-    get2SobeHotela(id).then((response) => {
+    getSobeHotela(id).then((response) => {
       setSobe(response.data);
 
     }).catch(error => {
@@ -77,53 +82,16 @@ const HotelComponent = () => {
       <div className='card shadow-lg border-0 mb-4 ' style={{ borderRadius: '15px', overflow: 'hidden' }}>
         {/* u početnom stanju je URL prazan, kao useState i onda baca error, pazi na to! */}
         {/* dok ne stigne odgovor iz API-ja, hotel.glavnaSlikaPutanja je prazna */}
-        {hotel.glavnaSlikaPutanja ? (
-          <img
-            src={hotel.glavnaSlikaPutanja}
-            alt="Hotel Sol"
-            className='img-fluid  shadow-sm'
-            style={{ objectFit: 'cover', height: '600px', width: '100%' }}
-          />
-        ) : null}
-        <div className='row text-center fs-5 fw-medium mb-4 mt-4'>
-          <div className='col'>
-            <p className='text-muted m-0'><strong>Grad:</strong> {hotel.grad}</p>
-          </div>
-
-          <div className='col'>
-            <p className='text-muted m-0'><strong>Adresa:</strong> {hotel.adresa}</p>
-          </div>
-
-          <div className='col'>
-            <p className='text-muted m-0'><strong>Parking:</strong>{' '}
-              {hotel.parking ? (<i className='fas fa-check text-success'></i>) : (<i className='fas fa-times fa-danger'></i>)}
-            </p>
-          </div>
-
-          <div className='col'>
-            <p className='text-muted m-0'><strong>WiFi:</strong>{' '}
-              {hotel.wifi ? (<i className='fas fa-check text-success'></i>) : (<i className='fas fa-times fa-danger'></i>)}
-            </p>
-          </div>
-
-          <div className='col'>
-            <p className='text-muted m-0'><strong>Bazen:</strong>{' '}
-              {hotel.bazen ? (<i className='fas fa-check text-success'></i>) : (<i className='fas fa-times fa-danger'></i>)}
-            </p>
-          </div>
-        </div>
-
-        {/* Sporedne slike hotela */}
-        {Array.isArray(hotel.sporedneSlike) && hotel.sporedneSlike.length > 0 && (
+        {Array.isArray(hotel.slike) && hotel.slike.length > 0 && (
           <div className="d-flex justify-content-center">
             <div
               id="hotelCarousel"
               className="carousel slide mb-5"
               data-bs-ride="carousel"
-              style={{ maxWidth: '800px', width: '100%' }}
+              style={{ width: '100%' }}
             >
               <div className="carousel-inner">
-                {hotel.sporedneSlike.map((slika, index) => (
+                {hotel.slike.map((slika, index) => (
                   <div
                     className={`carousel-item ${index === 0 ? 'active' : ''}`}
                     key={index}
@@ -159,11 +127,38 @@ const HotelComponent = () => {
             </div>
           </div>
         )}
+        <div className='row text-center fs-5 fw-medium mb-4 mt-4'>
+          <div className='col'>
+            <p className='text-muted m-0'><strong>Grad:</strong> {hotel.grad}</p>
+          </div>
+
+          <div className='col'>
+            <p className='text-muted m-0'><strong>Adresa:</strong> {hotel.adresa}</p>
+          </div>
+
+          <div className='col'>
+            <p className='text-muted m-0'><strong>Parking:</strong>{' '}
+              {hotel.parking ? (<i className='fas fa-check text-success'></i>) : (<i className='fas fa-times fa-danger'></i>)}
+            </p>
+          </div>
+
+          <div className='col'>
+            <p className='text-muted m-0'><strong>WiFi:</strong>{' '}
+              {hotel.wifi ? (<i className='fas fa-check text-success'></i>) : (<i className='fas fa-times fa-danger'></i>)}
+            </p>
+          </div>
+
+          <div className='col'>
+            <p className='text-muted m-0'><strong>Bazen:</strong>{' '}
+              {hotel.bazen ? (<i className='fas fa-check text-success'></i>) : (<i className='fas fa-times fa-danger'></i>)}
+            </p>
+          </div>
+        </div>
       </div>
 
       <div className='row g-4'>
         {sobe.map((soba, index) => (
-          <div key={index} className='col-md-6'>
+          <div key={index} className='col-md-4'>
             <div className='card h-100 shadow-lg border-0' style={{ borderRadius: '15px', overflow: 'hidden' }}>
               {/* Glavna slika */}
               {soba.glavnaSlika && (
@@ -234,7 +229,7 @@ const HotelComponent = () => {
                 {/* Gumb Rezerviraj */}
                 <button
                   className="btn btn-outline-secondary mt-auto"
-                  onClick={() => navigator(`/rezervacija/${soba.id}`)}
+                  onClick={() => navigator(`/rezervacija/${soba.idSoba}`)}
                 >
                   Rezerviraj
                 </button>
@@ -247,7 +242,7 @@ const HotelComponent = () => {
         <div className="col-12 text-center mt-4">
           <button
             className="btn btn-secondary btn-lg"
-            onClick={() => navigator(`/sobe/${idHotel}`)}
+            onClick={() => navigator(`/sobeHotela/${idHotel}`)}
           >
             Vidi više
           </button>

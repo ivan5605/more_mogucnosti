@@ -53,7 +53,7 @@ const NasiHoteliComponent = () => {
                         <div className='col-md-7'>
                           <div className='card-body py-4 px-5'>
                             <h3 className='card-title mb-3'>{hotel.naziv}</h3>
-                            <p className='card-text text-muted mb-2'><strong>Grad:</strong> {hotel.grad}</p>
+                            <p className='card-text text-muted mb-2'><strong>Grad:</strong> {hotel.grad.imeGrad}</p>
                             <p className='card-text text-muted mb-2'><strong>Adresa:</strong> {hotel.adresa}</p>
                             <p className='card-text text-muted mb-2'><strong>Parking:</strong>{' '}
                               {hotel.parking ? (<i className='fas fa-check text-success'></i>) : (<i className='fas fa-times fa-danger'></i>)}
@@ -80,7 +80,7 @@ const NasiHoteliComponent = () => {
                         <div className='col-md-7'>
                           <div className='card-body py-4 px-5'>
                             <h3 className='card-title mb-3'>{hotel.naziv}</h3>
-                            <p className='card-text text-muted mb-2'><strong>Grad:</strong> {hotel.grad}</p>
+                            <p className='card-text text-muted mb-2'><strong>Grad:</strong> {hotel.grad.imeGrad}</p>
                             <p className='card-text text-muted mb-2'><strong>Adresa:</strong> {hotel.adresa}</p>
                             <p className='card-text text-muted mb-2'><strong>Parking:</strong>{' '}
                               {hotel.parking ? (<i className='fas fa-check text-success'></i>) : (<i className='fas fa-times fa-danger'></i>)}

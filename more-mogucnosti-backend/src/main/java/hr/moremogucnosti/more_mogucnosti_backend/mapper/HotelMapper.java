@@ -1,8 +1,10 @@
 package hr.moremogucnosti.more_mogucnosti_backend.mapper;
 
-import hr.moremogucnosti.more_mogucnosti_backend.dto.HotelDto;
+import hr.moremogucnosti.more_mogucnosti_backend.dto.HotelPrikazDto;
+import hr.moremogucnosti.more_mogucnosti_backend.dto.HotelResponseDto;
 import hr.moremogucnosti.more_mogucnosti_backend.entity.Hotel;
 import hr.moremogucnosti.more_mogucnosti_backend.entity.Slika;
+import hr.moremogucnosti.more_mogucnosti_backend.exception.ResourceNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -14,15 +16,16 @@ import java.util.stream.Collectors;
 public class HotelMapper {
 
     private final SlikaMapper slikaMapper;
+    private final GradMapper gradMapper;
 
-    public HotelDto toHotelDto(Hotel hotel){
+    public HotelResponseDto toHotelResponseDto(Hotel hotel){
         if (hotel==null){
-            return null;
+            throw new ResourceNotFoundException("Nema hotela za mapiranje u DTO objekt");
         }
-        HotelDto hotelDto = new HotelDto();
+        HotelResponseDto hotelDto = new HotelResponseDto();
         hotelDto.setId(hotel.getId());
         hotelDto.setNaziv(hotel.getNaziv());
-        hotelDto.setGrad(hotel.getGrad().getImeGrad());
+        hotelDto.setGrad(gradMapper.toGradDto(hotel.getGrad()));
         hotelDto.setAdresa(hotel.getAdresa());
         hotelDto.setParking(hotel.isParking());
         hotelDto.setBazen(hotel.isBazen());
@@ -43,4 +46,31 @@ public class HotelMapper {
 
         return hotelDto;
     }
+
+    public HotelPrikazDto toPrikazDto(Hotel hotel){
+        if (hotel==null){
+            throw new ResourceNotFoundException("Nema hotela za mapiranje u prikazDTO objekt");
+        }
+        HotelPrikazDto hotelPrikazDto = new HotelPrikazDto();
+        hotelPrikazDto.setNaziv(hotel.getNaziv());
+        hotelPrikazDto.setGrad(gradMapper.toGradDto(hotel.getGrad()));
+        hotelPrikazDto.setAdresa(hotel.getAdresa());
+        return hotelPrikazDto;
+    }
+
+//    public Hotel fromHotelDto(HotelDto hotelDto) {
+//        if (hotelDto==null){
+//            throw new ResourceNotFoundException("Nema hotela za mapiranje u entity objekt");
+//        }
+//        Hotel hotel = new Hotel();
+//        hotel.setId(hotelDto.getId());
+//        hotel.setNaziv(hotelDto.getNaziv());
+//        hotel.setGrad(gradMapper.fromGradDto(hotelDto.getGrad()));
+//        hotel.setParking(hotelDto.isParking());
+//        hotel.setBazen(hotelDto.isBazen());
+//        hotel.setWifi(hotelDto.isWifi());
+//        hotel.setAdresa(hotelDto.getAdresa());
+//        hotel.set
+//        return hotel;
+//    }
 }

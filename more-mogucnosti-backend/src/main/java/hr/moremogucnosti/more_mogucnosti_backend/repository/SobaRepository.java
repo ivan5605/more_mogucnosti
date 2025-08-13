@@ -1,11 +1,13 @@
 package hr.moremogucnosti.more_mogucnosti_backend.repository;
 
 import hr.moremogucnosti.more_mogucnosti_backend.entity.Soba;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface SobaRepository extends JpaRepository<Soba, Long> {
     List<Soba> findByHotelId(Long id);
@@ -24,5 +26,33 @@ public interface SobaRepository extends JpaRepository<Soba, Long> {
     //automatski napravi deduplikaciju i napuni listu unutar svake Soba instance
 
     @Query(value = "SELECT * FROM Soba WHERE hotel_id = :hotelId ORDER BY RAND() LIMIT 2;", nativeQuery = true)
-    List<Soba> find2RandomSobeHotela(@Param("hotelId") Long id);
+    List<Soba> find2RandomSobeHotela1(@Param("hotelId") Long id);
+
+    @Query("""
+            SELECT DISTINCT s
+            FROM Soba s
+            LEFT JOIN FETCH s.slike
+            WHERE s.hotel.id = :hotelId
+            ORDER BY function('RAND')
+            """)
+    List<Soba> find2RandomSobeHotelaWithSlike(@Param("hotelId") Long id, Pageable pageable);
+
+    @Query("SELECT DISTINCT s FROM Soba s LEFT JOIN FETCH s.slike WHERE s.id = :idSoba")
+    Optional<Soba> findByIdWithSlike(@Param("idSoba") Long id);
+
+    //za findById JpaRepository već ima default implementaciju: Optional<T> findById(ID id); pa ne treba Optional
+    //a kao ovo nije defaultna treba...
+
+    //ako vraćaš kolekcije (List) ne treba optional jer prazna lista već sama po sebi označava da nema rezultata
+    //ne vraća se null nego Collections.emptyList()
+
+    @Query("""
+            SELECT DISTINCT s
+            FROM Soba s
+            LEFT JOIN FETCH s.slike
+            LEFT JOIN FETCH s.hotel h
+            LEFT JOIN FETCH h.grad
+            WHERE s.id = :idSoba""")
+    Optional<Soba> getSobaByIdWithHotelAndSlike(@Param("idSoba") Long id);
+
 }

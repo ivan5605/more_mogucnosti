@@ -43,4 +43,9 @@ public class Hotel {
 
     @OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<HotelSlika> slike;
+
+    //lista Soba???
+
+    //@OneToMany jedan objekat ima više povezanih - 1 hotel ima više slika/soba
+    //tu anotaciju stavljam na stranu veze gdi ocu imati kolekciju (listu) povezanih objekata
 }

@@ -40,7 +40,7 @@ const PocetnaComponent = () => {
       <div className='pocetnaBaza' style={{ backgroundImage: `url(${pozadina})` }}>
         <div className='pocetnaOverlay'></div>
         <div className='pocetnaSadrzaj'>
-          <h1 className='fw-bold display-4'>Otkrij svoj idealni odmor na Jadranu!</h1>
+          <h1 className='fw-bold display-4'>Otkrijte svoj idealni odmor na Jadranu!</h1>
           <h2 className='fw-light fst-italic lead mb-4'>Rezerviraj hotel brzo, jednostavno i sigurno.</h2>
           <button className="btn btn-secondary btn-lg" onClick={handleClick}>
             Prikaži istaknuto
@@ -74,7 +74,7 @@ const PocetnaComponent = () => {
                         <div className='col-md-7'>
                           <div className='card-body py-4 px-5'>
                             <h3 className='card-title mb-3'>{hotel.naziv}</h3>
-                            <p className='card-text text-muted mb-2'><strong>Grad:</strong> {hotel.grad}</p>
+                            <p className='card-text text-muted mb-2'><strong>Grad:</strong> {hotel.grad.imeGrad}</p>
                             <p className='card-text text-muted mb-2'><strong>Adresa:</strong> {hotel.adresa}</p>
                             <p className='card-text text-muted mb-2'><strong>Parking:</strong>{' '}
                               {hotel.parking ? (<i className='fas fa-check text-success'></i>) : (<i className='fas fa-times fa-danger'></i>)}
@@ -95,7 +95,7 @@ const PocetnaComponent = () => {
                         <div className='col-md-7'>
                           <div className='card-body py-4 px-5'>
                             <h3 className='card-title mb-3'>{hotel.naziv}</h3>
-                            <p className='card-text text-muted mb-2'><strong>Grad:</strong> {hotel.grad}</p>
+                            <p className='card-text text-muted mb-2'><strong>Grad:</strong> {hotel.grad.imeGrad}</p>
                             <p className='card-text text-muted mb-2'><strong>Adresa:</strong> {hotel.adresa}</p>
                             <p className='card-text text-muted mb-2'><strong>Parking:</strong>{' '}
                               {hotel.parking ? (<i className='fas fa-check text-success'></i>) : (<i className='fas fa-times fa-danger'></i>)}

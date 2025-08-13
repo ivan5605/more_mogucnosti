@@ -12,6 +12,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify'
 import NasiHoteliComponent from './components/NasiHoteliComponent'
 import HotelComponent from './components/HotelComponent'
+import RezervacijaComponent from './components/RezervacijaComponent'
 
 function App() {
   return (
@@ -32,6 +33,9 @@ function App() {
 
             {/* http://localhost:3000/hotel/idHotel */}
             <Route path='/hotel/:idHotel' element={<HotelComponent />}></Route>
+
+            {/* http://localhost:3000/rezervacija/idSoba */}
+            <Route path='/rezervacija/:idSoba' element={<RezervacijaComponent />}></Route>
           </Routes>
         </main>
         <FooterComponent />

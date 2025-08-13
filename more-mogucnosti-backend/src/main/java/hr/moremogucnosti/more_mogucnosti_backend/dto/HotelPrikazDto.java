@@ -7,11 +7,11 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 
-public class KorisnikDto {
-    private String ime;
-    private String prezime;
-    private String email;
+public class HotelPrikazDto {
+    private String naziv;
+    private GradDto grad;
+    private String adresa;
 }

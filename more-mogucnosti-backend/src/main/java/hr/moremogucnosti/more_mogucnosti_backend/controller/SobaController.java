@@ -1,6 +1,7 @@
 package hr.moremogucnosti.more_mogucnosti_backend.controller;
 
 import hr.moremogucnosti.more_mogucnosti_backend.dto.SobaDto;
+import hr.moremogucnosti.more_mogucnosti_backend.dto.SobaZaRezervacijuDto;
 import hr.moremogucnosti.more_mogucnosti_backend.service.SobaService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -34,5 +35,11 @@ public class SobaController {
     public ResponseEntity<List<SobaDto>> getRandomSobe(@PathVariable("id") Long id){
         List<SobaDto> sobe = sobaService.getRandomSobeHotela(id);
         return new ResponseEntity<>(sobe, HttpStatus.OK);
+    }
+
+    @GetMapping("/withHotelAndSlike/{id}")
+    public ResponseEntity<SobaZaRezervacijuDto> getSobaWithHotelAndSlike(@PathVariable("id") Long id){
+        SobaZaRezervacijuDto sobaZaRezervacijuDto = sobaService.getSobaWithHotelAndSlike(id);
+        return new ResponseEntity<>(sobaZaRezervacijuDto,HttpStatus.OK);
     }
 }

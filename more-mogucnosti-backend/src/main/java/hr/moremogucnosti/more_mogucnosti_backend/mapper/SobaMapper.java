@@ -2,6 +2,8 @@ package hr.moremogucnosti.more_mogucnosti_backend.mapper;
 
 import hr.moremogucnosti.more_mogucnosti_backend.dto.SlikaDto;
 import hr.moremogucnosti.more_mogucnosti_backend.dto.SobaDto;
+import hr.moremogucnosti.more_mogucnosti_backend.dto.SobaZaRezervacijuDto;
+import hr.moremogucnosti.more_mogucnosti_backend.entity.Hotel;
 import hr.moremogucnosti.more_mogucnosti_backend.entity.Slika;
 import hr.moremogucnosti.more_mogucnosti_backend.entity.Soba;
 import hr.moremogucnosti.more_mogucnosti_backend.exception.ResourceNotFoundException;
@@ -17,12 +19,14 @@ import java.util.stream.Collectors;
 public class SobaMapper {
 
     private final SlikaMapper slikaMapper;
+    private final HotelMapper hotelMapper;
 
     public SobaDto mapToDto(Soba soba){
         if (soba==null){
             throw new ResourceNotFoundException("Nema sobe za mapiranje u DTO objekt");
         }
         SobaDto sobaDto = new SobaDto();
+        sobaDto.setIdSoba(soba.getId());
         sobaDto.setKapacitet(soba.getKapacitet());
         sobaDto.setCijenaNocenja(soba.getCijenaNocenja());
         sobaDto.setBrojSobe(soba.getBrojSobe());
@@ -44,5 +48,36 @@ public class SobaMapper {
 
         sobaDto.setSporedneSlike(slikeDto);
         return sobaDto;
+    }
+
+    public SobaZaRezervacijuDto mapToZaRezervacijuDto(Soba soba) {
+        if (soba == null){
+            throw new ResourceNotFoundException("Nema sobe za mapiranje u ZaRezervacijuDTO objekt");
+        }
+        SobaZaRezervacijuDto sobaZaRezervacijuDto = new SobaZaRezervacijuDto();
+
+        sobaZaRezervacijuDto.setBrojSobe(soba.getBrojSobe());
+        sobaZaRezervacijuDto.setKapacitet(soba.getKapacitet());
+        sobaZaRezervacijuDto.setBalkon(soba.isBalkon());
+        sobaZaRezervacijuDto.setPetFriendly(soba.isPetFriendly());
+        sobaZaRezervacijuDto.setCijenaNocenja(soba.getCijenaNocenja());
+
+        sobaZaRezervacijuDto.setGlavnaSlika(soba.getSlike()
+                .stream()
+                .filter(Slika::isGlavnaSlika)
+                .map(slikaMapper::mapToDto)
+                .findFirst()
+                .orElse(null));
+
+        sobaZaRezervacijuDto.setSporedneSlike(soba.getSlike()
+                .stream()
+                .filter(slika -> !slika.isGlavnaSlika())
+                .map(slikaMapper::mapToDto)
+                .collect(Collectors.toList()));
+
+        Hotel hotel = soba.getHotel();
+        sobaZaRezervacijuDto.setHotel(hotelMapper.toPrikazDto(hotel));
+
+        return sobaZaRezervacijuDto;
     }
 }

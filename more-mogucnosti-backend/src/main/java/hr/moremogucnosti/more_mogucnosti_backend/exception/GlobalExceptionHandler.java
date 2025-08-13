@@ -67,4 +67,14 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleLozinkeNePodudarajuException(LozinkeNePodudarajuException ex){
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(BadRequestException.class)
+    public ResponseEntity<Map<String, Object>> handleBadRequestException(BadRequestException ex){
+        Map<String, Object> response = new HashMap<>();
+        response.put("status", HttpStatus.BAD_REQUEST.value()); //400
+        response.put("error", HttpStatus.BAD_REQUEST.getReasonPhrase()); //"Bad Request"
+        response.put("message", ex.getMessage()); //poruka je tam gdi pozivam exception kao argument
+        response.put("timestamp", LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME));
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST); //"2025-08-12T16:13:20.3067808
+    }
 }

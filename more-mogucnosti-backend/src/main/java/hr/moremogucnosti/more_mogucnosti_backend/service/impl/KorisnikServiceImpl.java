@@ -6,6 +6,7 @@ import hr.moremogucnosti.more_mogucnosti_backend.entity.Korisnik;
 import hr.moremogucnosti.more_mogucnosti_backend.entity.Uloga;
 import hr.moremogucnosti.more_mogucnosti_backend.exception.DuplicateException;
 import hr.moremogucnosti.more_mogucnosti_backend.exception.LozinkeNePodudarajuException;
+import hr.moremogucnosti.more_mogucnosti_backend.exception.ResourceNotFoundException;
 import hr.moremogucnosti.more_mogucnosti_backend.mapper.KorisnikMapper;
 import hr.moremogucnosti.more_mogucnosti_backend.repository.KorisnikRepository;
 import hr.moremogucnosti.more_mogucnosti_backend.service.KorisnikService;
@@ -42,5 +43,23 @@ public class KorisnikServiceImpl implements KorisnikService {
         } else {
             throw new LozinkeNePodudarajuException("Lozinke se ne podudaraju!");
         }
+    }
+
+    @Override
+    public Korisnik getEntity(Long idKorisnik) {
+        Korisnik korisnik = korisnikRepository.findById(idKorisnik)
+                .orElseThrow(() -> new ResourceNotFoundException("Korisnik sa ID-jem " + idKorisnik + " ne postoji!"));
+        return korisnik;
+    }
+
+    @Override
+    public KorisnikDto prijavaKorisnik(String email, String lozinka) {
+        if (korisnikRepository.existsByEmail(email)){
+            Korisnik korisnik = korisnikRepository.findByEmail(email);
+            if (passwordEncoder.matches(lozinka, korisnik.getLozinka())){
+
+            }
+        }
+        return null;
     }
 }

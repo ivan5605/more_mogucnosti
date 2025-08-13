@@ -25,7 +25,9 @@ public class SecurityConfig {
                                 "/api/hotel/random",
                                 "/api/hotelSlika/ostaleSlikeHotel/**",
                                 "/api/soba/**",
-                                "/api/soba/hotel/**"
+                                "/api/soba/hotel/**",
+                                "/api/soba/withHotelAndSlike/**",
+                                "api/rezervacija"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )

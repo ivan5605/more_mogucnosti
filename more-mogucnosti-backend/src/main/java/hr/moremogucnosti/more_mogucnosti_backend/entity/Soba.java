@@ -1,5 +1,6 @@
 package hr.moremogucnosti.more_mogucnosti_backend.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -24,6 +25,7 @@ public class Soba {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "hotel_id", nullable = false)
+    @JsonManagedReference
     private Hotel hotel;
 
     @Column(name = "kapacitet", nullable = false)
@@ -41,7 +43,7 @@ public class Soba {
     @Column(name = "pet_friendly")
     private boolean petFriendly = true;
 
-    @OneToMany(mappedBy = "soba", cascade = CascadeType.ALL, fetch = FetchType.EAGER,orphanRemoval = true)
+    @OneToMany(mappedBy = "soba", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<SobaSlika> slike;
     //mappedBy = "soba" - ja nisam vlasnik veze, druga strana (SobaSlika) drži strani ključ
     //soba je ime varijable u entitetu SobaSlika koji ima strani ključ
@@ -51,6 +53,7 @@ public class Soba {
     //izbrišem sobu - izbrišu se i sve slike te sobe!
 
     //fetch = FetchType.LAZY - slike se ne budu učitale odmah dok dohvatim Soba
+    //s LAZY imam veću kontrolu jer mi ne trebaju uvijek, nego onda kroz Query to odredim
     //ucitaju se samo dok ih eksplicitno pozoveš, npr. soba.getSlike()
 
     //orphanRemoval znači da će JPA automatski obrisati objekt iz baze podataka ako ga maknem iz liste slike u entitetu Soba
