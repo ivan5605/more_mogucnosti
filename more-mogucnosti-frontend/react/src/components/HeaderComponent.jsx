@@ -1,6 +1,7 @@
 import React from 'react';
 import logo from '../assets/logo.png'; // Ispravna putanja
 import { useLocation, useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify';
 
 const HeaderComponent = () => {
 
@@ -10,6 +11,22 @@ const HeaderComponent = () => {
   const trenutnaPutanja = stranica.pathname;
 
   const postaviTrenutnuStranicu = (putanja) => trenutnaPutanja === putanja ? 'nav-link px-2 link-secondary' : 'nav-link px-2 link-dark';
+
+  const handleProfilClick = (e) => {
+    e.preventDefault(); // spriječi normalni <a> redirect
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      toast.error("Morate biti prijavljeni!", {
+        autoClose: 2000,
+        position: "bottom-left",
+      });
+      return; // ne navigira
+    }
+
+    // ako ima token -> idi na profil
+    navigator("/profil");
+  };
 
   return (
     <div className='container-fluid'>
@@ -31,9 +48,12 @@ const HeaderComponent = () => {
           <li>
             <a href="/onama" className={postaviTrenutnuStranicu('/onama')}>O nama</a>
           </li>
+          <li>
+            <a href="/profil" className={postaviTrenutnuStranicu('/profil')} onClick={handleProfilClick}>Profil</a>
+          </li>
         </ul>
         <div className='col-md-3 text-end'>
-          <button type='button' className='btn btn-outline-primary me-2'>Prijava</button>
+          <button type='button' className='btn btn-outline-primary me-2' onClick={() => navigator('/prijava')}>Prijava</button>
           <button type='button' className='btn btn-primary' onClick={() => navigator('/registracija')}>Registracija</button>
         </div>
       </header>

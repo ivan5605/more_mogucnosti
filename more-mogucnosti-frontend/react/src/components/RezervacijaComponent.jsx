@@ -19,7 +19,6 @@ const RezervacijaComponent = () => {
 
   const [rezervacija, setRezervacija] = useState({
     sobaId: idSoba,
-    korisnikId: 21, //inače uzimam od prijavljenog korisnika
     brojOsoba: 1,
     datumPocetak: '',
     datumKraj: ''
@@ -99,6 +98,12 @@ const RezervacijaComponent = () => {
           if (status === 409) {
             //409 - conflict - vec postoji rezervacija u tom rasponu datuma
             setZauzeto(error => ({ ...error, greska: poruka }))
+          } else if (status === 403) {
+            console.log("Korisnik nije prijavljen!", poruka);
+            toast.error('Za izradu rezervacije morate biti prijavljeni!', {
+              autoClose: 5000,
+              position: 'bottom-left'
+            })
           } else {
             console.error("Greška kod izrade rezervacije!", poruka)
           }
@@ -278,7 +283,10 @@ const RezervacijaComponent = () => {
 
               <div className="d-flex mt-5">
                 <button
+                  type='button'
                   className="btn btn-primary btn-lg w-100 me-3"
+                  data-bs-toggle='modal'
+                  data-bs-target='#exampleModal'
                   onClick={(e) => rezerviraj(e)}
                 >
                   Rezerviraj

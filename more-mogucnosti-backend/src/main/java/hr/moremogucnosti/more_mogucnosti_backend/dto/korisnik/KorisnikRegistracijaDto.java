@@ -1,37 +1,27 @@
-package hr.moremogucnosti.more_mogucnosti_backend.dto;
+package hr.moremogucnosti.more_mogucnosti_backend.dto.korisnik;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-
-public class KorisnikRegistracijaDto {
-
+public record KorisnikRegistracijaDto (
     @NotBlank(message = "Unesite ime!")
-    private String ime;
+    String ime,
 
     @NotBlank(message = "Unesite prezime!")
-    private String prezime;
+    String prezime,
 
     @NotBlank(message = "Unesite email!")
     @Email(message = "Neispravna email adresa!")
-    private String email;
+    String email,
 
     @NotBlank(message = "Unesite lozinku!")
     @Size(min = 8, message = "Lozinka mora imati najmanje 8 znakova!")
     @Pattern(regexp = ".*[A-Z].*", message = "Lozinka mora sadržavati barem jedno veliko slovo!")
     @Pattern(regexp = ".*\\d.*", message = "Lozinka mora sadržavati barem jedan broj!")
-    private String lozinka;
+    String lozinka,
 
     @NotBlank(message = "Ponovno unesite lozinku za potvrdu!")
-    private String lozinkaPotvrda;
-}
+    String lozinkaPotvrda
+) {}

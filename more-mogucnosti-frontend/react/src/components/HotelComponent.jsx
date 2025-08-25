@@ -237,16 +237,6 @@ const HotelComponent = () => {
             </div>
           </div>
         ))}
-
-        {/* Gumb Vidi više */}
-        <div className="col-12 text-center mt-4">
-          <button
-            className="btn btn-secondary btn-lg"
-            onClick={() => navigator(`/sobeHotela/${idHotel}`)}
-          >
-            Vidi više
-          </button>
-        </div>
       </div>
 
 

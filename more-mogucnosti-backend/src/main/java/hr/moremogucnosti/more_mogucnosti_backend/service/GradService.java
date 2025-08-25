@@ -1,8 +1,8 @@
 package hr.moremogucnosti.more_mogucnosti_backend.service;
 
-import hr.moremogucnosti.more_mogucnosti_backend.dto.GradDto;
+import hr.moremogucnosti.more_mogucnosti_backend.dto.GradResponseDto;
 
 //@Service
 public interface GradService {
-    GradDto getGrad(Long id);
+    GradResponseDto findById(Long id);
 }

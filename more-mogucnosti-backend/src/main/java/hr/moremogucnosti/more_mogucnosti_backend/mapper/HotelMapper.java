@@ -1,7 +1,8 @@
 package hr.moremogucnosti.more_mogucnosti_backend.mapper;
 
-import hr.moremogucnosti.more_mogucnosti_backend.dto.HotelPrikazDto;
-import hr.moremogucnosti.more_mogucnosti_backend.dto.HotelResponseDto;
+import hr.moremogucnosti.more_mogucnosti_backend.dto.hotel.HotelPreviewDto;
+import hr.moremogucnosti.more_mogucnosti_backend.dto.hotel.HotelViewDto;
+import hr.moremogucnosti.more_mogucnosti_backend.dto.hotel.HotelDetailsDto;
 import hr.moremogucnosti.more_mogucnosti_backend.entity.Hotel;
 import hr.moremogucnosti.more_mogucnosti_backend.entity.Slika;
 import hr.moremogucnosti.more_mogucnosti_backend.exception.ResourceNotFoundException;
@@ -18,44 +19,65 @@ public class HotelMapper {
     private final SlikaMapper slikaMapper;
     private final GradMapper gradMapper;
 
-    public HotelResponseDto toHotelResponseDto(Hotel hotel){
+    public HotelDetailsDto toDetailsDto(Hotel hotel){
         if (hotel==null){
             throw new ResourceNotFoundException("Nema hotela za mapiranje u DTO objekt");
         }
-        HotelResponseDto hotelDto = new HotelResponseDto();
-        hotelDto.setId(hotel.getId());
-        hotelDto.setNaziv(hotel.getNaziv());
-        hotelDto.setGrad(gradMapper.toGradDto(hotel.getGrad()));
-        hotelDto.setAdresa(hotel.getAdresa());
-        hotelDto.setParking(hotel.isParking());
-        hotelDto.setBazen(hotel.isBazen());
-        hotelDto.setWifi(hotel.isWifi());
+        HotelDetailsDto hotelDto = new HotelDetailsDto(
+                hotel.getId(),
+                hotel.getNaziv(),
+                gradMapper.toResponseDto(hotel.getGrad()),
+                hotel.getAdresa(),
+                hotel.isParking(),
+                hotel.isBazen(),
+                hotel.isWifi(),
 
-        hotelDto.setGlavnaSlika(hotel.getSlike()
-                .stream()
-                .filter(Slika::isGlavnaSlika)
-                .findFirst()
-                .map(slikaMapper::mapToDto)
-                .orElse(null));
+                hotel.getSlike()
+                        .stream()
+                        .filter(Slika::isGlavnaSlika)
+                        .findFirst()
+                        .map(slikaMapper::toResponseDto)
+                        .orElse(null),
 
-        hotelDto.setSporedneSlike(hotel.getSlike()
-                .stream()
-                .filter(slika -> !slika.isGlavnaSlika())
-                .map(slikaMapper::mapToDto)
-                .collect(Collectors.toList()));
-
+                hotel.getSlike()
+                        .stream()
+                        .filter(slika -> !slika.isGlavnaSlika())
+                        .map(slikaMapper::toResponseDto)
+                        .collect(Collectors.toList())
+        );
         return hotelDto;
     }
 
-    public HotelPrikazDto toPrikazDto(Hotel hotel){
+    public HotelViewDto toViewDto(Hotel hotel){
         if (hotel==null){
             throw new ResourceNotFoundException("Nema hotela za mapiranje u prikazDTO objekt");
         }
-        HotelPrikazDto hotelPrikazDto = new HotelPrikazDto();
-        hotelPrikazDto.setNaziv(hotel.getNaziv());
-        hotelPrikazDto.setGrad(gradMapper.toGradDto(hotel.getGrad()));
-        hotelPrikazDto.setAdresa(hotel.getAdresa());
+        HotelViewDto hotelPrikazDto = new HotelViewDto(
+                hotel.getNaziv(), gradMapper.toResponseDto(hotel.getGrad()), hotel.getAdresa()
+        );
         return hotelPrikazDto;
+    }
+
+    public HotelPreviewDto toPreviewDto(Hotel hotel){
+        if (hotel==null){
+            throw new ResourceNotFoundException("Nema hotela za mapiranje u previewDTO objekt");
+        }
+        return new HotelPreviewDto(
+                hotel.getId(),
+                hotel.getNaziv(),
+                gradMapper.toResponseDto(hotel.getGrad()),
+                hotel.getAdresa(),
+                hotel.isParking(),
+                hotel.isBazen(),
+                hotel.isWifi(),
+
+                hotel.getSlike()
+                        .stream()
+                        .filter(Slika::isGlavnaSlika)
+                        .findFirst()
+                        .map(slikaMapper::toResponseDto)
+                        .orElse(null)
+        );
     }
 
 //    public Hotel fromHotelDto(HotelDto hotelDto) {

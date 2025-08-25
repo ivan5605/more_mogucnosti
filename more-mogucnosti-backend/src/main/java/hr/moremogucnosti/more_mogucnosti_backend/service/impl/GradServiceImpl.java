@@ -1,6 +1,6 @@
 package hr.moremogucnosti.more_mogucnosti_backend.service.impl;
 
-import hr.moremogucnosti.more_mogucnosti_backend.dto.GradDto;
+import hr.moremogucnosti.more_mogucnosti_backend.dto.GradResponseDto;
 import hr.moremogucnosti.more_mogucnosti_backend.entity.Grad;
 import hr.moremogucnosti.more_mogucnosti_backend.exception.ResourceNotFoundException;
 import hr.moremogucnosti.more_mogucnosti_backend.mapper.GradMapper;
@@ -18,9 +18,9 @@ public class GradServiceImpl implements GradService {
     private final GradMapper gradMapper;
 
     @Override
-    public GradDto getGrad(Long id) {
+    public GradResponseDto findById(Long id) {
         Grad grad = gradRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Grad sa ID-jem " + id + " ne postoji!"));
-        return gradMapper.toGradDto(grad);
+        return gradMapper.toResponseDto(grad);
     }
 }

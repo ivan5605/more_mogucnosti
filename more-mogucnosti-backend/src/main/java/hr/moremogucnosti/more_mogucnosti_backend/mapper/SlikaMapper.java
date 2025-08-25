@@ -1,6 +1,6 @@
 package hr.moremogucnosti.more_mogucnosti_backend.mapper;
 
-import hr.moremogucnosti.more_mogucnosti_backend.dto.SlikaDto;
+import hr.moremogucnosti.more_mogucnosti_backend.dto.SlikaResponseDto;
 import hr.moremogucnosti.more_mogucnosti_backend.entity.Slika;
 import org.springframework.stereotype.Component;
 
@@ -24,12 +24,13 @@ public class SlikaMapper {
         return slikaDto;
     }*/
 
-    public SlikaDto mapToDto (Slika slika){
+    public SlikaResponseDto toResponseDto(Slika slika){
         if (slika == null){
             return null;
         }
-        SlikaDto slikaDto = new SlikaDto();
-        slikaDto.setPutanja(slika.getPutanja());
+        SlikaResponseDto slikaDto = new SlikaResponseDto(
+                slika.getPutanja()
+        );
         return slikaDto;
     }
 

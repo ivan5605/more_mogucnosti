@@ -13,6 +13,7 @@ import { ToastContainer } from 'react-toastify'
 import NasiHoteliComponent from './components/NasiHoteliComponent'
 import HotelComponent from './components/HotelComponent'
 import RezervacijaComponent from './components/RezervacijaComponent'
+import ProfilComponent from './components/ProfilComponent'
 
 function App() {
   return (
@@ -36,6 +37,12 @@ function App() {
 
             {/* http://localhost:3000/rezervacija/idSoba */}
             <Route path='/rezervacija/:idSoba' element={<RezervacijaComponent />}></Route>
+
+            {/* http://localhost:3000/prijava */}
+            <Route path='/prijava' element={<LoginComponent />}></Route>
+
+            {/* http://localhost:3000/profil */}
+            <Route path='/profil' element={<ProfilComponent />}></Route>
           </Routes>
         </main>
         <FooterComponent />

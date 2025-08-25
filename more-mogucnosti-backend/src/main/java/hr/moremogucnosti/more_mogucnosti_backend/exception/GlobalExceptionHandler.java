@@ -77,4 +77,14 @@ public class GlobalExceptionHandler {
         response.put("timestamp", LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME));
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST); //"2025-08-12T16:13:20.3067808
     }
+
+    @ExceptionHandler(InvalidLoginException.class)
+    public ResponseEntity<Map<String, Object>> handleInvalidLoginException(InvalidLoginException ex){
+        Map<String, Object> response = new HashMap<>();
+        response.put("status", HttpStatus.UNAUTHORIZED.value());
+        response.put("error", HttpStatus.UNAUTHORIZED.getReasonPhrase());
+        response.put("message", ex.getMessage());
+        response.put("timestamp", LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME));
+        return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
+    }
 }

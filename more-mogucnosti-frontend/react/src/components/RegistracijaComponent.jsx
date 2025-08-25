@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { addKorisnik } from '../services/KorisnikService'
 import { useNavigate } from 'react-router-dom'
 import { ToastContainer, toast } from 'react-toastify';
+import { registracija } from '../services/AuthService';
 
 
 const RegistracijaComponent = () => {
@@ -93,13 +94,13 @@ const RegistracijaComponent = () => {
     return Object.values(errorsCopy).every(error => error === "");
   }
 
-  function registracija(dogadaj) {
+  function registrajKorisnik(dogadaj) {
     dogadaj.preventDefault();
 
     if (provjeriUnos()) {
       console.log("Korisnik podaci: ", korisnik);
 
-      addKorisnik(korisnik).then(response => {
+      registracija(korisnik).then(response => {
         console.log("Korisnik uspješno registriran!", response.data);
         toast.success('Registracija uspješna!', {
           autoClose: 2000,
@@ -222,7 +223,7 @@ const RegistracijaComponent = () => {
                       </div>
 
                       <div className='d-flex justify-content-center mx-4 mb-3 mb-lg-4'>
-                        <button type='button' className='btn btn-primary btn-lg' onClick={(dogadaj) => registracija(dogadaj)}>Registracija</button>
+                        <button type='button' className='btn btn-primary btn-lg' onClick={(dogadaj) => registrajKorisnik(dogadaj)}>Registracija</button>
                       </div>
 
                     </form>

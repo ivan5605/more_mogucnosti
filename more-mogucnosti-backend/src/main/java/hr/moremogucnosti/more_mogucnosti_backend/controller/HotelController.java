@@ -1,6 +1,7 @@
 package hr.moremogucnosti.more_mogucnosti_backend.controller;
 
-import hr.moremogucnosti.more_mogucnosti_backend.dto.HotelResponseDto;
+import hr.moremogucnosti.more_mogucnosti_backend.dto.hotel.HotelDetailsDto;
+import hr.moremogucnosti.more_mogucnosti_backend.dto.hotel.HotelPreviewDto;
 import hr.moremogucnosti.more_mogucnosti_backend.service.HotelService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,19 +21,19 @@ public class HotelController {
     private final HotelService hotelService;
 
     @GetMapping("{id}")
-    public ResponseEntity<HotelResponseDto> getHotel(@PathVariable("id") Long id){
-        HotelResponseDto hotelDto = hotelService.getDto(id);
+    public ResponseEntity<HotelDetailsDto> getHotel(@PathVariable("id") Long id){
+        HotelDetailsDto hotelDto = hotelService.findDetailById(id);
         return new ResponseEntity<>(hotelDto, HttpStatus.OK);
     }
 
     @GetMapping
-    public ResponseEntity<List<HotelResponseDto>> getAllHotels(){
-        List<HotelResponseDto> hoteliDto = hotelService.getAllHotels();
+    public ResponseEntity<List<HotelPreviewDto>> getAllHoteli(){
+        List<HotelPreviewDto> hoteliDto = hotelService.findAll();
         return new ResponseEntity<>(hoteliDto, HttpStatus.OK);
     }
 
     @GetMapping("/random")
-    public List<HotelResponseDto> getRandomHotels(){
-        return hotelService.getRandomHotels();
+    public List<HotelPreviewDto> getRandomHoteli(){
+        return hotelService.findRandom();
     }
 }

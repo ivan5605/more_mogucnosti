@@ -1,7 +1,7 @@
 package hr.moremogucnosti.more_mogucnosti_backend.mapper;
 
-import hr.moremogucnosti.more_mogucnosti_backend.dto.KorisnikDto;
-import hr.moremogucnosti.more_mogucnosti_backend.dto.KorisnikRegistracijaDto;
+import hr.moremogucnosti.more_mogucnosti_backend.dto.korisnik.KorisnikViewDto;
+import hr.moremogucnosti.more_mogucnosti_backend.dto.korisnik.KorisnikRegistracijaDto;
 import hr.moremogucnosti.more_mogucnosti_backend.entity.Korisnik;
 import hr.moremogucnosti.more_mogucnosti_backend.exception.ResourceNotFoundException;
 import org.springframework.stereotype.Component;
@@ -9,27 +9,26 @@ import org.springframework.stereotype.Component;
 @Component
 public class KorisnikMapper {
 
-    public Korisnik fromKorisnikRegistracijaDto(KorisnikRegistracijaDto korisnikRegistracijaDto){
+    public Korisnik fromRegistracijaDto(KorisnikRegistracijaDto korisnikRegistracijaDto){
         if (korisnikRegistracijaDto==null){
             throw new ResourceNotFoundException("Nema korisnika za mapiranje u entity objekt");
         }
         Korisnik korisnik = new Korisnik();
-        korisnik.setIme(korisnikRegistracijaDto.getIme());
-        korisnik.setPrezime(korisnikRegistracijaDto.getPrezime());
-        korisnik.setEmail(korisnikRegistracijaDto.getEmail());
-        korisnik.setLozinka(korisnikRegistracijaDto.getLozinka());
+        korisnik.setIme(korisnikRegistracijaDto.ime());
+        korisnik.setPrezime(korisnikRegistracijaDto.prezime());
+        korisnik.setEmail(korisnikRegistracijaDto.email());
+        korisnik.setLozinka(korisnikRegistracijaDto.lozinka());
         //Mapper treba biti jednostavan, "glup" – ne zna ništa o sigurnosti, enkripciji itd.
         return korisnik;
     }
 
-    public KorisnikDto toKorisnikDto(Korisnik korisnik){
+    public KorisnikViewDto toViewDto(Korisnik korisnik){
         if (korisnik==null){
             throw new ResourceNotFoundException("Nema korisnika za mapiranje u DTO objekt");
         }
-        KorisnikDto korisnikDto = new KorisnikDto();
-        korisnikDto.setIme(korisnik.getIme());
-        korisnikDto.setPrezime(korisnik.getPrezime());
-        korisnikDto.setEmail(korisnik.getEmail());
+        KorisnikViewDto korisnikDto = new KorisnikViewDto(
+                korisnik.getIme(), korisnik.getPrezime(), korisnik.getEmail()
+        );
         return korisnikDto;
     }
 }

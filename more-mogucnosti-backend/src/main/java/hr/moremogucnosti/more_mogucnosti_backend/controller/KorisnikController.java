@@ -1,9 +1,7 @@
 package hr.moremogucnosti.more_mogucnosti_backend.controller;
 
-import hr.moremogucnosti.more_mogucnosti_backend.dto.KorisnikDto;
-import hr.moremogucnosti.more_mogucnosti_backend.dto.KorisnikRegistracijaDto;
+import hr.moremogucnosti.more_mogucnosti_backend.dto.korisnik.KorisnikViewDto;
 import hr.moremogucnosti.more_mogucnosti_backend.service.KorisnikService;
-import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,9 +17,9 @@ public class KorisnikController {
 
     private final KorisnikService korisnikService;
 
-    @PostMapping
-    public ResponseEntity<KorisnikDto> registrirajKorisnik(@Valid @RequestBody KorisnikRegistracijaDto korisnikRegistracijaDto){
-        KorisnikDto korisnikDto = korisnikService.registrirajKorisnik(korisnikRegistracijaDto);
-        return new ResponseEntity<>(korisnikDto, HttpStatus.CREATED);
+    @GetMapping("{id}")
+    public ResponseEntity<KorisnikViewDto> getKorisnik(@PathVariable("id") Long idKorisnik){
+        KorisnikViewDto korisnikViewDto = korisnikService.findById(idKorisnik);
+        return new ResponseEntity<>(korisnikViewDto, HttpStatus.OK);
     }
 }

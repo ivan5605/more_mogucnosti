@@ -1,6 +1,6 @@
 package hr.moremogucnosti.more_mogucnosti_backend.service.impl;
 
-import hr.moremogucnosti.more_mogucnosti_backend.dto.UlogaDto;
+import hr.moremogucnosti.more_mogucnosti_backend.dto.UlogaResponseDto;
 import hr.moremogucnosti.more_mogucnosti_backend.entity.Uloga;
 import hr.moremogucnosti.more_mogucnosti_backend.exception.ResourceNotFoundException;
 import hr.moremogucnosti.more_mogucnosti_backend.mapper.UlogaMapper;
@@ -18,14 +18,14 @@ public class UlogaServiceImpl implements UlogaService {
     private final UlogaMapper ulogaMapper;
 
     @Override
-    public UlogaDto getUlogaById(Long id) {
+    public UlogaResponseDto findById(Long id) {
         Uloga uloga = ulogaRepository.findById(id).
                 orElseThrow(() -> new ResourceNotFoundException("Uloga sa ID-jem " + id + " ne postoji!"));
-        return ulogaMapper.mapToUlogaDto(uloga);
+        return ulogaMapper.toResponseDto(uloga);
     }
 
     @Override
-    public Uloga getUlogaByNaziv(String naziv) {
+    public Uloga loadEntity(String naziv) {
         Uloga uloga = ulogaRepository.findByNazivUloga(naziv)
                 .orElseThrow(() -> new ResourceNotFoundException("Uloga pod nazivom " + naziv + " ne postoji!"));
         return uloga;

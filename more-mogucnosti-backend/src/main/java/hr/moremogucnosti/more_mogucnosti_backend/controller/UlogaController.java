@@ -1,6 +1,6 @@
 package hr.moremogucnosti.more_mogucnosti_backend.controller;
 
-import hr.moremogucnosti.more_mogucnosti_backend.dto.UlogaDto;
+import hr.moremogucnosti.more_mogucnosti_backend.dto.UlogaResponseDto;
 import hr.moremogucnosti.more_mogucnosti_backend.service.UlogaService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,8 +18,8 @@ public class UlogaController {
     private final UlogaService ulogaService;
 
     @GetMapping("{id}")
-    public ResponseEntity<UlogaDto> getUloga(@PathVariable("id") Long id){
-        UlogaDto ulogaDto = ulogaService.getUlogaById(id);
+    public ResponseEntity<UlogaResponseDto> getUloga(@PathVariable("id") Long id){
+        UlogaResponseDto ulogaDto = ulogaService.findById(id);
         return new ResponseEntity<>(ulogaDto, HttpStatus.OK);
     }
 

@@ -1,6 +1,7 @@
 package hr.moremogucnosti.more_mogucnosti_backend.service.impl;
 
-import hr.moremogucnosti.more_mogucnosti_backend.dto.HotelResponseDto;
+import hr.moremogucnosti.more_mogucnosti_backend.dto.hotel.HotelDetailsDto;
+import hr.moremogucnosti.more_mogucnosti_backend.dto.hotel.HotelPreviewDto;
 import hr.moremogucnosti.more_mogucnosti_backend.entity.Hotel;
 import hr.moremogucnosti.more_mogucnosti_backend.exception.ResourceNotFoundException;
 import hr.moremogucnosti.more_mogucnosti_backend.mapper.HotelMapper;
@@ -22,15 +23,15 @@ public class HotelServiceImpl implements HotelService {
     private final HotelMapper hotelMapper;
 
     @Override
-    public HotelResponseDto getDto(Long id) {
+    public HotelDetailsDto findDetailById(Long id) {
         Hotel hotel = hotelRepository.findByHotelIdWithSlike(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Hotel sa ID-jem " + id + " ne postoji!!"));
 
-        return hotelMapper.toHotelResponseDto(hotel);
+        return hotelMapper.toDetailsDto(hotel);
     }
 
     @Override
-    public List<HotelResponseDto> getAllHotels() {
+    public List<HotelPreviewDto> findAll() {
         List<Hotel> hoteli = hotelRepository.findAllWithSlike();
 //        List<HotelDto> hoteliDto = new ArrayList<>();
 
@@ -42,28 +43,28 @@ public class HotelServiceImpl implements HotelService {
 
         //List<HotelDto> hoteliDto = hoteli.stream().map((hotel) -> hotelMapper.toHotelDto(hotel)).collect(Collectors.toList());
 
-        List<HotelResponseDto> hoteliDto = hoteli
+        List<HotelPreviewDto> hoteliDto = hoteli
                 .stream()
-                .map(hotelMapper::toHotelResponseDto)
+                .map(hotelMapper::toPreviewDto)
                 .collect(Collectors.toList());
 
         return hoteliDto;
     }
 
     @Override
-    public List<HotelResponseDto> getRandomHotels() {
+    public List<HotelPreviewDto> findRandom() {
         //List<Hotel> hoteli = hotelRepository.find3RandomHotels();
         //List<HotelDto> hotelDtos = hoteli.stream().map((hotel) -> hotelMapper.toHotelDto(hotel)).collect(Collectors.toList());
 
         List<Long> ids = hotelRepository.findRandomHotelIds(PageRequest.of(0, 3));
 
         return hotelRepository.find3RandomHotelsWithSlike(ids).stream()
-                .map(hotelMapper::toHotelResponseDto)
+                .map(hotelMapper::toPreviewDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public Hotel getEntity(Long id) {
+    public Hotel loadEntity(Long id) {
         Hotel hotel = hotelRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Hotel sa ID-jem " + id + " ne postoji!"));
         return hotel;
