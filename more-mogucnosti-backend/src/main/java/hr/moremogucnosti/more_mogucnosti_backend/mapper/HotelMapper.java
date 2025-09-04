@@ -53,7 +53,8 @@ public class HotelMapper {
             throw new ResourceNotFoundException("Nema hotela za mapiranje u prikazDTO objekt");
         }
         HotelViewDto hotelPrikazDto = new HotelViewDto(
-                hotel.getNaziv(), gradMapper.toResponseDto(hotel.getGrad()), hotel.getAdresa()
+                hotel.getId(),
+                hotel.getNaziv()
         );
         return hotelPrikazDto;
     }

@@ -14,4 +14,8 @@ api.interceptors.request.use((config) => {
   return config; //vraćam config inace request nejde dalje
 })
 
-export const createRezervacija = (rezervacija) => api.post(REST_API_BASE_URL, rezervacija); 
+export const createRezervacija = (rezervacija) => api.post(REST_API_BASE_URL, rezervacija);
+
+export const getZauzetiDatumi = (idSoba) => api.get(REST_API_BASE_URL + `/datumi/${idSoba}`);
+
+export const getRezervacijeKorisnika = () => api.get(REST_API_BASE_URL + '/korisnik');

@@ -19,7 +19,7 @@ public class Rezervacija {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_rezervacija")
-    private Long idRezervacija;
+    private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "korisnik_id", nullable = false)

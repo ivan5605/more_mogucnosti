@@ -1,10 +1,13 @@
 package hr.moremogucnosti.more_mogucnosti_backend.controller;
 
-import hr.moremogucnosti.more_mogucnosti_backend.Security.JwtService;
+import hr.moremogucnosti.more_mogucnosti_backend.dto.auth.AuthExpResponse;
 import hr.moremogucnosti.more_mogucnosti_backend.dto.auth.AuthLoginRequest;
 import hr.moremogucnosti.more_mogucnosti_backend.dto.auth.AuthRegistracijaRequest;
 import hr.moremogucnosti.more_mogucnosti_backend.dto.auth.AuthResponse;
+import hr.moremogucnosti.more_mogucnosti_backend.dto.korisnik.KorisnikViewDto;
+import hr.moremogucnosti.more_mogucnosti_backend.security.JwtService;
 import hr.moremogucnosti.more_mogucnosti_backend.service.AuthService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -33,8 +36,15 @@ public class AuthController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<?> me(@AuthenticationPrincipal User user){ //uzmi trenutno autentificiranog korisnika iz SecurityContext i injektaj ga u ovu metodu kao argument
-        return new ResponseEntity<>(authService.getUserInfo(user), HttpStatus.OK);
+    public ResponseEntity<KorisnikViewDto> me(@AuthenticationPrincipal User user){ //uzmi trenutno autentificiranog korisnika iz SecurityContext i injektaj ga u ovu metodu kao argument
+        KorisnikViewDto viewDto = authService.getUserInfo(user);
+        return new ResponseEntity<>(viewDto, HttpStatus.OK);
+    }
+
+    @GetMapping("/expAt")
+    public ResponseEntity<AuthExpResponse> getExpAt(HttpServletRequest request){
+        AuthExpResponse response = authService.getExp(request);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }
 

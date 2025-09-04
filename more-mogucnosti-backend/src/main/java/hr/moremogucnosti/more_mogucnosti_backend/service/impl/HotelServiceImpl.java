@@ -10,12 +10,14 @@ import hr.moremogucnosti.more_mogucnosti_backend.service.HotelService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
+@Transactional(readOnly = true)
 
 public class HotelServiceImpl implements HotelService {
 
@@ -33,15 +35,6 @@ public class HotelServiceImpl implements HotelService {
     @Override
     public List<HotelPreviewDto> findAll() {
         List<Hotel> hoteli = hotelRepository.findAllWithSlike();
-//        List<HotelDto> hoteliDto = new ArrayList<>();
-
-//        for (Hotel hotel : hoteli){
-//            HotelDto hotelDto = hotelMapper.toHotelDto(hotel);
-//            hotelDto.setGrad(hotel.getGrad().getImeGrad());
-//            hoteliDto.add(hotelDto);
-//        }
-
-        //List<HotelDto> hoteliDto = hoteli.stream().map((hotel) -> hotelMapper.toHotelDto(hotel)).collect(Collectors.toList());
 
         List<HotelPreviewDto> hoteliDto = hoteli
                 .stream()
@@ -53,9 +46,6 @@ public class HotelServiceImpl implements HotelService {
 
     @Override
     public List<HotelPreviewDto> findRandom() {
-        //List<Hotel> hoteli = hotelRepository.find3RandomHotels();
-        //List<HotelDto> hotelDtos = hoteli.stream().map((hotel) -> hotelMapper.toHotelDto(hotel)).collect(Collectors.toList());
-
         List<Long> ids = hotelRepository.findRandomHotelIds(PageRequest.of(0, 3));
 
         return hotelRepository.find3RandomHotelsWithSlike(ids).stream()

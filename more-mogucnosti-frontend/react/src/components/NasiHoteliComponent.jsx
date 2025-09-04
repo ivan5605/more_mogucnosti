@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { use, useEffect, useState } from 'react'
 import { getAllHoteli } from '../services/HotelService';
 import { useNavigate } from 'react-router-dom';
 
@@ -6,6 +6,8 @@ import { useNavigate } from 'react-router-dom';
 const NasiHoteliComponent = () => {
 
   const [hoteli, setHoteli] = useState([]);
+
+  const [ucitavanje, setUcitavanje] = useState(true);
 
   const navigator = useNavigate();
 
@@ -22,8 +24,21 @@ const NasiHoteliComponent = () => {
   }
 
   useEffect(() => {
-    allHoteli();
+    (async () => {
+      try {
+        const response = await getAllHoteli();
+        setHoteli(response.data);
+      } catch (error) {
+        console.error('Greška kod dohvaćanja hotela:', error)
+      } finally {
+        setUcitavanje(false);
+      };
+    })();
   }, [])
+
+  if (ucitavanje) {
+    return <div className='container py-5 mt-5'>Učitavanje...</div>
+  }
 
   return (
     <div>

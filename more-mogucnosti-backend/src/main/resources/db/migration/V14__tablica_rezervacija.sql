@@ -5,6 +5,8 @@ CREATE TABLE rezervacija (
     broj_osoba INT NOT NULL,
     datum_pocetak DATE NOT NULL,
     datum_kraj DATE NOT NULL,
-    FOREIGN KEY (korisnik_id) REFERENCES korisnik(id_korisnik),
-    FOREIGN KEY (soba_id) REFERENCES soba(id_soba)
+    CONSTRAINT fk_rezervacija_korisnik
+        FOREIGN KEY (korisnik_id) REFERENCES korisnik(id_korisnik),
+    CONSTRAINT fk_rezervacija_soba
+        FOREIGN KEY (soba_id) REFERENCES soba(id_soba)
 );

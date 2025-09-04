@@ -1,6 +1,6 @@
 package hr.moremogucnosti.more_mogucnosti_backend.config;
 
-import hr.moremogucnosti.more_mogucnosti_backend.Security.JwtFilter;
+import hr.moremogucnosti.more_mogucnosti_backend.security.JwtFilter;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -41,7 +41,7 @@ public class SecurityConfig { //mozak Spring Security-a
                         .requestMatchers("/api/auth/**").permitAll()
 
                         // autentikacija obavezna:
-                        .requestMatchers("/api/rezervacija/**").authenticated()
+                        .requestMatchers("/api/rezervacija/**", "/api/recenzija/moja/hotel/**").authenticated()
 
 
                         // sve ostalo je javno

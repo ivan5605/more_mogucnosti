@@ -31,12 +31,6 @@ public class SobaController {
         return new ResponseEntity<>(sobeHotela, HttpStatus.OK);
     }
 
-    @GetMapping("/hotel/random/{id}")
-    public ResponseEntity<List<SobaResponseDto>> getRandomSobe(@PathVariable("id") Long id){
-        List<SobaResponseDto> sobe = sobaService.findRandomByIdHotel(id);
-        return new ResponseEntity<>(sobe, HttpStatus.OK);
-    }
-
     @GetMapping("/withHotelAndSlike/{id}")
     public ResponseEntity<SobaDetailsDto> getDetailsSoba(@PathVariable("id") Long id){
         SobaDetailsDto sobaDetailsDto = sobaService.findDetailsById(id);

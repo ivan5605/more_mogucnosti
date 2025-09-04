@@ -12,5 +12,6 @@ CREATE TABLE korisnik (
     email VARCHAR(100) NOT NULL UNIQUE,
     lozinka VARCHAR (255) NOT NULL,
     uloga_id BIGINT NOT NULL,
-    FOREIGN KEY (uloga_id) REFERENCES uloga(id_uloga)
+    CONSTRAINT fk_korisnik_uloga
+        FOREIGN KEY (uloga_id) REFERENCES uloga(id_uloga)
 );

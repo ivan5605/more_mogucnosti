@@ -11,12 +11,14 @@ import hr.moremogucnosti.more_mogucnosti_backend.service.SobaService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
+@Transactional(readOnly = true)
 public class SobaServiceImpl implements SobaService {
 
     private final SobaRepository sobaRepository;
@@ -41,15 +43,6 @@ public class SobaServiceImpl implements SobaService {
         List<SobaResponseDto> sobeHotelaDto = sobeHotela.stream().
                 map(sobaMapper::toResponseDto).collect(Collectors.toList());
         return sobeHotelaDto;
-    }
-
-    @Override
-    public List<SobaResponseDto> findRandomByIdHotel(Long hotelId) {
-        List<SobaResponseDto> sobe = sobaRepository.find2RandomSobeHotelaWithSlike(hotelId, PageRequest.of(0, 2))
-                .stream()
-                .map(sobaMapper::toResponseDto)
-                .collect(Collectors.toList());
-        return sobe;
     }
 
     @Override

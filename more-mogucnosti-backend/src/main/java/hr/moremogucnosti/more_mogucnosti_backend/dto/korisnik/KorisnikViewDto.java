@@ -1,7 +1,8 @@
 package hr.moremogucnosti.more_mogucnosti_backend.dto.korisnik;
 
 public record KorisnikViewDto(
-    String ime,
-    String prezime,
-    String email
+        Long id,
+        String ime,
+        String prezime,
+        String email
 ) {}

@@ -1,17 +1,18 @@
 package hr.moremogucnosti.more_mogucnosti_backend.service.impl;
 
 import hr.moremogucnosti.more_mogucnosti_backend.dto.rezervacija.RezervacijaCreateDto;
+import hr.moremogucnosti.more_mogucnosti_backend.dto.rezervacija.RezervacijaDatumDto;
 import hr.moremogucnosti.more_mogucnosti_backend.dto.rezervacija.RezervacijaDetailsDto;
+import hr.moremogucnosti.more_mogucnosti_backend.dto.rezervacija.RezervacijaZaKorisnikDto;
 import hr.moremogucnosti.more_mogucnosti_backend.entity.Korisnik;
 import hr.moremogucnosti.more_mogucnosti_backend.entity.Rezervacija;
 import hr.moremogucnosti.more_mogucnosti_backend.entity.Soba;
 import hr.moremogucnosti.more_mogucnosti_backend.exception.BadRequestException;
 import hr.moremogucnosti.more_mogucnosti_backend.exception.DuplicateException;
-import hr.moremogucnosti.more_mogucnosti_backend.exception.ResourceNotFoundException;
+import hr.moremogucnosti.more_mogucnosti_backend.mapper.HotelMapper;
 import hr.moremogucnosti.more_mogucnosti_backend.mapper.KorisnikMapper;
 import hr.moremogucnosti.more_mogucnosti_backend.mapper.RezervacijaMapper;
 import hr.moremogucnosti.more_mogucnosti_backend.mapper.SobaMapper;
-import hr.moremogucnosti.more_mogucnosti_backend.repository.KorisnikRepository;
 import hr.moremogucnosti.more_mogucnosti_backend.repository.RezervacijaRepository;
 import hr.moremogucnosti.more_mogucnosti_backend.service.KorisnikService;
 import hr.moremogucnosti.more_mogucnosti_backend.service.RezervacijaService;
@@ -19,12 +20,14 @@ import hr.moremogucnosti.more_mogucnosti_backend.service.SobaService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
+@Transactional(readOnly = true)
 
 public class RezervacijaServiceImpl implements RezervacijaService {
 
@@ -34,44 +37,43 @@ public class RezervacijaServiceImpl implements RezervacijaService {
     private final KorisnikMapper korisnikMapper;
     private final SobaService sobaService;
     private final SobaMapper sobaMapper;
-    private final KorisnikRepository korisnikRepository;
+    private final HotelMapper hotelMapper;
 
     @Override
+    @Transactional
     public RezervacijaDetailsDto createRezervacija(RezervacijaCreateDto rezervacijaCreateDto, User user) {
         Soba soba = sobaService.loadEntity(rezervacijaCreateDto.sobaId());
-        Korisnik korsnik = korisnikRepository.findByEmail(user.getUsername()).
-                orElseThrow(() -> new ResourceNotFoundException("Korisnik sa email-om " + user.getUsername() + " ne postoji!"));
+        Korisnik korsnik = korisnikService.loadEntityByEmail(user.getUsername());
 
         if (rezervacijaCreateDto.brojOsoba() > soba.getKapacitet()){
             throw new BadRequestException("Broj osoba ne smije biti veći od kapaciteta sobe (" + soba.getKapacitet() + ")");
         }
 
-        //List<RezervacijaDetailsDto> rezervacijeSobe = getRezervacijeSobe(soba.getId());
-        //List<Rezervacija> rezervacije = rezervacijaRepository.findAllBySobaId(soba.getId());
-
         Rezervacija rezervacija = rezervacijaMapper.fromCreateDto(rezervacijaCreateDto, soba, korsnik);
-//        for (Rezervacija rezervacijaSobe : rezervacije){
-//            if (!(rezervacija.getDatumKraj().isBefore(rezervacijaSobe.getDatumPocetak()) || rezervacija.getDatumPocetak().isAfter(rezervacijaSobe.getDatumKraj()))){
-//                throw new DuplicateException("Soba je već rezervirana u tom rasponu datuma!");
-//            }
-//        }
 
         if (rezervacijaRepository.existsOverlappingRezervacija(soba.getId(), rezervacija.getDatumPocetak(), rezervacija.getDatumKraj())){
             throw new DuplicateException("Soba je već rezervirana u tom rasponu datuma!");
         }
 
         Rezervacija savedRezervacija = rezervacijaRepository.save(rezervacija);
-        return rezervacijaMapper.toResponseDto(savedRezervacija, sobaMapper.toResponseDto(soba), korisnikMapper.toViewDto(korsnik));
+        return rezervacijaMapper.toDetailsDto(savedRezervacija);
     }
 
     @Override
-    public List<RezervacijaDetailsDto> findAllByIdSoba(Long idSoba) {
-        List<RezervacijaDetailsDto> rezervacijeSobe = rezervacijaRepository.findBySobaId(idSoba)
+    public List<RezervacijaDatumDto> findAllZauzetiDatumi(Long idSoba) {
+        List<RezervacijaDatumDto> zauzetiDatumi = rezervacijaRepository.findAllBySobaId(idSoba)
                 .stream()
-                .map(rezervacija -> rezervacijaMapper.toResponseDto(rezervacija,
-                        sobaMapper.toResponseDto(rezervacija.getSoba()),
-                        korisnikMapper.toViewDto(rezervacija.getKorisnik())))
+                .map(rezervacijaMapper::toDatumDto)
                 .collect(Collectors.toList());
-        return rezervacijeSobe;
+        return zauzetiDatumi;
+    }
+
+    @Override
+    public List<RezervacijaZaKorisnikDto> findAll(User user) {
+        List<RezervacijaZaKorisnikDto> rezervacije = rezervacijaRepository.findWithSobaHotelByKorisnikEmail(user.getUsername())
+                .stream()
+                .map(rezervacijaMapper::toZaKorisnikaDto)
+                .collect(Collectors.toList());
+        return rezervacije;
     }
 }

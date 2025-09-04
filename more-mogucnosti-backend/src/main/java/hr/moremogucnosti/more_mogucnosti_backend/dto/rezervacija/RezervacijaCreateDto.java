@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 public record RezervacijaCreateDto (
-    @NotNull(message = "Rezervacija mora imati hotel!")
+    @NotNull(message = "Rezervacija mora imati sobu!")
     Long sobaId,
 
     @NotNull(message = "Obavezan unos broja osoba!")

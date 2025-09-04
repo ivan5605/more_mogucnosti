@@ -4,5 +4,7 @@ public record AuthResponse(
         String token,
         String email,
         String ime,
-        String uloga) {
+        String uloga,
+        Long expAt
+        ) {
 }

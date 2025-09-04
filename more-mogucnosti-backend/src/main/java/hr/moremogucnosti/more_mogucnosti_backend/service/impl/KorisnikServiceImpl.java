@@ -8,9 +8,11 @@ import hr.moremogucnosti.more_mogucnosti_backend.repository.KorisnikRepository;
 import hr.moremogucnosti.more_mogucnosti_backend.service.KorisnikService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @AllArgsConstructor
+@Transactional(readOnly = true)
 
 public class KorisnikServiceImpl implements KorisnikService {
 
@@ -29,4 +31,11 @@ public class KorisnikServiceImpl implements KorisnikService {
         return korisnikRepository.findById(id).
                 orElseThrow(() -> new ResourceNotFoundException("Korisnik sa ID-jem " + id + " ne postoji"));
     }
+
+    @Override
+    public Korisnik loadEntityByEmail(String email) {
+        return korisnikRepository.findByEmailWUloga(email)
+                .orElseThrow(() -> new ResourceNotFoundException("Korisnik sa email-om " + email + " ne postoji!"));
+    }
+
 }

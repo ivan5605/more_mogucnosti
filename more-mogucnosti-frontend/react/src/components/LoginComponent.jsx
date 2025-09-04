@@ -1,9 +1,12 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
-import { prijava } from '../services/AuthService';
+import { prijava, getExpAt } from '../services/AuthService';
 import { toast } from 'react-toastify';
+import { useAuth } from '../auth/AuthContext';
 
 const LoginComponent = () => {
+
+  const { login } = useAuth();
 
   const navigator = useNavigate();
 
@@ -50,12 +53,15 @@ const LoginComponent = () => {
     dogadaj.preventDefault();
 
     if (provjeriUnos()) {
-      console.log("Korisnik podaci: ", korisnik);
-
       prijava(korisnik).then(response => {
+
         const token = response.data.token;
         localStorage.setItem("token", token);
-        console.log("Korisnik uspješno prijavljen!", response.data);
+        let expAt = response.data.expAt;
+        localStorage.setItem("expAt", expAt);
+
+        login(token, expAt);
+
         toast.success("Prijava uspješna!", {
           autoClose: 2000,
           position: 'bottom-left'
@@ -77,11 +83,14 @@ const LoginComponent = () => {
         }
 
       })
+
+
+
     }
   }
 
   return (
-    <section className='py-5 mt-5' style={{ backgroundColor: '#eee' }}>
+    <section className='py-5 mt-5 h-100' style={{ backgroundColor: '#eee' }}>
       <div className='container h-100 mb-5'>
         <div className='row d-flex justify-content-center align-items-center h-100'>
           <div className='col-lg-12 col-xl-11'>

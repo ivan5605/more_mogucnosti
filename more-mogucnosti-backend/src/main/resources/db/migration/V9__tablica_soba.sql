@@ -6,5 +6,6 @@ CREATE TABLE soba (
    broj_sobe INT NOT NULL,
    balkon BOOLEAN NOT NULL,
    pet_friendly BOOLEAN NOT NULL DEFAULT true,
-   FOREIGN KEY (hotel_id) REFERENCES hotel(id_hotel)
+   CONSTRAINT fk_soba_hotel
+     FOREIGN KEY (hotel_id) REFERENCES hotel(id_hotel)
 );

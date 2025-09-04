@@ -6,6 +6,4 @@ export const getSoba = (idSoba) => axios.get(REST_API_BASE_URL + '/' + idSoba);
 
 export const getSobeHotela = (idHotel) => axios.get(REST_API_BASE_URL + '/hotel/' + idHotel);
 
-export const get2SobeHotela = (idHotel) => axios.get(REST_API_BASE_URL + '/hotel/random/' + idHotel);
-
 export const getSobaWithHotelAndSlike = (idSoba) => axios.get(REST_API_BASE_URL + '/withHotelAndSlike/' + idSoba);

@@ -8,9 +8,11 @@ import hr.moremogucnosti.more_mogucnosti_backend.repository.UlogaRepository;
 import hr.moremogucnosti.more_mogucnosti_backend.service.UlogaService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @AllArgsConstructor
+@Transactional(readOnly = true)
 
 public class UlogaServiceImpl implements UlogaService {
 

@@ -3,7 +3,8 @@ CREATE TABLE soba_slika (
     soba_id BIGINT NOT NULL,
     putanja VARCHAR(255) NOT NULL,
     glavna_slika BOOLEAN NOT NULL DEFAULT false,
-    FOREIGN KEY (soba_id) REFERENCES soba(id_soba)
+    CONSTRAINT fk_sobaSlika_soba
+        FOREIGN KEY (soba_id) REFERENCES soba(id_soba)
 );
 
 INSERT INTO soba_slika (soba_id, putanja, glavna_slika) VALUES

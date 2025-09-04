@@ -9,7 +9,6 @@ import java.util.List;
 public interface SobaService {
     SobaResponseDto findById(Long idSoba);
     List<SobaResponseDto> findAllByIdHotel(Long hotelId);
-    List<SobaResponseDto> findRandomByIdHotel(Long hotelId);
     SobaDetailsDto findDetailsById(Long isSoba);
     Soba loadEntity(Long idSoba);
 }

@@ -5,5 +5,8 @@ import hr.moremogucnosti.more_mogucnosti_backend.entity.Korisnik;
 
 public interface KorisnikService {
     KorisnikViewDto findById(Long id);
+
     Korisnik loadEntity(Long id);
+
+    Korisnik loadEntityByEmail(String email);
 }

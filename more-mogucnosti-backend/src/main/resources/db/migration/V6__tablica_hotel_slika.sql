@@ -3,5 +3,6 @@ CREATE TABLE hotel_slika (
     hotel_id BIGINT NOT NULL,
     putanja VARCHAR(255) NOT NULL,
     glavna_slika BOOLEAN NOT NULL DEFAULT false,
-    FOREIGN KEY (hotel_id) REFERENCES hotel(id_hotel)
+    CONSTRAINT fk_hotelSlika_hotel
+        FOREIGN KEY (hotel_id) REFERENCES hotel(id_hotel)
 );

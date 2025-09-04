@@ -25,3 +25,4 @@ export const prijava = (prijavaRequest) => axios.post(REST_API_BASE_URL + "/logi
 
 export const prijavljeni = () => api.get(REST_API_BASE_URL + "/me");
 
+export const getExpAt = () => api.get(REST_API_BASE_URL + "/expAt");

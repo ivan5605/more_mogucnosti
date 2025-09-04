@@ -3,14 +3,22 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { getHotel } from '../services/HotelService';
 import { getSobeHotela } from '../services/SobaService';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+import { getRecenzijeHotela, getInfoRecenzija } from '../services/RecenzijaService';
+import { useAuth } from '../auth/AuthContext';
+import { toast } from 'react-toastify';
+import RecenzijaComponent from './RecenzijaComponent';
 
 const HotelComponent = () => {
+
+  const { loggedIn, logout } = useAuth();
 
   const { idHotel } = useParams();
 
   const navigator = useNavigate();
 
   const [sobe, setSobe] = useState([]);
+
+  const [prikaziSve, setPrikaziSve] = useState(false);
 
   const [hotel, setHotel] = useState({
     naziv: '',
@@ -22,66 +30,149 @@ const HotelComponent = () => {
     slike: []
   });
 
+  const [recenzija, setRecenzija] = useState([]);
+
+  const [ucitavanje, setUcitavanje] = useState(true);
+
+  const [prikaziFormaRecenzije, setPrikaziFormaRecenzije] = useState(false);
+
+  const [infoRec, setInfoRec] = useState({
+    broj: 0,
+    prosjek: 0
+  });
+
   useEffect(() => {
-    getHotel(idHotel).then((response) => {
+    (async () => {
+      try {
+        const [hotelRes, recenzijeRes, sobeRes, infoRes] = await Promise.all([
+          getHotel(idHotel),
+          getRecenzijeHotela(idHotel),
+          getSobeHotela(idHotel),
+          getInfoRecenzija(idHotel)
+        ]);
 
-      const glavna = response.data.glavnaSlika?.putanja ? [{
-        putanja: response.data.glavnaSlika.putanja
-      }] : [];
+        const glavna = hotelRes.data.glavnaSlika?.putanja
+          ? [{ putanja: hotelRes.data.glavnaSlika.putanja }]
+          : [];
 
-      const sporedne = Array.isArray(response.data.sporedneSlike)
-        ? response.data.sporedneSlike : [];
+        const sporedne = Array.isArray(hotelRes.data.sporedneSlike)
+          ? hotelRes.data.sporedneSlike
+          : [];
 
-      setHotel({
-        naziv: response.data.naziv,
-        grad: response.data.grad.imeGrad,
-        adresa: response.data.adresa,
-        parking: response.data.parking,
-        wifi: response.data.wifi,
-        bazen: response.data.bazen,
-        slike: [...glavna, ...sporedne]
-      })
-    }).catch(error => {
-      console.error(error);
-    })
-  }, [idHotel])
+        setHotel({
+          naziv: hotelRes.data.naziv,
+          grad: hotelRes.data.grad.imeGrad,
+          adresa: hotelRes.data.adresa,
+          parking: hotelRes.data.parking,
+          wifi: hotelRes.data.wifi,
+          bazen: hotelRes.data.bazen,
+          slike: [...glavna, ...sporedne],
+        });
 
-  function sobeHotela(id) {
-    getSobeHotela(id).then((response) => {
-      setSobe(response.data);
+        const recenzije = Array.isArray(recenzijeRes.data) ? [...recenzijeRes.data] : [];
+        recenzije.sort((a, b) => new Date(b.datum) - new Date(a.datum));
+        setRecenzija(recenzije);
 
-    }).catch(error => {
-      console.error("Greška kod dohvaćanja soba hotela!", error)
-    })
+        setSobe(sobeRes.data);
+
+        setInfoRec({
+          broj: infoRes.data.brojRecenzija,
+          prosjek: infoRes.data.prosjekRecenzija
+        });
+
+      } catch (error) {
+        console.error('Greška kod dohvaćanja hotela/recenzija:', error);
+      } finally {
+        setUcitavanje(false);
+      }
+    })();
+  }, [idHotel]);
+
+  if (ucitavanje) {
+    return <div className='container py-5 mt-5'>Učitavanje...</div>
   }
 
-  //console.log() se ispisuje dva put jer sam u development načinu rada s React Strict Mode (pogledaj main.jsx)
-  //React namjerno dvaput poziva useEffect (i druge efekte) da detektira neželjene pojave, to se NE događa u produkciji
+  function handleRezerviraj(idSoba) {
+    {
+      !loggedIn ? (
+        toast.error("Za rezervaciju je potrebna prijava!", {
+          autoClose: 4000,
+          position: 'bottom-left'
+        })
+      ) : (
+        navigator(`/rezervacija/${idSoba}`)
+      )
+    }
+  }
 
-  //to radi da vidi jel bi mi aplikacija preživela remount - ponovno montiranje komponent
-  //React uništi (unmount) komponentu, te ponovno kreira (mount) istu komponentu
+  function handleRecenzija(hotelId) {
+    if (!loggedIn) {
+      toast.error("Za dodavanje recenzije je potrebna prijava!", {
+        autoClose: 4000,
+        position: 'bottom-left'
+      });
+    } else {
+      setPrikaziFormaRecenzije(true);
+    }
+  }
 
-  useEffect(() => {
-    console.log(hotel);
-  }, [hotel])
+  const refreshRecenzije = async () => {
+    try {
+      const res = await getRecenzijeHotela(idHotel);
+      const arr = Array.isArray(res.data) ? [...res.data] : [];
+      arr.sort((a, b) => new Date(b.datum) - new Date(a.datum));
+      setRecenzija(arr);
+    } catch (e) {
+      console.error('Greška kod osvježavanja recenzija:', e);
+    }
+  };
 
-  useEffect(() => {
-    sobeHotela(idHotel);
-  }, [idHotel])
+  const refreshInfoRec = async () => {
+    try {
+      const infoRes = await getInfoRecenzija(idHotel);
+      setInfoRec({
+        broj: infoRes.data.brojRecenzija,
+        prosjek: infoRes.data.prosjekRecenzija
+      });
+    } catch (e) {
+      console.error('Greška kod osvježavanja info recenzija:', e);
+    }
+  };
 
-  useEffect(() => {
-    console.log("Sobe su ažurirane:", JSON.stringify(sobe, null, 2));
-  }, [sobe]);
+  // kad je spremanje gotovo: refetch + zatvori formu
+  const handleRecSaved = async () => {
+    await Promise.all([refreshRecenzije(), refreshInfoRec()]);
+    setPrikaziFormaRecenzije(false);
+  };
+
+  // helper za zvjezdice
+  const renderStars = (avg) => {
+    const rounded = Math.round(avg || 0);
+    return '★'.repeat(rounded) + '☆'.repeat(5 - rounded);
+  };
 
   return (
     <div className='container py-5 mt-5'>
-      <h2 className='text-center mb-4 fw-bold display-4' style={{ fontFamily: 'Segoe UI, sans-serif' }}>
+      <h2 className='text-center mb-2 fw-bold display-4' style={{ fontFamily: 'Segoe UI, sans-serif' }}>
         {hotel.naziv}
       </h2>
 
+      <div className="text-center mb-4">
+        {infoRec.broj > 0 ? (
+          <div className="d-inline-flex align-items-center gap-3">
+            <span className="fs-5" aria-label={`Prosjek ${infoRec.prosjek?.toFixed?.(2) ?? '0.00'} od 5`}>
+              {renderStars(infoRec.prosjek)}
+            </span>
+            <span className="text-muted">
+              {Number(infoRec.prosjek).toFixed(2)} / 5 · {infoRec.broj} recenzij{infoRec.broj === 1 ? 'a' : (infoRec.broj >= 2 && infoRec.broj <= 4 ? 'e' : 'a')}
+            </span>
+          </div>
+        ) : (
+          <span className="text-muted">Još nema recenzija</span>
+        )}
+      </div>
+
       <div className='card shadow-lg border-0 mb-4 ' style={{ borderRadius: '15px', overflow: 'hidden' }}>
-        {/* u početnom stanju je URL prazan, kao useState i onda baca error, pazi na to! */}
-        {/* dok ne stigne odgovor iz API-ja, hotel.glavnaSlikaPutanja je prazna */}
         {Array.isArray(hotel.slike) && hotel.slike.length > 0 && (
           <div className="d-flex justify-content-center">
             <div
@@ -156,6 +247,70 @@ const HotelComponent = () => {
         </div>
       </div>
 
+      <div className="mt-4 mb-4">
+        <h4 className="fw-bold mb-3 text-center">Recenzije</h4>
+
+        {recenzija.length === 0 ? (
+          <div className="text-muted">Još nema recenzija za ovaj hotel.</div>
+        ) : (
+          <>
+            {(prikaziSve ? recenzija : recenzija.slice(0, 3)).map((rec) => (
+              <div key={rec.id} className="card mb-3 shadow-sm border-0">
+                <div className="card-body">
+                  <div className="d-flex justify-content-between align-items-center">
+                    <div className="fw-semibold">
+                      {rec.korisnik?.ime} {rec.korisnik?.prezime}
+                    </div>
+                    <div aria-label={`Ocjena ${rec.ocjena} od 5`}>
+                      {'★'.repeat(rec.ocjena)}{'☆'.repeat(5 - rec.ocjena)}
+                    </div>
+                  </div>
+                  {rec.tekst && <p className="mb-2 mt-2">{rec.tekst}</p>}
+                  <small className="text-muted">
+                    {new Date(rec.datum).toLocaleDateString('hr-HR')}
+                  </small>
+                </div>
+              </div>
+            ))}
+
+            {recenzija.length > 3 && (
+              <div className="text-center mt-3">
+                {!prikaziSve ? (
+                  <button
+                    className="btn btn-outline-primary mx-1"
+                    onClick={() => setPrikaziSve(true)}
+                  >
+                    Prikaži više
+                  </button>
+                ) : (
+                  <button
+                    className="btn btn-outline-secondary mx-1"
+                    onClick={() => setPrikaziSve(false)}
+                  >
+                    Prikaži manje
+                  </button>
+                )}
+                {!prikaziFormaRecenzije && (
+                  <button
+                    className='btn btn-primary mx-1'
+                    onClick={() => handleRecenzija(idHotel)}
+                  >
+                    Dodaj recenziju
+                  </button>
+                )}
+              </div>
+            )}
+          </>
+        )}
+      </div>
+
+      {/* Forma za recenziju – prikazuje se kad korisnik klikne na gumb */}
+      {prikaziFormaRecenzije && (
+        <div className="mt-4">
+          <RecenzijaComponent onSaved={handleRecSaved} onCancel={() => setPrikaziFormaRecenzije(false)} />
+        </div>
+      )}
+
       <div className='row g-4'>
         {sobe.map((soba, index) => (
           <div key={index} className='col-md-4'>
@@ -229,7 +384,7 @@ const HotelComponent = () => {
                 {/* Gumb Rezerviraj */}
                 <button
                   className="btn btn-outline-secondary mt-auto"
-                  onClick={() => navigator(`/rezervacija/${soba.idSoba}`)}
+                  onClick={() => handleRezerviraj(soba.idSoba)}
                 >
                   Rezerviraj
                 </button>
@@ -239,11 +394,8 @@ const HotelComponent = () => {
         ))}
       </div>
 
-
-
     </div>
-
   )
 }
 
-export default HotelComponent
+export default HotelComponent;

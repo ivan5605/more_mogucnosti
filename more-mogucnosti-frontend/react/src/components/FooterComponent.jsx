@@ -2,7 +2,7 @@ import React from 'react'
 
 const FooterComponent = () => {
   return (
-    <div className='container-fluid'>
+    <div className='container-fluid bg-white'>
       <footer className='d-flex flex-wrap justify-content-between align-items-center py-1 my-2 border-top footer'>
         <div className=' d-flex align-items-center'>
           <span className='mb-2 mb-md-0 text-body-secondary'>&copy; {new Date().getFullYear()} More Mogućnosti d.o.o.</span>

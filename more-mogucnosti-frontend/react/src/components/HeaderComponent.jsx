@@ -1,64 +1,57 @@
 import React from 'react';
-import logo from '../assets/logo.png'; // Ispravna putanja
-import { useLocation, useNavigate } from 'react-router-dom'
+import logo from '../assets/logo.png';
+import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { useAuth } from '../auth/AuthContext';
 
 const HeaderComponent = () => {
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
+  const { loggedIn, logout } = useAuth();
 
-  const navigator = useNavigate();
+  const linkClass = (to) =>
+    pathname === to ? 'nav-link px-2 link-secondary' : 'nav-link px-2 link-dark';
+  //koja je aktivna
 
-  const stranica = useLocation();
-  const trenutnaPutanja = stranica.pathname;
-
-  const postaviTrenutnuStranicu = (putanja) => trenutnaPutanja === putanja ? 'nav-link px-2 link-secondary' : 'nav-link px-2 link-dark';
-
-  const handleProfilClick = (e) => {
-    e.preventDefault(); // spriječi normalni <a> redirect
-    const token = localStorage.getItem("token");
-
-    if (!token) {
-      toast.error("Morate biti prijavljeni!", {
-        autoClose: 2000,
-        position: "bottom-left",
-      });
-      return; // ne navigira
-    }
-
-    // ako ima token -> idi na profil
-    navigator("/profil");
+  const handleLogout = () => {
+    logout();
+    toast.success('Uspješno odjavljeni!', {
+      autoClose: 1500,
+      position: 'bottom-left'
+    });
   };
 
   return (
-    <div className='container-fluid'>
-      <header className='d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 border-bottom bg-white position-fixed top-0 start-0 w-100 z-3 px-3'>
-        <div className='d-flex col-md-3 mb-2 mb-md-0'>
-          <img src={logo} height={40} alt="" />
-          <h4 className='ms-2 '>More Mogućnosti</h4>
+    <div className="container-fluid">
+      <header className="d-flex flex-wrap align-items-center justify-content-between py-3 border-bottom bg-white position-fixed top-0 start-0 w-100 z-3 px-3">
+        <div className="d-flex align-items-center">
+          <img src={logo} height={40} alt="Logo" />
+          <h4 className="ms-2 mb-0">More Mogućnosti</h4>
         </div>
-        <ul className='nav col-12 col-md-auto mb-2 justify-content-center'>
-          <li>
-            <a href="/" className={postaviTrenutnuStranicu('/')}>Početna</a>
-          </li>
-          <li>
-            <a href="/nasiHoteli" className={postaviTrenutnuStranicu('/nasiHoteli')}>Naši hoteli</a>
-          </li>
-          <li>
-            <a href="/kontakt" className={postaviTrenutnuStranicu('/kontakt')}>Kontakt</a>
-          </li>
-          <li>
-            <a href="/onama" className={postaviTrenutnuStranicu('/onama')}>O nama</a>
-          </li>
-          <li>
-            <a href="/profil" className={postaviTrenutnuStranicu('/profil')} onClick={handleProfilClick}>Profil</a>
-          </li>
+
+        <ul className="nav mb-2 mb-md-0">
+          <li className="nav-item"><Link to="/" className={linkClass('/')}>Početna</Link></li>
+          <li className="nav-item"><Link to="/nasiHoteli" className={linkClass('/nasiHoteli')}>Naši hoteli</Link></li>
+          <li className="nav-item"><Link to="/kontakt" className={linkClass('/kontakt')}>Kontakt</Link></li>
+          <li className="nav-item"><Link to="/onama" className={linkClass('/onama')}>O nama</Link></li>
         </ul>
-        <div className='col-md-3 text-end'>
-          <button type='button' className='btn btn-outline-primary me-2' onClick={() => navigator('/prijava')}>Prijava</button>
-          <button type='button' className='btn btn-primary' onClick={() => navigator('/registracija')}>Registracija</button>
+
+        <div className="text-end">
+          {!loggedIn ? (
+            <>
+              <button className="btn btn-outline-primary me-2" onClick={() => navigate('/prijava')}>Prijava</button>
+              <button className="btn btn-primary" onClick={() => navigate('/registracija')}>Registracija</button>
+            </>
+          ) : (
+            <>
+              <button className="btn btn-outline-primary me-2" onClick={() => navigate('/profil')}>Profil</button>
+              <button className="btn btn-primary" onClick={handleLogout}>Odjava</button>
+            </>
+          )}
         </div>
       </header>
     </div>
-  )
-}
+  );
+};
 
 export default HeaderComponent;

@@ -1,14 +1,14 @@
 package hr.moremogucnosti.more_mogucnosti_backend.dto.rezervacija;
 
-import hr.moremogucnosti.more_mogucnosti_backend.dto.korisnik.KorisnikViewDto;
-import hr.moremogucnosti.more_mogucnosti_backend.dto.soba.SobaResponseDto;
+import hr.moremogucnosti.more_mogucnosti_backend.dto.korisnik.KorisnikBasicDto;
+import hr.moremogucnosti.more_mogucnosti_backend.dto.soba.SobaViewDto;
 
 import java.time.LocalDate;
 
 public record RezervacijaDetailsDto (
     Long idRezervacija,
-    KorisnikViewDto korisnik,
-    SobaResponseDto soba,
+    KorisnikBasicDto korisnik,
+    SobaViewDto soba,
     int brojOsoba,
     LocalDate datumPocetak,
     LocalDate datumKraj

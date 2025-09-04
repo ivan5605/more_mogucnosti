@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -18,7 +20,7 @@ public class Korisnik {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_korisnik")
-    private Long idKorisnik;
+    private Long id;
 
     @Column (nullable = false)
     private String ime;
@@ -35,4 +37,12 @@ public class Korisnik {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "uloga_id", nullable = false)
     private Uloga uloga;
+
+    @OneToMany(mappedBy = "korisnik", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @OrderBy("datumPocetak DESC")
+    private List<Rezervacija> rezervacije;
+
+    @OneToMany(mappedBy = "korisnik", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @OrderBy("datum DESC")
+    private List<Recenzija> recenzije;
 }

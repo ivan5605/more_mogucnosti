@@ -9,15 +9,26 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface RezervacijaRepository extends JpaRepository<Rezervacija, Long> {
-    List<Rezervacija> findBySobaId(Long sobaId);
+
     List<Rezervacija> findAllBySobaId(Long sobaId);
 
     @Query("""
-            SELECT COUNT(r) > 0 FROM Rezervacija r
-            WHERE r.soba.id = :sobaId
-            AND NOT (r.datumKraj < :noviPocetak OR r.datumPocetak > :noviKraj)
-            """)
+        select count(r) > 0
+        from Rezervacija r
+        where r.soba.id = :sobaId
+        and r.datumPocetak < :noviKraj  
+        and r.datumKraj    > :noviPocetak 
+    """)
     boolean existsOverlappingRezervacija(@Param("sobaId") Long sobaId,
                                          @Param("noviPocetak") LocalDate noviPocetak,
                                          @Param("noviKraj") LocalDate noviKraj);
+
+    @Query("""
+            select r from Rezervacija r
+            join fetch r.soba s
+            join fetch s.hotel h
+            where r.korisnik.email = :korisnikEmail
+            order by r.datumPocetak desc
+            """)
+    List<Rezervacija> findWithSobaHotelByKorisnikEmail(@Param("korisnikEmail") String email);
 }

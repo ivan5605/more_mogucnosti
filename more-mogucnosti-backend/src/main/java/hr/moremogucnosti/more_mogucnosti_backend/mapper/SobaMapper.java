@@ -2,6 +2,7 @@ package hr.moremogucnosti.more_mogucnosti_backend.mapper;
 
 import hr.moremogucnosti.more_mogucnosti_backend.dto.soba.SobaResponseDto;
 import hr.moremogucnosti.more_mogucnosti_backend.dto.soba.SobaDetailsDto;
+import hr.moremogucnosti.more_mogucnosti_backend.dto.soba.SobaViewDto;
 import hr.moremogucnosti.more_mogucnosti_backend.entity.Hotel;
 import hr.moremogucnosti.more_mogucnosti_backend.entity.Slika;
 import hr.moremogucnosti.more_mogucnosti_backend.entity.Soba;
@@ -78,5 +79,17 @@ public class SobaMapper {
 
         );
         return sobaZaRezervacijuDto;
+    }
+
+    public SobaViewDto toViewDto(Soba soba){
+        if (soba == null){
+            throw new ResourceNotFoundException("NEma soba za mapiranje u viewDto objekt!");
+        }
+        return new SobaViewDto(
+                soba.getId(),
+                soba.getCijenaNocenja(),
+                soba.getBrojSobe(),
+                hotelMapper.toViewDto(soba.getHotel())
+        );
     }
 }

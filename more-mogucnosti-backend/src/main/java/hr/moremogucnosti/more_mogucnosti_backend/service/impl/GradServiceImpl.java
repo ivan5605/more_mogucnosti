@@ -8,6 +8,7 @@ import hr.moremogucnosti.more_mogucnosti_backend.repository.GradRepository;
 import hr.moremogucnosti.more_mogucnosti_backend.service.GradService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @AllArgsConstructor
@@ -18,6 +19,7 @@ public class GradServiceImpl implements GradService {
     private final GradMapper gradMapper;
 
     @Override
+    @Transactional(readOnly = true)
     public GradResponseDto findById(Long id) {
         Grad grad = gradRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Grad sa ID-jem " + id + " ne postoji!"));
