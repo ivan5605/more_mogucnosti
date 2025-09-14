@@ -59,6 +59,8 @@ const LoginComponent = () => {
         localStorage.setItem("token", token);
         let expAt = response.data.expAt;
         localStorage.setItem("expAt", expAt);
+        let uloga = response.data.uloga;
+        localStorage.setItem("uloga", uloga);
 
         login(token, expAt);
 

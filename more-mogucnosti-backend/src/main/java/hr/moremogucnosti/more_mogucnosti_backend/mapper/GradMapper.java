@@ -12,6 +12,7 @@ public class GradMapper {
             throw new ResourceNotFoundException("Nema grada za mapiranje u DTO objekt");
         }
         GradResponseDto gradDto = new GradResponseDto(
+                grad.getIdGrad(),
                 grad.getImeGrad()
         );
         return gradDto;

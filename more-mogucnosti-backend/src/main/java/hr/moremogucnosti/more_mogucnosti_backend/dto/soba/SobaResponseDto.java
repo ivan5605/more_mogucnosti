@@ -6,7 +6,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 public record SobaResponseDto(
-    Long idSoba,
+    Long id,
     int kapacitet,
     BigDecimal cijenaNocenja,
     int brojSobe,

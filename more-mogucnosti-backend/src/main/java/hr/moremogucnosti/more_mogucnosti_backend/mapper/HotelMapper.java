@@ -1,6 +1,7 @@
 package hr.moremogucnosti.more_mogucnosti_backend.mapper;
 
 import hr.moremogucnosti.more_mogucnosti_backend.dto.hotel.HotelPreviewDto;
+import hr.moremogucnosti.more_mogucnosti_backend.dto.hotel.HotelResponseDto;
 import hr.moremogucnosti.more_mogucnosti_backend.dto.hotel.HotelViewDto;
 import hr.moremogucnosti.more_mogucnosti_backend.dto.hotel.HotelDetailsDto;
 import hr.moremogucnosti.more_mogucnosti_backend.entity.Hotel;
@@ -79,6 +80,22 @@ public class HotelMapper {
                         .map(slikaMapper::toResponseDto)
                         .orElse(null)
         );
+    }
+
+    public HotelResponseDto toResponseDto(Hotel hotel) {
+        if (hotel==null){
+            throw new ResourceNotFoundException("Nema hotela za mapiranje u responseDTO objekt");
+        }
+        HotelResponseDto hotelResponseDto = new HotelResponseDto(
+                hotel.getId(),
+                hotel.getNaziv(),
+                gradMapper.toResponseDto(hotel.getGrad()),
+                hotel.getAdresa(),
+                hotel.isParking(),
+                hotel.isWifi(),
+                hotel.isBazen()
+        );
+        return hotelResponseDto;
     }
 
 //    public Hotel fromHotelDto(HotelDto hotelDto) {

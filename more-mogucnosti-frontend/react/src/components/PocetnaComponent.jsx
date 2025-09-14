@@ -42,11 +42,6 @@ const PocetnaComponent = () => {
     allHoteli();
   }, []);
 
-  useEffect(() => {
-    console.log("Token: ", localStorage.getItem("token"));
-    console.log("ExpAt: ", localStorage.getItem("expAt"));
-  })
-
   if (ucitavanje) {
     return <div className='container py-5 mt-5'>Učitavanje...</div>
   }

@@ -13,6 +13,7 @@ import hr.moremogucnosti.more_mogucnosti_backend.exception.ResourceNotFoundExcep
 import hr.moremogucnosti.more_mogucnosti_backend.mapper.RecenzijaMapper;
 import hr.moremogucnosti.more_mogucnosti_backend.mapper.RezervacijaMapper;
 import hr.moremogucnosti.more_mogucnosti_backend.repository.KorisnikRepository;
+import hr.moremogucnosti.more_mogucnosti_backend.security.AppUserPrincipal;
 import hr.moremogucnosti.more_mogucnosti_backend.security.JwtService;
 import hr.moremogucnosti.more_mogucnosti_backend.service.AuthService;
 import hr.moremogucnosti.more_mogucnosti_backend.service.RecenzijaService;
@@ -26,7 +27,6 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -58,16 +58,16 @@ public class AuthServiceImpl implements AuthService {
         }
 
         Korisnik k = new Korisnik();
-        k.setIme(request.ime());
-        k.setPrezime(request.prezime());
+        k.setIme(request.ime().trim());
+        k.setPrezime(request.prezime().trim());
         k.setEmail(email);
         k.setLozinka(encoder.encode(request.lozinka()));
         k.setUloga(ulogaService.loadEntity("USER"));
 
         korisnikRepository.save(k);
 
-        String token = jwtService.generate(k.getEmail());
-        long exp = jwtService.getExpirationMs(token);
+        String token = jwtService.generateToken(k);
+        long exp = jwtService.getExpirationMs(token); //da se vraca Date?
 
         return new AuthResponse(
                 token,
@@ -90,7 +90,7 @@ public class AuthServiceImpl implements AuthService {
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
-            String token = jwtService.generate(request.email());
+            String token = jwtService.generateToken(k);
             long exp = jwtService.getExpirationMs(token);
             return new AuthResponse(
                     token,
@@ -105,7 +105,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public KorisnikViewDto getUserInfo(User user) {
+    public KorisnikViewDto getUserInfo(AppUserPrincipal user) {
         if (user == null){
             throw new ResourceNotFoundException("Niste prijavljeni!");
         }

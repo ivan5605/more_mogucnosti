@@ -15,9 +15,11 @@ import HotelComponent from './components/HotelComponent'
 import RezervacijaComponent from './components/RezervacijaComponent'
 import ProfilComponent from './components/ProfilComponent'
 import 'react-datepicker/dist/react-datepicker.css';
-
+import KorisnikDetaljiComponent from './components/KorisnikDetaljiComponent';
 import { AuthProvider } from './auth/AuthContext';
-import RecenzijaComponent from './components/RecenzijaComponent'
+import RecenzijaComponent from './components/RecenzijaComponent';
+import AdminComponent from './components/AdminComponent';
+
 
 function App() {
 
@@ -52,6 +54,12 @@ function App() {
 
               {/* http://localhost:3000/recenzija/idHotel */}
               <Route path='/recenzija/:idHotel' element={<RecenzijaComponent />}></Route>
+
+              {/* http://localhost:3000/admin */}
+              <Route path='/admin' element={<AdminComponent />}></Route>
+
+              {/* http://localhost:3000/korisnik/detalji/idKorisnik */}
+              <Route path='/korisnik/detalji/:idKorisnik' element={<KorisnikDetaljiComponent />}></Route>
             </Routes>
           </main>
           <FooterComponent />

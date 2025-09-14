@@ -20,7 +20,7 @@ import java.util.List;
 public class Soba {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "idSoba")
+    @Column(name = "id_soba")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)

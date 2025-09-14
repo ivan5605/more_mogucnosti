@@ -13,8 +13,10 @@ public record AuthRegistracijaRequest(
         String prezime,
 
         @NotBlank(message = "Unesite email!")
-        @Email(message = "Neispravna email adresa!")
-        //@UniqueEmail
+        @Email(
+                message = "Neispravna email adresa!",
+                regexp = "^[^\\s@]+@[^\\s@]+\\.[A-Za-z]{2,}$"
+        )
         String email,
 
         @NotBlank(message = "Unesite lozinku!")

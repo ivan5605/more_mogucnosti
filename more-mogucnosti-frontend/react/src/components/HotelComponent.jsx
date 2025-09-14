@@ -384,7 +384,7 @@ const HotelComponent = () => {
                 {/* Gumb Rezerviraj */}
                 <button
                   className="btn btn-outline-secondary mt-auto"
-                  onClick={() => handleRezerviraj(soba.idSoba)}
+                  onClick={() => handleRezerviraj(soba.id)}
                 >
                   Rezerviraj
                 </button>

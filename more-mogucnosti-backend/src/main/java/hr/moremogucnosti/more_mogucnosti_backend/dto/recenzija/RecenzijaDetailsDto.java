@@ -6,7 +6,7 @@ import hr.moremogucnosti.more_mogucnosti_backend.dto.korisnik.KorisnikViewDto;
 import java.time.LocalDate;
 
 public record RecenzijaDetailsDto(
-        Long idRecenzija,
+        Long id,
         KorisnikViewDto korisnikViewDto,
         HotelViewDto hotelViewDto,
         int ocjena,

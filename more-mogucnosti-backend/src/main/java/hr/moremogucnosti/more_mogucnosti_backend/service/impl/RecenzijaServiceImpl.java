@@ -4,6 +4,7 @@ import hr.moremogucnosti.more_mogucnosti_backend.dto.recenzija.*;
 import hr.moremogucnosti.more_mogucnosti_backend.entity.Hotel;
 import hr.moremogucnosti.more_mogucnosti_backend.entity.Korisnik;
 import hr.moremogucnosti.more_mogucnosti_backend.entity.Recenzija;
+import hr.moremogucnosti.more_mogucnosti_backend.exception.ResourceNotFoundException;
 import hr.moremogucnosti.more_mogucnosti_backend.mapper.HotelMapper;
 import hr.moremogucnosti.more_mogucnosti_backend.mapper.KorisnikMapper;
 import hr.moremogucnosti.more_mogucnosti_backend.mapper.RecenzijaMapper;
@@ -13,7 +14,6 @@ import hr.moremogucnosti.more_mogucnosti_backend.service.HotelService;
 import hr.moremogucnosti.more_mogucnosti_backend.service.KorisnikService;
 import hr.moremogucnosti.more_mogucnosti_backend.service.RecenzijaService;
 import lombok.AllArgsConstructor;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,7 +42,7 @@ public class RecenzijaServiceImpl implements RecenzijaService {
 
     @Override
     public List<RecenzijaZaHotelDto> findAllByHotelId(Long idHotel) {
-        List<RecenzijaZaHotelDto> recenzijeHotela = repository.findByHotelId(idHotel)
+        List<RecenzijaZaHotelDto> recenzijeHotela = repository.findByHotelIdWithKorisnik(idHotel)
                 .stream()
                 .map(mapper::toZaHotelDto)
                 .collect(Collectors.toList());
@@ -52,8 +52,8 @@ public class RecenzijaServiceImpl implements RecenzijaService {
 
     @Override
     @Transactional
-    public RecenzijaDetailsDto editOrCreateRecenzija(User user, Long idHotel, RecenzijaCreateDto recenzijaCreateDto) {
-        Korisnik korisnik = korisnikService.loadEntityByEmail(user.getUsername());
+    public RecenzijaDetailsDto editOrCreateRecenzija(Long userId, Long idHotel, RecenzijaCreateDto recenzijaCreateDto) {
+        Korisnik korisnik = korisnikService.loadEntity(userId);
         Hotel hotel = hotelService.loadEntity(idHotel);
 
         Optional<Recenzija> rec = repository.findByKorisnikIdAndHotelId(korisnik.getId(), hotel.getId());
@@ -79,30 +79,30 @@ public class RecenzijaServiceImpl implements RecenzijaService {
         return recenzijaHotelStatusDto;
     }
 
-//    @Override
-//    public List<RecenzijaZaKorisnikDto> findAllByKorisnikEmail(User user) {
-//        List<RecenzijaZaKorisnikDto> recenzije = repository.findByKorisnikEmailOrderByDatumDesc(user.getUsername())
-//                .stream()
-//                .map(recenzijaKorisnikView -> new RecenzijaZaKorisnikDto(
-//                        recenzijaKorisnikView.getId(),
-//                        new HotelViewDto(
-//                                recenzijaKorisnikView.getHotel().getId(),
-//                                recenzijaKorisnikView.getHotel().getNaziv()
-//                        ),
-//                        recenzijaKorisnikView.getOcjena(),
-//                        recenzijaKorisnikView.getTekst(),
-//                        recenzijaKorisnikView.getDatum()
-//                ))
-//                .collect(Collectors.toList());
-//        return recenzije;
-//    }
-
     @Override
-    public List<RecenzijaZaKorisnikDto> findAllWithHotelByEmail(User user) {
-        List<RecenzijaZaKorisnikDto> recenzije = repository.findWithHotelByKorisnikEmail(user.getUsername())
+    public List<RecenzijaZaKorisnikDto> findAllWithHotelById(Long userId) {
+        List<RecenzijaZaKorisnikDto> recenzije = repository.findWithHotelByKorisnikId(userId)
                 .stream()
                 .map(mapper::toZaKorisnikaDto)
                 .collect(Collectors.toList());
         return recenzije;
+    }
+
+    @Override
+    public List<RecenzijaZaKorisnikDto> findAllByKorisnikId(Long id) {
+        List<RecenzijaZaKorisnikDto> recenzije = repository.findAllByKorisnikIdOrderByDatumDesc(id)
+                .stream()
+                .map(mapper::toZaKorisnikaDto)
+                .toList();
+        return recenzije;
+    }
+
+    @Override
+    @Transactional
+    public void deleteById(Long idRecenzija, Long userId) {
+        int izbrisano = repository.deleteByIdAndKorisnik_Id(idRecenzija, userId);
+        if (izbrisano == 0){
+            throw new ResourceNotFoundException("Recenzija ne postoji.");
+        }
     }
 }

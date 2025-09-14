@@ -130,7 +130,7 @@ const RecenzijaComponent = ({ onSaved, onCancel }) => {
                     <textarea
                       id='tekst'
                       className={`form-control ${errors.tekst ? 'is-invalid' : ''}`}
-                      placeholder='Što vam se svidjelo ili nije svidjelo?'
+                      placeholder='Što mislite o ovom hotelu?'
                       rows={6}
                       name='tekst'
                       maxLength={1000}

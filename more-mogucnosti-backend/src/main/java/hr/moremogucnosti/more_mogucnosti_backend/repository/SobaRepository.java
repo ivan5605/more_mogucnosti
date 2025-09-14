@@ -28,8 +28,8 @@ public interface SobaRepository extends JpaRepository<Soba, Long> {
     //Speing odnosno Hibernate je "pametan" i sam prepozna kad se radi o istom entitetu Soba na temelju id_soba
     //automatski napravi deduplikaciju i napuni listu unutar svake Soba instance
 
-    @Query("SELECT DISTINCT s FROM Soba s LEFT JOIN FETCH s.slike WHERE s.id = :idSoba")
-    Optional<Soba> findByIdWithSlike(@Param("idSoba") Long id);
+    @Query("SELECT DISTINCT s FROM Soba s LEFT JOIN FETCH s.slike WHERE s.id = :id")
+    Optional<Soba> findByIdWithSlike(@Param("id") Long id);
 
     //za findById JpaRepository već ima default implementaciju: Optional<T> findById(ID id); pa ne treba Optional
     //a kao ovo nije defaultna treba...
@@ -43,7 +43,7 @@ public interface SobaRepository extends JpaRepository<Soba, Long> {
             LEFT JOIN FETCH s.slike
             LEFT JOIN FETCH s.hotel h
             LEFT JOIN FETCH h.grad
-            WHERE s.id = :idSoba""")
-    Optional<Soba> getSobaByIdWithHotelAndSlike(@Param("idSoba") Long id);
+            WHERE s.id = :id""")
+    Optional<Soba> getSobaByIdWithHotelAndSlike(@Param("id") Long id);
 
 }

@@ -2,6 +2,7 @@ package hr.moremogucnosti.more_mogucnosti_backend.repository;
 
 import hr.moremogucnosti.more_mogucnosti_backend.dto.recenzija.RecenzijaHotelStatusDto;
 import hr.moremogucnosti.more_mogucnosti_backend.entity.Recenzija;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -24,7 +25,13 @@ public interface RecenzijaRepository extends JpaRepository<Recenzija, Long> {
 //        }
 //    }
 
-    List<Recenzija> findByHotelId(Long id);
+    @Query("""
+            SELECT r from Recenzija r
+            left join fetch r.korisnik k
+            where r.hotel.id = :hotelId
+            order by r.datum desc 
+            """)
+    List<Recenzija> findByHotelIdWithKorisnik(@Param("hotelId") Long hotelId);
 
     //Boolean existsByKorisnikIdAndHotelId(Long korisnikId, Long hotelId); ionak mi treba recenzija ako postoji
 
@@ -44,8 +51,13 @@ public interface RecenzijaRepository extends JpaRepository<Recenzija, Long> {
     @Query("""
             select r from Recenzija r
             join fetch r.hotel h
-            where r.korisnik.email = :korisnikEmail
+            where r.korisnik.id = :id
             order by r.datum desc
             """)
-    List<Recenzija> findWithHotelByKorisnikEmail(@Param("korisnikEmail") String email);
+    List<Recenzija> findWithHotelByKorisnikId(@Param("id") Long id);
+
+    @EntityGraph(attributePaths = {"hotel"})
+    List<Recenzija> findAllByKorisnikIdOrderByDatumDesc(Long id);
+
+    int deleteByIdAndKorisnik_Id(Long id, Long korisnikId);
 }

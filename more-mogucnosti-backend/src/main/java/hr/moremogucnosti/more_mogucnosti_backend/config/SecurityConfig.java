@@ -1,9 +1,12 @@
 package hr.moremogucnosti.more_mogucnosti_backend.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import hr.moremogucnosti.more_mogucnosti_backend.security.JwtFilter;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -13,11 +16,14 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import java.time.Instant;
 import java.util.List;
+import java.util.Map;
 
 @Configuration
 @EnableWebSecurity //ja želim kontrolirati pravila ne koristi default
 @AllArgsConstructor
+@EnableMethodSecurity //za @PreAuthorize, ADMIN ili USER
 public class SecurityConfig { //mozak Spring Security-a
 
     private final JwtFilter jwtFilter;
@@ -38,14 +44,60 @@ public class SecurityConfig { //mozak Spring Security-a
 
                 .authorizeHttpRequests(auth -> auth
                         // auth/ je javno (login, register, refresh...)
-                        .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/api/auth/register",
+                                "/api/auth/login")
+                        .permitAll()
 
                         // autentikacija obavezna:
-                        .requestMatchers("/api/rezervacija/**", "/api/recenzija/moja/hotel/**").authenticated()
+                        .requestMatchers("/api/rezervacija/create",
+                                "/api/korisnik/delete",
+                                "/api/korisnik/update",
+                                "/api/korisnik/updateLozinka",
+                                "/api/rezervacija/korisnik",
+                                "/api/rezervacija/update/**",
+                                "/api/rezervacija/delete/**",
+                                "/api/auth/me",
+                                "/api/recenzija/moja/hotel/**",
+                                "/api/recenzija/korisnik",
+                                "/api/recenzija/delete/**")
+                        .authenticated()
+
+                        .requestMatchers("/api/korisnik/adminDelete/**",
+                                "/api/rezervacija/admin/korisnikAkt/**",
+                                "/api/rezervacija/admin/korisnikSt/**",
+                                "/api/korisnik/admin/count",
+                                "/apu/recenzija/admin/korisnik/**")
+                        .hasRole("ADMIN")
 
 
                         // sve ostalo je javno
                         .anyRequest().permitAll() //ovo ide na kraju
+                )
+                .exceptionHandling(e -> e
+                        .authenticationEntryPoint((req, res, ex) -> {        // 401
+                            res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                            res.setContentType("application/json");
+                            var body = Map.of(
+                                    "status", 401,
+                                    "error", "Unauthorized",
+                                    "message", "Prijava je obavezna.",
+                                    "path", req.getRequestURI(),
+                                    "timestamp", Instant.now().toString()
+                            );
+                            res.getWriter().write(new ObjectMapper().writeValueAsString(body));
+                        })
+                        .accessDeniedHandler((req, res, ex) -> {             // 403
+                            res.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                            res.setContentType("application/json");
+                            var body = Map.of(
+                                    "status", 403,
+                                    "error", "Forbidden",
+                                    "message", "Nemate ovlasti za ovu radnju.",
+                                    "path", req.getRequestURI(),
+                                    "timestamp", Instant.now().toString()
+                            );
+                            res.getWriter().write(new ObjectMapper().writeValueAsString(body));
+                        })
                 )
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
                 //u lanac sam dodal Jwtfilter i to prije standardnog username/password filtra

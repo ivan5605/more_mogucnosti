@@ -1,5 +1,8 @@
 package hr.moremogucnosti.more_mogucnosti_backend.exception;
 
+import hr.moremogucnosti.more_mogucnosti_backend.api.ErrorResponse;
+import hr.moremogucnosti.more_mogucnosti_backend.api.ValidationErrorResponse;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -7,8 +10,6 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,75 +17,108 @@ import java.util.Map;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<Map<String, Object>> handleGenericException(Exception ex){
-        Map<String, Object> response = new HashMap<>();
-        response.put("status", HttpStatus.INTERNAL_SERVER_ERROR.value());
-        response.put("error", HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase());
-        response.put("message", ex.getMessage());
-        response.put("timestamp", LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME));
-        return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+    public ResponseEntity<ErrorResponse> handleGenericException(Exception ex, HttpServletRequest req){
+        var status = HttpStatus.INTERNAL_SERVER_ERROR;
+        return new ResponseEntity<>(
+                ErrorResponse.of(
+                        status,
+                        "Dogodila se neočekivana greška.",
+                        req.getRequestURI()),
+                status
+        );
     }
 
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<Map<String, Object>> handleResourceNotFound(ResourceNotFoundException ex){
-
-        Map<String, Object> response = new HashMap<>();
-        response.put("status", HttpStatus.NOT_FOUND.value());
-        response.put("error", HttpStatus.NOT_FOUND.getReasonPhrase());
-        response.put("message", ex.getMessage());
-        response.put("timestamp", LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME));
-
-        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    public ResponseEntity<ErrorResponse> handleResourceNotFound(ResourceNotFoundException ex, HttpServletRequest req){
+        var status = HttpStatus.NOT_FOUND;
+        return new ResponseEntity<>(
+                ErrorResponse.of(
+                        status,
+                        ex.getMessage(),
+                        req.getRequestURI()),
+                status
+        );
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Map<String, Object>> handleValidationException(MethodArgumentNotValidException ex){
+    public ResponseEntity<ValidationErrorResponse> handleValidationException(MethodArgumentNotValidException ex, HttpServletRequest req){
+
+        var status = HttpStatus.BAD_REQUEST;
+
+        //ako @Valid padne onda spring ubaci sve greške u jedan objekt - BindingResult
+        //baca MethodArgumentNotValidException, dobim tu iznimku i vadim greske van
         Map<String, String> errors = new HashMap<>();
         for (FieldError error : ex.getBindingResult().getFieldErrors()){
             errors.put(error.getField(), error.getDefaultMessage());
         }
-        Map<String, Object> response = new HashMap<>();
-        response.put("status", HttpStatus.BAD_REQUEST.value());
-        response.put("error", HttpStatus.BAD_REQUEST.getReasonPhrase());
-        response.put("message", "Validacija nije uspjela!");
-        response.put("errors", errors);
-        response.put("timestamp", LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME));
 
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(
+                ValidationErrorResponse.of(
+                        status,
+                        "Neispravni podaci",
+                        req.getRequestURI(),
+                        errors),
+                status
+        );
     }
 
     @ExceptionHandler(DuplicateException.class)
-    public ResponseEntity<Map<String, Object>> handleDuplicateException(DuplicateException ex){
-        Map<String, Object> response = new HashMap<>();
-        response.put("status", HttpStatus.CONFLICT.value());
-        response.put("error", HttpStatus.CONFLICT.getReasonPhrase());
-        response.put("message", ex.getMessage());
-        response.put("timestamp", LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME));
-        return new ResponseEntity<>(response, HttpStatus.CONFLICT);
+    public ResponseEntity<ErrorResponse> handleDuplicateException(DuplicateException ex, HttpServletRequest req){
+        var status = HttpStatus.CONFLICT;
+        return new ResponseEntity<>(
+                ErrorResponse.of(
+                        status,
+                        ex.getMessage(),
+                        req.getRequestURI()),
+                status
+        );
     }
 
-    @ExceptionHandler(LozinkeNePodudarajuException.class)
-    public ResponseEntity<String> handleLozinkeNePodudarajuException(LozinkeNePodudarajuException ex){
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    @ExceptionHandler(LozinkaException.class)
+    public ResponseEntity<ErrorResponse> handleLozinke(LozinkaException ex, HttpServletRequest req){
+        var status = HttpStatus.BAD_REQUEST;
+        return new ResponseEntity<>(
+                ErrorResponse.of(
+                        status,
+                        ex.getMessage(),
+                        req.getRequestURI()),
+                status
+        );
     }
 
     @ExceptionHandler(BadRequestException.class)
-    public ResponseEntity<Map<String, Object>> handleBadRequestException(BadRequestException ex){
-        Map<String, Object> response = new HashMap<>();
-        response.put("status", HttpStatus.BAD_REQUEST.value()); //400
-        response.put("error", HttpStatus.BAD_REQUEST.getReasonPhrase()); //"Bad Request"
-        response.put("message", ex.getMessage()); //poruka je tam gdi pozivam exception kao argument
-        response.put("timestamp", LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME));
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST); //"2025-08-12T16:13:20.3067808
+    public ResponseEntity<ErrorResponse> handleBadRequestException(BadRequestException ex, HttpServletRequest req){
+        var status = HttpStatus.BAD_REQUEST;
+        return new ResponseEntity<>(
+                ErrorResponse.of(
+                        status,
+                        ex.getMessage(),
+                        req.getRequestURI()),
+                status
+        );
     }
 
     @ExceptionHandler(InvalidLoginException.class)
-    public ResponseEntity<Map<String, Object>> handleInvalidLoginException(InvalidLoginException ex){
-        Map<String, Object> response = new HashMap<>();
-        response.put("status", HttpStatus.UNAUTHORIZED.value());
-        response.put("error", HttpStatus.UNAUTHORIZED.getReasonPhrase());
-        response.put("message", ex.getMessage());
-        response.put("timestamp", LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME));
-        return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
+    public ResponseEntity<ErrorResponse> handleInvalidLoginException(InvalidLoginException ex, HttpServletRequest req){
+        var status = HttpStatus.UNAUTHORIZED;
+        return new ResponseEntity<>(
+                ErrorResponse.of(
+                        status,
+                        ex.getMessage(),
+                        req.getRequestURI()),
+                status
+        );
+    }
+
+    @ExceptionHandler(ForbiddenException.class)
+    public ResponseEntity<ErrorResponse> handleForbiddenException(ForbiddenException ex, HttpServletRequest req) {
+        var status = HttpStatus.FORBIDDEN;
+        return new ResponseEntity<>(
+                ErrorResponse.of(
+                        status,
+                        ex.getMessage(),
+                        req.getRequestURI()),
+                status
+        );
     }
 }

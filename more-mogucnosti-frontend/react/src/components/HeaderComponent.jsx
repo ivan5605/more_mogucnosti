@@ -8,6 +8,7 @@ const HeaderComponent = () => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const { loggedIn, logout } = useAuth();
+  const uloga = localStorage.getItem("uloga");
 
   const linkClass = (to) =>
     pathname === to ? 'nav-link px-2 link-secondary' : 'nav-link px-2 link-dark';
@@ -39,16 +40,44 @@ const HeaderComponent = () => {
         <div className="text-end">
           {!loggedIn ? (
             <>
-              <button className="btn btn-outline-primary me-2" onClick={() => navigate('/prijava')}>Prijava</button>
-              <button className="btn btn-primary" onClick={() => navigate('/registracija')}>Registracija</button>
+              <button
+                className="btn btn-outline-primary me-2"
+                onClick={() => navigate('/prijava')}
+              >
+                Prijava
+              </button>
+              <button
+                className="btn btn-primary"
+                onClick={() => navigate('/registracija')}
+              >
+                Registracija
+              </button>
             </>
           ) : (
             <>
-              <button className="btn btn-outline-primary me-2" onClick={() => navigate('/profil')}>Profil</button>
-              <button className="btn btn-primary" onClick={handleLogout}>Odjava</button>
+              {uloga === 'ADMIN' ? (
+                <button
+                  className="btn btn-outline-primary me-2"
+                  onClick={() => navigate('/admin')}
+                >
+                  Panel
+                </button>
+              ) : (
+                <button
+                  className="btn btn-outline-primary me-2"
+                  onClick={() => navigate('/profil')}
+                >
+                  Profil
+                </button>
+              )}
+
+              <button className="btn btn-primary" onClick={handleLogout}>
+                Odjava
+              </button>
             </>
           )}
         </div>
+
       </header>
     </div>
   );

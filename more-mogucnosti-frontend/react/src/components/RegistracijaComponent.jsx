@@ -44,6 +44,8 @@ const RegistracijaComponent = () => {
   function provjeriEmail(email) {
     if (!email.trim()) {
       return "Unesite email!";
+    } else if (!/^[^\s@]+@[^\s@]+\.[A-Za-z]{2,}$/.test(email)) {
+      return "Neispravna email adresa!";
     } else {
       return "";
     }
@@ -63,6 +65,8 @@ const RegistracijaComponent = () => {
   }
 
   function provjeriLozinkaPotvrda(lozinka, lozinkaPotvrda) {
+    if (!lozinkaPotvrda) return "Unesite lozinku za potvrdu!"
+
     if (lozinka === lozinkaPotvrda) {
       return "";
     } else {

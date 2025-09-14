@@ -1,5 +1,6 @@
 package hr.moremogucnosti.more_mogucnosti_backend.dto;
 
 public record GradResponseDto(
-    String imeGrad
+        Long idGrad,
+        String imeGrad
 ) {}

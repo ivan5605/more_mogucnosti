@@ -6,7 +6,7 @@ import hr.moremogucnosti.more_mogucnosti_backend.dto.soba.SobaViewDto;
 import java.time.LocalDate;
 
 public record RezervacijaDetailsDto (
-    Long idRezervacija,
+    Long id,
     KorisnikBasicDto korisnik,
     SobaViewDto soba,
     int brojOsoba,

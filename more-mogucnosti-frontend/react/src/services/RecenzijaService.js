@@ -21,3 +21,7 @@ export const upsertRecenzija = (idHotel, recenzija) => api.put(REST_API_BASE_URL
 export const getInfoRecenzija = (idHotel) => axios.get(REST_API_BASE_URL + `/hotel/info/${idHotel}`);
 
 export const getRecenzijeKorisnika = () => api.get(REST_API_BASE_URL + '/korisnik');
+
+export const getRecenzijeByIdKorisnik = (idKorisnik) => api.get(REST_API_BASE_URL + `/admin/korisnik/${idKorisnik}`);
+
+export const deleteRecenzija = (idRecenzija) => api.delete(REST_API_BASE_URL + `/delete/${idRecenzija}`)

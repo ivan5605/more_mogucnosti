@@ -56,6 +56,7 @@ public class SobaMapper {
         Hotel hotel = soba.getHotel();
 
         SobaDetailsDto sobaZaRezervacijuDto = new SobaDetailsDto(
+                soba.getId(),
                 soba.getKapacitet(),
                 soba.getCijenaNocenja(),
                 soba.getBrojSobe(),
@@ -75,7 +76,7 @@ public class SobaMapper {
                         .map(slikaMapper::toResponseDto)
                         .collect(Collectors.toList()),
 
-                (hotelMapper.toViewDto(hotel))
+                (hotelMapper.toResponseDto(hotel))
 
         );
         return sobaZaRezervacijuDto;
@@ -83,12 +84,13 @@ public class SobaMapper {
 
     public SobaViewDto toViewDto(Soba soba){
         if (soba == null){
-            throw new ResourceNotFoundException("NEma soba za mapiranje u viewDto objekt!");
+            throw new ResourceNotFoundException("Nema soba za mapiranje u viewDto objekt!");
         }
         return new SobaViewDto(
                 soba.getId(),
                 soba.getCijenaNocenja(),
                 soba.getBrojSobe(),
+                soba.getKapacitet(),
                 hotelMapper.toViewDto(soba.getHotel())
         );
     }

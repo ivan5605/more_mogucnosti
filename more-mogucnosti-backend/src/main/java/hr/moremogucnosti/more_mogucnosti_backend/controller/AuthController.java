@@ -5,6 +5,7 @@ import hr.moremogucnosti.more_mogucnosti_backend.dto.auth.AuthLoginRequest;
 import hr.moremogucnosti.more_mogucnosti_backend.dto.auth.AuthRegistracijaRequest;
 import hr.moremogucnosti.more_mogucnosti_backend.dto.auth.AuthResponse;
 import hr.moremogucnosti.more_mogucnosti_backend.dto.korisnik.KorisnikViewDto;
+import hr.moremogucnosti.more_mogucnosti_backend.security.AppUserPrincipal;
 import hr.moremogucnosti.more_mogucnosti_backend.security.JwtService;
 import hr.moremogucnosti.more_mogucnosti_backend.service.AuthService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -14,7 +15,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -36,7 +36,7 @@ public class AuthController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<KorisnikViewDto> me(@AuthenticationPrincipal User user){ //uzmi trenutno autentificiranog korisnika iz SecurityContext i injektaj ga u ovu metodu kao argument
+    public ResponseEntity<KorisnikViewDto> me(@AuthenticationPrincipal AppUserPrincipal user){ //uzmi trenutno autentificiranog korisnika iz SecurityContext i injektaj ga u ovu metodu kao argument
         KorisnikViewDto viewDto = authService.getUserInfo(user);
         return new ResponseEntity<>(viewDto, HttpStatus.OK);
     }
