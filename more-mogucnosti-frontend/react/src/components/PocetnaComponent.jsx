@@ -3,7 +3,6 @@ import pozadina from '../assets/pocetna3.jpg';
 import './PocetnaComponent.css';
 import { getRandomHoteli } from '../services/HotelService';
 import { useNavigate } from 'react-router-dom';
-import { getExpAt } from '../services/AuthService';
 
 const PocetnaComponent = () => {
   const navigate = useNavigate();

@@ -1,4 +1,4 @@
-import React, { use, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { getAllHoteli } from '../services/HotelService';
 import { useNavigate } from 'react-router-dom';
 
@@ -11,12 +11,13 @@ const NasiHoteliComponent = () => {
 
   const navigator = useNavigate();
 
-  function allHoteli() {
-    getAllHoteli().then(response => {
-      setHoteli(response.data)
-    }).catch(error => {
-      console.error("Greška kod dohvaćanja hotela!", error)
-    })
+  const DEFAULT_SLIKA = 'https://res.cloudinary.com/dcolr4yi2/image/upload/v1758037557/0ae34d64f5299aa8dd6d77e28a51680d_oeyree.png';
+
+  const getHotelSlika = (h) => h?.glavnaSlika?.putanja || DEFAULT_SLIKA;
+
+  const onSlikaErr = (e) => {
+    e.currentTarget.onerror = null;
+    e.currentTarget.src = DEFAULT_SLIKA;
   }
 
   function detaljiHotel(idHotel) {
@@ -59,7 +60,8 @@ const NasiHoteliComponent = () => {
                       <>
                         <div className='col-md-5'>
                           <img
-                            src={hotel.glavnaSlika.putanja}
+                            src={getHotelSlika(hotel)}
+                            onError={onSlikaErr}
                             alt="Slika hotela"
                             className='img-fluid h-100'
                             style={{ objectFit: 'cover', borderTopLeftRadius: '15px', borderBottomLeftRadius: '15px' }}
@@ -117,7 +119,8 @@ const NasiHoteliComponent = () => {
                         </div>
                         <div className='col-md-5'>
                           <img
-                            src={hotel.glavnaSlika.putanja}
+                            src={getHotelSlika(hotel)}
+                            onError={onSlikaErr}
                             alt="Slika hotela"
                             className='img-fluid h-100'
                             style={{ objectFit: 'cover', borderTopRightRadius: '15px', borderBottomRightRadius: '15px' }}

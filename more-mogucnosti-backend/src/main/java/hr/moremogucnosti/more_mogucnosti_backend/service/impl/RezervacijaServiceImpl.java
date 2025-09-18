@@ -128,4 +128,29 @@ public class RezervacijaServiceImpl implements RezervacijaService {
 
         return rezervacijaMapper.toDetailsDto(spremljena);
     }
+
+    @Override
+    @Transactional
+    @PreAuthorize("hasRole('ADMIN')")
+    public void adminDelete(Long idRezervacija) {
+        Rezervacija rezervacija = rezervacijaRepository.findById(idRezervacija)
+                .orElseThrow(() -> new ResourceNotFoundException("Rezervacija ne postoji."));
+
+        rezervacijaRepository.deleteById(idRezervacija);
+    }
+
+    @Override
+    @Transactional
+    @PreAuthorize("hasRole('ADMIN')")
+    public RezervacijaDetailsDto adminUpdate(Long idRezervacija, RezervacijaUpdateDto novaRezervacija) {
+        Rezervacija rezervacija = rezervacijaRepository.findById(idRezervacija)
+                .orElseThrow(() -> new ResourceNotFoundException("Rezervacija ne postoji."));
+
+        rezervacija.setBrojOsoba(novaRezervacija.brojOsoba());
+        rezervacija.setDatumPocetak(novaRezervacija.datumPocetak());
+        rezervacija.setDatumKraj(novaRezervacija.datumKraj());
+        Rezervacija spremljena = rezervacijaRepository.save(rezervacija);
+
+        return rezervacijaMapper.toDetailsDto(spremljena);
+    }
 }

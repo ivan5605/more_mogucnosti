@@ -53,4 +53,6 @@ public interface RezervacijaRepository extends JpaRepository<Rezervacija, Long> 
     Optional<Rezervacija> findByIdAndKorisnikId(Long id, Long korisnikId);
 
     int deleteByIdAndKorisnikId(Long id, Long korisnikId);
+
+    boolean existsBySobaIdAndDatumPocetakAfter(Long sobaId, LocalDate danas);
 }

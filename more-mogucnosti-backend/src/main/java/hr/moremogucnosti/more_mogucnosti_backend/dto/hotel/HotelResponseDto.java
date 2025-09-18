@@ -9,5 +9,6 @@ public record HotelResponseDto(
         String adresa,
         boolean parking,
         boolean wifi,
-        boolean bazen
+        boolean bazen,
+        boolean aktivan
 ) {}

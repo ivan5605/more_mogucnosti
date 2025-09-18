@@ -33,7 +33,8 @@ public interface KorisnikRepository extends JpaRepository<Korisnik, Long> {
             select new hr.moremogucnosti.more_mogucnosti_backend.dto.korisnik.KorisnikAdminDto (
                 k.id, k.ime, k.prezime, k.email,
                 (select count (rz) from Rezervacija rz where rz.korisnik = k),
-                (select count (rc) from Recenzija rc where rc.korisnik = k)
+                (select count (rc) from Recenzija rc where rc.korisnik = k),
+                k.aktivan
             )
             from Korisnik k where uloga.idUloga = 2
             """)

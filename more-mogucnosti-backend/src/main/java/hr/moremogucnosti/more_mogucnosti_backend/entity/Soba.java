@@ -37,11 +37,14 @@ public class Soba {
     @Column(name = "broj_sobe", nullable = false)
     private int brojSobe;
 
-    @Column(name = "balkon", nullable = false)
-    private boolean balkon;
+    @Column(name = "balkon")
+    private boolean balkon = false;
 
     @Column(name = "pet_friendly")
     private boolean petFriendly = true;
+
+    @Column(name = "aktivno")
+    private boolean aktivno = true;
 
     @OneToMany(mappedBy = "soba", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<SobaSlika> slike;

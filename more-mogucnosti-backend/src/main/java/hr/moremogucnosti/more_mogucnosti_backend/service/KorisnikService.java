@@ -24,5 +24,5 @@ public interface KorisnikService {
 
     void promjenaLozinke(AppUserPrincipal user, KorisnikPromjenaLozinkeDto promjenaLozinkeDto);
 
-    void adminDeleteKorisnik(Long idKorisnik);
+    void adminSoftDeleteKorisnik(Long idKorisnik);
 }

@@ -1,18 +1,24 @@
 package hr.moremogucnosti.more_mogucnosti_backend.service.impl;
 
-import hr.moremogucnosti.more_mogucnosti_backend.dto.soba.SobaResponseDto;
+import hr.moremogucnosti.more_mogucnosti_backend.dto.soba.SobaCreateDto;
 import hr.moremogucnosti.more_mogucnosti_backend.dto.soba.SobaDetailsDto;
+import hr.moremogucnosti.more_mogucnosti_backend.dto.soba.SobaResponseDto;
+import hr.moremogucnosti.more_mogucnosti_backend.dto.soba.SobaUpdateDto;
+import hr.moremogucnosti.more_mogucnosti_backend.entity.Hotel;
 import hr.moremogucnosti.more_mogucnosti_backend.entity.Soba;
+import hr.moremogucnosti.more_mogucnosti_backend.exception.DuplicateException;
 import hr.moremogucnosti.more_mogucnosti_backend.exception.ResourceNotFoundException;
 import hr.moremogucnosti.more_mogucnosti_backend.mapper.SobaMapper;
+import hr.moremogucnosti.more_mogucnosti_backend.repository.HotelRepository;
+import hr.moremogucnosti.more_mogucnosti_backend.repository.RezervacijaRepository;
 import hr.moremogucnosti.more_mogucnosti_backend.repository.SobaRepository;
-import hr.moremogucnosti.more_mogucnosti_backend.service.HotelService;
 import hr.moremogucnosti.more_mogucnosti_backend.service.SobaService;
 import lombok.AllArgsConstructor;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,7 +29,8 @@ public class SobaServiceImpl implements SobaService {
 
     private final SobaRepository sobaRepository;
     private final SobaMapper sobaMapper;
-    private final HotelService hotelService;
+    private final HotelRepository hotelRepository;
+    private final RezervacijaRepository rezervacijaRepository;
 
     @Override
     public SobaResponseDto findById(Long idSoba) {
@@ -57,5 +64,61 @@ public class SobaServiceImpl implements SobaService {
         Soba soba = sobaRepository.findById(idSoba)
                 .orElseThrow(() -> new ResourceNotFoundException("Soba sa ID-jem " + idSoba + " ne postoji!"));
         return soba;
+    }
+
+    @Override
+    @Transactional
+    @PreAuthorize("hasRole('ADMIN')")
+    public SobaResponseDto createSoba(Long idHotel, SobaCreateDto sobaDto) {
+        Hotel hotel = hotelRepository.findById(idHotel)
+                .orElseThrow(() -> new ResourceNotFoundException("Hotel ne postoji."));
+
+        boolean duplikat = sobaRepository.existsByHotelIdAndBrojSobe(hotel.getId(), sobaDto.brojSobe());
+
+        if (duplikat){
+            throw new DuplicateException("Soba broj " + sobaDto.brojSobe() + " već postoji u ovom hotelu!");
+        }
+
+        Soba soba = new Soba();
+        soba.setBrojSobe(sobaDto.brojSobe());
+        soba.setHotel(hotel);
+        soba.setCijenaNocenja(sobaDto.cijenaNocenja());
+        soba.setBalkon(sobaDto.balkon());
+        soba.setPetFriendly(sobaDto.petFriendly());
+        soba.setKapacitet(sobaDto.kapacitet());
+
+        return sobaMapper.toResponseDto(soba);
+    }
+
+    @Override
+    @Transactional
+    @PreAuthorize("hasRole('ADMIN')")
+    public void softDeleteSoba(Long idSoba) {
+        Soba soba = sobaRepository.findById(idSoba)
+                .orElseThrow(() -> new ResourceNotFoundException("Soba ne postoji."));
+
+        if (rezervacijaRepository.existsBySobaIdAndDatumPocetakAfter(idSoba, LocalDate.now())) {
+            throw new DuplicateException("Prvo otkažite nadolazeće rezervacije, pa izbrišite sobu!");
+        }
+
+        soba.setAktivno(false);
+        sobaRepository.save(soba);
+    }
+
+    @Override
+    @Transactional
+    @PreAuthorize("hasRole('ADMIN')")
+    public SobaResponseDto updateSoba(Long idSoba, SobaUpdateDto sobaDto) {
+        Soba soba = sobaRepository.findById(idSoba)
+                .orElseThrow(() -> new ResourceNotFoundException("Soba ne postoji."));
+
+        soba.setCijenaNocenja(sobaDto.cijenaNocenja());
+        soba.setBalkon(sobaDto.balkon());
+        soba.setPetFriendly(sobaDto.petFriendly());
+        soba.setKapacitet(sobaDto.kapacitet());
+
+        Soba saved = sobaRepository.save(soba);
+
+        return sobaMapper.toResponseDto(saved);
     }
 }

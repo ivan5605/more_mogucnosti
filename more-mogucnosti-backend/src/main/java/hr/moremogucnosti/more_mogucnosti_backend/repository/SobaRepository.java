@@ -46,4 +46,6 @@ public interface SobaRepository extends JpaRepository<Soba, Long> {
             WHERE s.id = :id""")
     Optional<Soba> getSobaByIdWithHotelAndSlike(@Param("id") Long id);
 
+    boolean existsByHotelIdAndBrojSobe(Long hotelId, Integer brojSobe);
+
 }

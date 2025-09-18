@@ -45,4 +45,7 @@ public class Korisnik {
     @OneToMany(mappedBy = "korisnik", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @OrderBy("datum DESC")
     private List<Recenzija> recenzije;
+
+    @Column(name = "aktivan", nullable = false)
+    private boolean aktivan;
 }

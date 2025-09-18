@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
-import { prijava, getExpAt } from '../services/AuthService';
+import { prijava } from '../services/AuthService';
 import { toast } from 'react-toastify';
 import { useAuth } from '../auth/AuthContext';
 

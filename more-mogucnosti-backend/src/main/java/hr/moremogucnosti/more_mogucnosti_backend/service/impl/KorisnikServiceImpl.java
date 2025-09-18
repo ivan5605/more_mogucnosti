@@ -13,6 +13,7 @@ import hr.moremogucnosti.more_mogucnosti_backend.repository.KorisnikRepository;
 import hr.moremogucnosti.more_mogucnosti_backend.security.AppUserPrincipal;
 import hr.moremogucnosti.more_mogucnosti_backend.service.KorisnikService;
 import lombok.AllArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AccountStatusException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -126,7 +127,8 @@ public class KorisnikServiceImpl implements KorisnikService {
 
     @Override
     @Transactional
-    public void adminDeleteKorisnik(Long idKorisnik) {
+    @PreAuthorize("hasRole('ADMIN')")
+    public void adminSoftDeleteKorisnik(Long idKorisnik) {
         Korisnik korisnik = korisnikRepository.findById(idKorisnik)
                 .orElseThrow(() -> new ResourceNotFoundException("Korisnik sa ID-jem " + idKorisnik + " ne postoji!"));
 

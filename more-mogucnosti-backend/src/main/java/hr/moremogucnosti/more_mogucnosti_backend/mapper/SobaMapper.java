@@ -43,7 +43,9 @@ public class SobaMapper {
                         .stream()
                         .filter(slika -> !slika.isGlavnaSlika())
                         .map(slikaMapper::toResponseDto)
-                        .collect(Collectors.toList())
+                        .collect(Collectors.toList()),
+
+                soba.isAktivno()
         );
         return sobaDto;
     }
@@ -76,7 +78,9 @@ public class SobaMapper {
                         .map(slikaMapper::toResponseDto)
                         .collect(Collectors.toList()),
 
-                (hotelMapper.toResponseDto(hotel))
+                (hotelMapper.toResponseDto(hotel)),
+
+                soba.isAktivno()
 
         );
         return sobaZaRezervacijuDto;
@@ -91,7 +95,8 @@ public class SobaMapper {
                 soba.getCijenaNocenja(),
                 soba.getBrojSobe(),
                 soba.getKapacitet(),
-                hotelMapper.toViewDto(soba.getHotel())
+                hotelMapper.toViewDto(soba.getHotel()),
+                soba.isAktivno()
         );
     }
 }

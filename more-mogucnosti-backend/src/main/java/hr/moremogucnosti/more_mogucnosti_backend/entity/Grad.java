@@ -22,4 +22,7 @@ public class Grad {
 
     @Column(name = "ime_grad", nullable = false)
     private String imeGrad;
+
+    @Column(name = "slug", nullable = false)
+    private String slug;
 }

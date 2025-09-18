@@ -6,6 +6,7 @@ public record KorisnikAdminDto(
         String prezime,
         String email,
         Long brojRezervacija,
-        Long brojRecenzija
+        Long brojRecenzija,
+        boolean aktivan
 ) {
 }

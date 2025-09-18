@@ -1,0 +1,1 @@
+ALTER TABLE soba ADD UNIQUE soba_hotel_broj (broj_sobe, hotel_id);

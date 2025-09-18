@@ -1,6 +1,6 @@
 package hr.moremogucnosti.more_mogucnosti_backend.dto.soba;
 
-import hr.moremogucnosti.more_mogucnosti_backend.dto.SlikaResponseDto;
+import hr.moremogucnosti.more_mogucnosti_backend.dto.Slika.SlikaResponseDto;
 import hr.moremogucnosti.more_mogucnosti_backend.dto.hotel.HotelResponseDto;
 
 import java.math.BigDecimal;
@@ -15,5 +15,6 @@ public record SobaDetailsDto(
         boolean petFriendly,
         SlikaResponseDto glavnaSlika,
         List<SlikaResponseDto> sporedneSlike,
-        HotelResponseDto hotel
+        HotelResponseDto hotel,
+        boolean aktivno
 ) {}

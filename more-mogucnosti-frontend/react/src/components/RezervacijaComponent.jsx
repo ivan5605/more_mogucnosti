@@ -1,13 +1,11 @@
-import React, { useState, useEffect, useRef } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
-import { getSobaWithHotelAndSlike } from '../services/SobaService'
-import { createRezervacija, getZauzetiDatumi } from '../services/RezervacijaService'
-import * as bootstrap from 'bootstrap/dist/js/bootstrap.bundle.min.js'; //dobil ppristum svim JS Bootstrap komponentama (Modal, Tooltip, Collapse...)
+import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { getSobaWithHotelAndSlike } from '../services/SobaService';
+import { createRezervacija, getZauzetiDatumi } from '../services/RezervacijaService';
 import { toast } from 'react-toastify';
-import 'bootstrap/dist/css/bootstrap.min.css';
 import { prijavljeni } from '../services/AuthService';
 import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css'; // CSS za datepicker
+import 'react-datepicker/dist/react-datepicker.css';
 
 const RezervacijaComponent = () => {
   const { idSoba } = useParams();
@@ -33,22 +31,19 @@ const RezervacijaComponent = () => {
     ime: '',
     prezime: '',
     email: ''
-  })
+  });
 
-  const [zauzetiTermini, setZauzetiTermini] = useState([]); // [{idRezervacija, datumPocetak, datumKraj}, ...]
+  const [zauzetiTermini, setZauzetiTermini] = useState([]);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
 
-  // referenca na modal, dok se componenta digne current se s null stavi na div element koji referenciram
-  const modalRef = useRef(null);
+  // “skriveni” okidači za modal (otvori/zatvori) – bez Bootstrap JS importa ovdje
+  const openModalBtnRef = useRef(null);
+  const closeModalBtnRef = useRef(null);
 
-  // helperi za sigurno pretvaranje (izbjegne time-zone off-by-one)
   const toLocalDate = (yyyyMmDd) => (yyyyMmDd ? new Date(`${yyyyMmDd}T00:00:00`) : null);
-
   const toYMD = (d) => (d instanceof Date && !isNaN(d)) ? d.toLocaleDateString('sv-SE') : '';
-  // 'sv-SE' daje 'YYYY-MM-DD'
-
-  const addDays = (date, days) => { // min. 1 noćenje (odlazak dan nakon dolaska)
+  const addDays = (date, days) => {
     if (!date) return null;
     const d = new Date(date);
     d.setHours(0, 0, 0, 0);
@@ -58,50 +53,39 @@ const RezervacijaComponent = () => {
 
   function cijenaRezervacije(datumPocetak, datumKraj, cijenaNocenja) {
     if (!datumPocetak || !datumKraj || !cijenaNocenja) return 0;
-
     const pocetak = new Date(datumPocetak);
     const kraj = new Date(datumKraj);
-
     const razlikaMs = kraj.getTime() - pocetak.getTime();
-
     const razlikaDan = razlikaMs / (1000 * 60 * 60 * 24);
-
-    const ukupnaCijena = razlikaDan * cijenaNocenja;
-
-    return ukupnaCijena;
+    return razlikaDan * cijenaNocenja;
   }
 
   function setPrijavljeniKorisnik() {
-    prijavljeni().then(response => {
-      setKorisnik({
-        ime: response.data.ime,
-        prezime: response.data.prezime,
-        email: response.data.email
+    prijavljeni()
+      .then(response => {
+        setKorisnik({
+          ime: response.data.ime,
+          prezime: response.data.prezime,
+          email: response.data.email
+        });
       })
-    }).catch(error => {
-      console.error(error);
-    })
+      .catch(console.error);
   }
 
   const postavljeniKorisnik = useRef(false);
-
   const [ucitavanje, setUcitavanje] = useState(true);
 
   useEffect(() => {
     (async () => {
       try {
-        // ovo se izvrši samo jednom (na mount)
         if (!postavljeniKorisnik.current) {
           setPrijavljeniKorisnik();
           postavljeniKorisnik.current = true;
         }
-
-        // ovo se izvršava na svaku promjenu idSoba (i na mount)
         const [zauzetiRes, sobaRes] = await Promise.all([
           getZauzetiDatumi(idSoba),
           getSobaWithHotelAndSlike(idSoba),
         ]);
-
         setZauzetiTermini(Array.isArray(zauzetiRes.data) ? zauzetiRes.data : []);
         setSoba(sobaRes.data);
       } catch (err) {
@@ -113,21 +97,17 @@ const RezervacijaComponent = () => {
   }, [idSoba]);
 
   if (ucitavanje) {
-    return <div className='container py-5 mt-5'>Učitavanje...</div>
+    return <div className='container py-5 mt-5'>Učitavanje...</div>;
   }
 
   const onChangePocetakDP = (date) => {
     setStartDate(date);
     setRezervacija(prev => ({ ...prev, datumPocetak: toYMD(date) }));
-
-    // ako je trenutni kraj prije minimalnog kraja (dan nakon početka), resetiraj kraj
     const minEnd = addDays(date, 1);
     if (endDate && minEnd && endDate < minEnd) {
       setEndDate(null);
       setRezervacija(prev => ({ ...prev, datumKraj: '' }));
     }
-
-    // makni eventualnu poruku o grešci kod odabira
     setErrors(prev => ({ ...prev, datumPocetak: '' }));
   };
 
@@ -142,108 +122,88 @@ const RezervacijaComponent = () => {
       const danas = new Date();
       danas.setHours(0, 0, 0, 0);
       const dolazak = new Date(datumPocetak);
-      if (dolazak < danas) {
-        return "Datum dolazka ne može biti prije današnjeg datuma!";
-      }
-      return "";
+      if (dolazak < danas) return 'Datum dolazka ne može biti prije današnjeg datuma!';
+      return '';
     }
-    return "Unesite datum dolaska!";
+    return 'Unesite datum dolaska!';
   }
 
   function provjeriDatumOdlazak(datumPocetak, datumKraj) {
     if (datumKraj) {
       const dolazak = new Date(datumPocetak);
       const odlazak = new Date(datumKraj);
-      if (isNaN(dolazak.getTime())) return "Prvo unesite datum dolaska!";
-      if (odlazak <= dolazak) { // strože: mora biti nakon (min. 1 noćenje)
-        return "Datum odlazka mora biti nakon datuma dolaska!";
-      }
-      return "";
+      if (isNaN(dolazak.getTime())) return 'Prvo unesite datum dolaska!';
+      if (odlazak <= dolazak) return 'Datum odlazka mora biti nakon datuma dolaska!';
+      return '';
     }
-    return "Unesite datum odlaska!";
+    return 'Unesite datum odlaska!';
   }
 
   function provjeriBrojOsoba(broj, kapacitet) {
     const n = Number(broj);
-    if (!Number.isInteger(n) || n < 1) return "Unesite barem 1 osobu.";
+    if (!Number.isInteger(n) || n < 1) return 'Unesite barem 1 osobu.';
     if (kapacitet && n > kapacitet) return `Maksimalno ${kapacitet} osoba/e.`;
-    return "";
+    return '';
   }
 
   function provjeriUnos() {
     const e = {
       datumPocetak: provjeriDatumDolazak(rezervacija.datumPocetak),
       datumKraj: provjeriDatumOdlazak(rezervacija.datumPocetak, rezervacija.datumKraj),
-      brojOsoba: provjeriBrojOsoba(rezervacija.brojOsoba, soba?.kapacitet)
+      brojOsoba: provjeriBrojOsoba(rezervacija.brojOsoba, soba?.kapacitet),
     };
     setErrors(e);
-    // vrati true samo ako nema grešaka
-    return Object.values(e).every((err) => err === "");
+    return Object.values(e).every(err => err === '');
   }
 
-  // klik na "Potvrdi": prvo validacije, pa tek onda modal
   function handlePotvrdi(e) {
     e.preventDefault();
     setZauzeto({ greska: '' });
-
     if (!provjeriUnos()) return;
-
-    if (modalRef.current) {
-      const modal = bootstrap.Modal.getOrCreateInstance(modalRef.current);
-      modal.show(); //otvori modal (doda show klasu, zabrani scroll na body...)
-    }
+    // otvori modal “klikom” na skriveni gumb s data-bs-toggle
+    openModalBtnRef.current?.click();
   }
-  //bootsrap.Modal - klasa iz bootstrapa koja zna upravljati modalima
-  //getOrCreateInstance - pogleda el postoji Bootstrap instanca povezana s tim element tj z div elementom
-  //ako postoji - vrati ju, ako ne postoji - napravi novu instancu i vrati ju
 
   function rezerviraj(e) {
     e.preventDefault();
-
     if (!provjeriUnos()) return;
 
     createRezervacija(rezervacija)
-      .then(response => {
-        if (modalRef.current) {
-          const modal = bootstrap.Modal.getInstance(modalRef.current);
-          if (modal) modal.hide();
-        }
+      .then(() => {
+        // zatvori modal “klikom” na X (data-bs-dismiss)
+        closeModalBtnRef.current?.click();
         toast.success('Rezervacija izrađena!', {
           autoClose: 2000,
-          position: 'bottom-left'
+          position: 'bottom-left',
         });
         setTimeout(() => navigator('/'), 2000);
       })
       .catch(error => {
         if (error.response) {
           const status = error.response.status;
-          const poruka = error.response.data?.message || "Greška na serveru.";
-
+          const poruka = error.response.data?.message || 'Greška na serveru.';
           if (status === 409) {
             setZauzeto({ greska: poruka });
           } else if (status === 403) {
             toast.error('Za izradu rezervacije morate biti prijavljeni!', {
               autoClose: 5000,
-              position: 'bottom-left'
+              position: 'bottom-left',
             });
           } else {
-            console.error("Greška kod izrade rezervacije!", poruka);
+            console.error('Greška kod izrade rezervacije!', poruka);
           }
         }
       });
   }
 
-  // checkout dan je SLOBODAN -> kraj intervala - 1 dan
   const excludeIntervals = zauzetiTermini.map(t => {
     const start = toLocalDate(t.datumPocetak);
     const endExclusive = toLocalDate(t.datumKraj);
-    const endInclusive = new Date(endExclusive.getTime() - 86400000); // kraj - 1 dan
+    const endInclusive = new Date(endExclusive.getTime() - 86400000);
     return { start, end: endInclusive };
   });
 
-  if (!soba) {
-    return <div className='container mt-5'>Učitavanje...</div>
-  }
+  if (!soba) return <div className='container mt-5'>Učitavanje...</div>;
 
   const slikeSobe = [
     soba.glavnaSlika,
@@ -260,7 +220,7 @@ const RezervacijaComponent = () => {
         {soba.hotel.grad.imeGrad}, {soba.hotel.adresa}
       </div>
 
-      <div className="row g-4  align-items-stretch">
+      <div className="row g-4 align-items-stretch">
         <div className="col-lg-7 d-flex flex-column">
           <div id="sobaCarousel" className="carousel slide mb-4" data-bs-ride="carousel">
             <div className="carousel-inner">
@@ -293,11 +253,11 @@ const RezervacijaComponent = () => {
                 <li><strong>Cijena noćenja:</strong> {soba.cijenaNocenja} €</li>
                 <li>
                   <strong>Balkon:</strong>{' '}
-                  {soba.balkon ? <i className="fas fa-check text-success ms-1"></i> : <i className="fas fa-times text-danger ms-1"></i>}
+                  {soba.balkon ? <i className="bi bi-check2 text-success ms-1"></i> : <i className="bi bi-x text-danger ms-1"></i>}
                 </li>
                 <li>
                   <strong>Pet friendly:</strong>{' '}
-                  {soba.petFriendly ? <i className="fas fa-check text-success ms-1"></i> : <i className="fas fa-times text-danger ms-1"></i>}
+                  {soba.petFriendly ? <i className="bi bi-check2 text-success ms-1"></i> : <i className="bi bi-x text-danger ms-1"></i>}
                 </li>
               </ul>
             </div>
@@ -340,8 +300,8 @@ const RezervacijaComponent = () => {
                   selectsStart
                   startDate={startDate}
                   endDate={endDate}
-                  minDate={new Date()} // ne prije današnjeg
-                  excludeDateIntervals={excludeIntervals} // zabrani zauzete dane
+                  minDate={new Date()}
+                  excludeDateIntervals={excludeIntervals}
                   dateFormat="yyyy-MM-dd"
                   placeholderText="Odaberite datum dolaska"
                   className={`form-control ${errors.datumPocetak ? 'is-invalid' : ''}`}
@@ -357,7 +317,7 @@ const RezervacijaComponent = () => {
                   selectsEnd
                   startDate={startDate}
                   endDate={endDate}
-                  minDate={startDate ? addDays(startDate, 1) : new Date()} // ne prije početka + 1 dan (min 1 noćenje)
+                  minDate={startDate ? addDays(startDate, 1) : new Date()}
                   excludeDateIntervals={excludeIntervals}
                   dateFormat="yyyy-MM-dd"
                   placeholderText="Odaberite datum odlaska"
@@ -380,15 +340,32 @@ const RezervacijaComponent = () => {
                   Odustani
                 </button>
 
-                {/* Modal — samo se programatski otvara nakon validacije */}
-                <div className='modal fade' id='exampleModal' tabIndex={-1} aria-labelledby='exampleModalLabel' aria-hidden='true' ref={modalRef}>
+                {/* Skriveni okidač za otvaranje modala */}
+                <button
+                  type="button"
+                  ref={openModalBtnRef}
+                  className="d-none"
+                  data-bs-toggle="modal"
+                  data-bs-target="#exampleModal"
+                >
+                  Open
+                </button>
+
+                {/* Modal */}
+                <div className='modal fade' id='exampleModal' tabIndex={-1} aria-labelledby='exampleModalLabel' aria-hidden='true'>
                   <div className='modal-dialog'>
                     <div className='modal-content'>
                       <div className='modal-header'>
                         <h5 className='modal-title' id='exampleModalLabel'>
                           Rezervacija - <strong>{soba.hotel.naziv} (soba {soba.brojSobe})</strong>
                         </h5>
-                        <button type='button' className='btn-close' data-bs-dismiss='modal' aria-label='Close'></button>
+                        <button
+                          type='button'
+                          className='btn-close'
+                          data-bs-dismiss='modal'
+                          aria-label='Close'
+                          ref={closeModalBtnRef}
+                        ></button>
                       </div>
                       <div className='modal-body'>
                         <p><strong>Broj osoba:</strong> {rezervacija.brojOsoba} osoba/e</p>
@@ -415,7 +392,7 @@ const RezervacijaComponent = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default RezervacijaComponent
+export default RezervacijaComponent;

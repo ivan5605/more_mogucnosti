@@ -44,7 +44,9 @@ public class HotelMapper {
                         .stream()
                         .filter(slika -> !slika.isGlavnaSlika())
                         .map(slikaMapper::toResponseDto)
-                        .collect(Collectors.toList())
+                        .collect(Collectors.toList()),
+
+                hotel.isAktivno()
         );
         return hotelDto;
     }
@@ -78,7 +80,9 @@ public class HotelMapper {
                         .filter(Slika::isGlavnaSlika)
                         .findFirst()
                         .map(slikaMapper::toResponseDto)
-                        .orElse(null)
+                        .orElse(null),
+
+                hotel.isAktivno()
         );
     }
 
@@ -93,7 +97,8 @@ public class HotelMapper {
                 hotel.getAdresa(),
                 hotel.isParking(),
                 hotel.isWifi(),
-                hotel.isBazen()
+                hotel.isBazen(),
+                hotel.isAktivno()
         );
         return hotelResponseDto;
     }

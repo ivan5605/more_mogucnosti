@@ -24,22 +24,26 @@ const HeaderComponent = () => {
 
   return (
     <div className="container-fluid">
-      <header className="d-flex flex-wrap align-items-center justify-content-between py-3 border-bottom bg-white position-fixed top-0 start-0 w-100 z-3 px-3">
-        <div className="d-flex align-items-center">
-          <img src={logo} height={40} alt="Logo" />
-          <h4 className="ms-2 mb-0">More Mogućnosti</h4>
-        </div>
+      <header className="position-fixed top-0 start-0 w-100 bg-white border-bottom z-3">
+        <div className='d-flex align-items-center py-3 px-3 position-relative'>
 
-        <ul className="nav mb-2 mb-md-0">
-          <li className="nav-item"><Link to="/" className={linkClass('/')}>Početna</Link></li>
-          <li className="nav-item"><Link to="/nasiHoteli" className={linkClass('/nasiHoteli')}>Naši hoteli</Link></li>
-          <li className="nav-item"><Link to="/kontakt" className={linkClass('/kontakt')}>Kontakt</Link></li>
-          <li className="nav-item"><Link to="/onama" className={linkClass('/onama')}>O nama</Link></li>
-        </ul>
+          <div className="d-flex align-items-center">
+            <img src={logo} height={40} alt="Logo" />
+            <h4 className="ms-2 mb-0">More Mogućnosti</h4>
+          </div>
 
-        <div className="text-end">
+          <div className='position-absolute start-50 translate-middle-x'>
+            <ul className="nav mb-2 mb-md-0">
+              <li className="nav-item"><Link to="/" className={linkClass('/')}>Početna</Link></li>
+              <li className="nav-item"><Link to="/nasiHoteli" className={linkClass('/nasiHoteli')}>Naši hoteli</Link></li>
+              <li className="nav-item"><Link to="/kontakt" className={linkClass('/kontakt')}>Kontakt</Link></li>
+              <li className="nav-item"><Link to="/onama" className={linkClass('/onama')}>O nama</Link></li>
+            </ul>
+          </div>
+
+
           {!loggedIn ? (
-            <>
+            <div className='ms-auto'>
               <button
                 className="btn btn-outline-primary me-2"
                 onClick={() => navigate('/prijava')}
@@ -52,30 +56,35 @@ const HeaderComponent = () => {
               >
                 Registracija
               </button>
-            </>
+            </div>
           ) : (
-            <>
-              {uloga === 'ADMIN' ? (
-                <button
-                  className="btn btn-outline-primary me-2"
-                  onClick={() => navigate('/admin')}
-                >
-                  Panel
-                </button>
-              ) : (
-                <button
-                  className="btn btn-outline-primary me-2"
-                  onClick={() => navigate('/profil')}
-                >
-                  Profil
-                </button>
-              )}
-
-              <button className="btn btn-primary" onClick={handleLogout}>
-                Odjava
-              </button>
-            </>
+            uloga === 'ADMIN' ? (
+              <>
+                <div className='dropdown ms-auto'>
+                  <button className='btn btn-outline-secondary dropdown-toggle' type='button' id='dropdownBtn' data-bs-toggle='dropdown' aria-expanded='false'>
+                    <i className="bi bi-list"></i>
+                  </button>
+                  <ul className='dropdown-menu' aria-labelledby='dropdownBtn'>
+                    <li><a className='dropdown-item' href="/admin">Panel</a></li>
+                    <li><button className='dropdown-item' onClick={handleLogout}>Odjava</button></li>
+                  </ul>
+                </div>
+              </>
+            ) : (
+              <>
+                <div className='dropdown ms-auto'>
+                  <button className='btn btn-outline-secondary dropdown-toggle' type='button' id='dropdownBtn' data-bs-toggle='dropdown' aria-expanded='false'>
+                    <i class="bi bi-list"></i>
+                  </button>
+                  <ul className='dropdown-menu' aria-labelledby='dropdownBtn'>
+                    <li><a className='dropdown-item' href="/profil">Profil</a></li>
+                    <li><button className='dropdown-item' onClick={handleLogout}>Odjava</button></li>
+                  </ul>
+                </div>
+              </>
+            )
           )}
+
         </div>
 
       </header>

@@ -19,4 +19,8 @@ public interface RezervacijaService {
     void deleteRezervacija(Long userId, Long rezervacijaId);
 
     RezervacijaDetailsDto updateRezervacija(Long userId, Long rezervacijaIdd, RezervacijaUpdateDto novaRezervacija);
+
+    void adminDelete(Long idRezervacija);
+
+    RezervacijaDetailsDto adminUpdate(Long idRezervacija, RezervacijaUpdateDto novaRezervacija);
 }

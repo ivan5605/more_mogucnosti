@@ -1,0 +1,2 @@
+ALTER TABLE grad ADD UNIQUE uq_grad_slug (slug);
+ALTER TABLE grad MODIFY slug VARCHAR(150) NOT NULL;

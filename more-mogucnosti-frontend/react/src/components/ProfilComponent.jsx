@@ -28,6 +28,8 @@ const ProfilComponent = () => {
   const [odabranaRez, setOdabranaRez] = useState(null);
   const [modalRez, setModalRez] = useState(false);
 
+  const [promjenaRez, setPromjenaRez] = useState(false);
+
   // forma u modalu (uređivanje rezervacije)
   const [formaRez, setFormaRez] = useState({
     brojOsoba: 1,
@@ -132,7 +134,7 @@ const ProfilComponent = () => {
         setUcitavanje(false);
       }
     })();
-  }, []); //pokrece se jednom na mount
+  }, [promjenaRez]); //pokrece se jednom na mount
 
   useEffect(() => {
     if (!(modalUredi)) return;
@@ -204,8 +206,6 @@ const ProfilComponent = () => {
   }
 
   const handleRowClick = (rezervacija) => {
-    setFormaPromjenLoz({ staraLozinka: '', novaLozinka: '', novaLozinkaPotvrda: '' });
-    setPromjenaLozErr({ staraLozinka: '', novaLozinka: '', novaLozinkaPotvrda: '' });
     setOdabranaRez(rezervacija);
     setModalRez(true);
   };
@@ -327,6 +327,14 @@ const ProfilComponent = () => {
         position: 'bottom-left'
       })
 
+      {
+        promjenaRez ? (
+          setPromjenaRez(false)
+        ) : (
+          setPromjenaRez(true)
+        )
+      };
+
       // lokalno ažuriraj listu i odabranu
       setRezervacije(stare =>
         stare.map(r => (r.id === odabranaRez.id ? { ...r, ...updateDto } : r))
@@ -347,8 +355,15 @@ const ProfilComponent = () => {
 
       // makni iz liste i zatvori modal
       setRezervacije(stare => stare.filter(r => r.id !== odabranaRez.id));
+
+      toast.success("Rezervacija izbrisana!", {
+        autoClose: 2000,
+        position: 'bottom-left'
+      })
+
       setModalRez(false);
       setOdabranaRez(null);
+
     } catch (e) {
       console.error('Greška kod brisanja rezervacije!', e);
     }
@@ -503,15 +518,20 @@ const ProfilComponent = () => {
       setModalPromjenaLoz(false);
 
       logout();
+
+      toast.success("Lozinka uspješno promijenjena!", {
+        autoClose: 3000,
+        position: 'bottom-left'
+      })
     } catch (e) {
       if (e.response) {
         const status = e.response.status;
         const poruka = e.response.data.message || "Greška"
 
         if (status === 400) {
-          setPromjenaLozErr(prev => ({ ...prev, staraLozinka: "Netočna lozinka" }))
+          setPromjenaLozErr(prev => ({ ...prev, staraLozinka: poruka }))
         } else {
-          console.error('Netočna lozinka!', e);
+          console.error('Greška', e);
         }
       }
     }
@@ -580,7 +600,7 @@ const ProfilComponent = () => {
     try {
       await upsertRecenzija(odabranaRec.hotel.id, updateDto);
 
-      toast.success(`Rezervacija ažurirana!`, {
+      toast.success(`Recenzija ažurirana!`, {
         autoClose: 2000,
         position: 'bottom-left'
       })

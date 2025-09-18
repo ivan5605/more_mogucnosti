@@ -62,13 +62,13 @@ public class SecurityConfig { //mozak Spring Security-a
                                 "/api/recenzija/delete/**")
                         .authenticated()
 
-                        .requestMatchers("/api/korisnik/adminDelete/**",
-                                "/api/rezervacija/admin/korisnikAkt/**",
-                                "/api/rezervacija/admin/korisnikSt/**",
-                                "/api/korisnik/admin/count",
-                                "/apu/recenzija/admin/korisnik/**")
+                        .requestMatchers(
+                                "/api/rezervacija/admin/**",
+                                "/api/korisnik/admin/**",
+                                "/api/recenzija/admin/**",
+                                "/api/hotel/admin/**",
+                                "/api/soba/admin/**")
                         .hasRole("ADMIN")
-
 
                         // sve ostalo je javno
                         .anyRequest().permitAll() //ovo ide na kraju

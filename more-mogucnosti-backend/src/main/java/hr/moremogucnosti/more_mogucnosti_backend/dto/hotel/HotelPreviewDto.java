@@ -1,7 +1,7 @@
 package hr.moremogucnosti.more_mogucnosti_backend.dto.hotel;
 
 import hr.moremogucnosti.more_mogucnosti_backend.dto.GradResponseDto;
-import hr.moremogucnosti.more_mogucnosti_backend.dto.SlikaResponseDto;
+import hr.moremogucnosti.more_mogucnosti_backend.dto.Slika.SlikaResponseDto;
 
 public record HotelPreviewDto(
         Long id,
@@ -11,6 +11,7 @@ public record HotelPreviewDto(
         boolean parking,
         boolean wifi,
         boolean bazen,
-        SlikaResponseDto glavnaSlika
+        SlikaResponseDto glavnaSlika,
+        boolean aktivan
 ) {
 }

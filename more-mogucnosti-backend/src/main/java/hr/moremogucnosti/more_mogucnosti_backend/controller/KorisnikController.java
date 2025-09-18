@@ -55,9 +55,9 @@ public class KorisnikController {
         return new ResponseEntity<>("Lozinka uspješno promijenjena!", HttpStatus.OK);
     }
 
-    @DeleteMapping("/adminDelete/{id}")
+    @DeleteMapping("/admin/delete/{id}")
     public ResponseEntity<Void> adminDeleteKorisnik(@PathVariable("id") Long idKorisnik) {
-        korisnikService.adminDeleteKorisnik(idKorisnik);
+        korisnikService.adminSoftDeleteKorisnik(idKorisnik);
         return ResponseEntity.noContent().build();
     }
 }

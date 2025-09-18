@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getHotel } from '../services/HotelService';
 import { getSobeHotela } from '../services/SobaService';
-import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import { getRecenzijeHotela, getInfoRecenzija } from '../services/RecenzijaService';
 import { useAuth } from '../auth/AuthContext';
 import { toast } from 'react-toastify';
@@ -42,50 +41,73 @@ const HotelComponent = () => {
   });
 
   useEffect(() => {
+    let alive = true;
     (async () => {
-      try {
-        const [hotelRes, recenzijeRes, sobeRes, infoRes] = await Promise.all([
-          getHotel(idHotel),
-          getRecenzijeHotela(idHotel),
-          getSobeHotela(idHotel),
-          getInfoRecenzija(idHotel)
-        ]);
+      setUcitavanje(true);
 
-        const glavna = hotelRes.data.glavnaSlika?.putanja
-          ? [{ putanja: hotelRes.data.glavnaSlika.putanja }]
-          : [];
+      const results = await Promise.allSettled([
+        getHotel(idHotel),
+        getRecenzijeHotela(idHotel),
+        getSobeHotela(idHotel),
+        getInfoRecenzija(idHotel),
+      ]);
 
-        const sporedne = Array.isArray(hotelRes.data.sporedneSlike)
-          ? hotelRes.data.sporedneSlike
-          : [];
+      if (!alive) return;
 
+      const [hotelRes, recRes, sobeRes, infoRes] = results;
+
+      // HOTEL
+      if (hotelRes.status === 'fulfilled') {
+        const h = hotelRes.value.data;
+        const glavna = h.glavnaSlika?.putanja ? [{ putanja: h.glavnaSlika.putanja }] : [];
+        const sporedne = Array.isArray(h.sporedneSlike) ? h.sporedneSlike : [];
         setHotel({
-          naziv: hotelRes.data.naziv,
-          grad: hotelRes.data.grad.imeGrad,
-          adresa: hotelRes.data.adresa,
-          parking: hotelRes.data.parking,
-          wifi: hotelRes.data.wifi,
-          bazen: hotelRes.data.bazen,
+          naziv: h.naziv,
+          grad: h.grad?.imeGrad ?? '',
+          adresa: h.adresa ?? '',
+          parking: !!h.parking,
+          wifi: !!h.wifi,
+          bazen: !!h.bazen,
           slike: [...glavna, ...sporedne],
         });
-
-        const recenzije = Array.isArray(recenzijeRes.data) ? [...recenzijeRes.data] : [];
-        recenzije.sort((a, b) => new Date(b.datum) - new Date(a.datum));
-        setRecenzija(recenzije);
-
-        setSobe(sobeRes.data);
-
-        setInfoRec({
-          broj: infoRes.data.brojRecenzija,
-          prosjek: infoRes.data.prosjekRecenzija
-        });
-
-      } catch (error) {
-        console.error('Greška kod dohvaćanja hotela/recenzija:', error);
-      } finally {
-        setUcitavanje(false);
+      } else {
+        console.error('Greška kod hotela:', hotelRes.reason);
       }
+
+      // RECENZIJE
+      if (recRes.status === 'fulfilled') {
+        const arr = Array.isArray(recRes.value.data) ? [...recRes.value.data] : [];
+        arr.sort((a, b) => new Date(b.datum) - new Date(a.datum));
+        setRecenzija(arr);
+      } else {
+        console.warn('Nema recenzija ili greška:', recRes.reason);
+        setRecenzija([]); // fallback
+      }
+
+      // SOBE
+      if (sobeRes.status === 'fulfilled') {
+        setSobe(sobeRes.value.data ?? []);
+      } else {
+        console.error('Greška kod soba:', sobeRes.reason);
+        setSobe([]); // fallback
+      }
+
+      // INFO RECENZIJA (prosjek/broj)
+      if (infoRes.status === 'fulfilled') {
+        const d = infoRes.value.data || {};
+        setInfoRec({
+          broj: d.brojRecenzija ?? 0,
+          prosjek: d.prosjekRecenzija ?? 0,
+        });
+      } else {
+        console.warn('Info recenzija API 500/404 → postavljam 0/0');
+        setInfoRec({ broj: 0, prosjek: 0 }); // fallback
+      }
+
+      setUcitavanje(false);
     })();
+
+    return () => { alive = false; };
   }, [idHotel]);
 
   if (ucitavanje) {
@@ -168,7 +190,7 @@ const HotelComponent = () => {
             </span>
           </div>
         ) : (
-          <span className="text-muted">Još nema recenzija</span>
+          <></>
         )}
       </div>
 
@@ -251,31 +273,38 @@ const HotelComponent = () => {
         <h4 className="fw-bold mb-3 text-center">Recenzije</h4>
 
         {recenzija.length === 0 ? (
-          <div className="text-muted">Još nema recenzija za ovaj hotel.</div>
+          <div className="text-center">
+            <div className="text-muted mb-2">Još nema recenzija za ovaj hotel.</div>
+            {!prikaziFormaRecenzije && (
+              <button
+                className="btn btn-primary"
+                onClick={() => handleRecenzija(idHotel)}
+              >
+                Dodaj recenziju
+              </button>
+            )}
+          </div>
         ) : (
           <>
             {(prikaziSve ? recenzija : recenzija.slice(0, 3)).map((rec) => (
               <div key={rec.id} className="card mb-3 shadow-sm border-0">
-                <div className="card-body">
-                  <div className="d-flex justify-content-between align-items-center">
-                    <div className="fw-semibold">
-                      {rec.korisnik?.ime} {rec.korisnik?.prezime}
-                    </div>
-                    <div aria-label={`Ocjena ${rec.ocjena} od 5`}>
-                      {'★'.repeat(rec.ocjena)}{'☆'.repeat(5 - rec.ocjena)}
-                    </div>
+                <div key={rec.id} className="card mb-3 shadow-sm border-0">
+                  <div className="card-body">
+                    <div className="d-flex justify-content-between align-items-center">
+                      <div className="fw-semibold"> {rec.korisnik?.ime} {rec.korisnik?.prezime}
+                      </div>
+                      <div aria-label={`Ocjena ${rec.ocjena} od 5`}> {'★'.repeat(rec.ocjena)}{'☆'.repeat(5 - rec.ocjena)}
+                      </div>
+                    </div> {rec.tekst && <p className="mb-2 mt-2">{rec.tekst}</p>}
+                    <small className="text-muted"> {new Date(rec.datum).toLocaleDateString('hr-HR')} </small>
                   </div>
-                  {rec.tekst && <p className="mb-2 mt-2">{rec.tekst}</p>}
-                  <small className="text-muted">
-                    {new Date(rec.datum).toLocaleDateString('hr-HR')}
-                  </small>
                 </div>
               </div>
             ))}
 
-            {recenzija.length > 3 && (
-              <div className="text-center mt-3">
-                {!prikaziSve ? (
+            <div className="text-center mt-3">
+              {recenzija.length > 3 && (
+                !prikaziSve ? (
                   <button
                     className="btn btn-outline-primary mx-1"
                     onClick={() => setPrikaziSve(true)}
@@ -289,20 +318,22 @@ const HotelComponent = () => {
                   >
                     Prikaži manje
                   </button>
-                )}
-                {!prikaziFormaRecenzije && (
-                  <button
-                    className='btn btn-primary mx-1'
-                    onClick={() => handleRecenzija(idHotel)}
-                  >
-                    Dodaj recenziju
-                  </button>
-                )}
-              </div>
-            )}
+                )
+              )}
+
+              {!prikaziFormaRecenzije && (
+                <button
+                  className="btn btn-primary mx-1"
+                  onClick={() => handleRecenzija(idHotel)}
+                >
+                  Dodaj recenziju
+                </button>
+              )}
+            </div>
           </>
         )}
       </div>
+
 
       {/* Forma za recenziju – prikazuje se kad korisnik klikne na gumb */}
       {prikaziFormaRecenzije && (

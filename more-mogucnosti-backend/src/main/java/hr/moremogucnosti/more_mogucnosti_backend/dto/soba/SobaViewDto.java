@@ -9,6 +9,7 @@ public record SobaViewDto(
         BigDecimal cijenaNocenja,
         int brojSobe,
         int kapacitet,
-        HotelViewDto hotel
+        HotelViewDto hotel,
+        boolean aktivno
 ) {
 }

@@ -24,7 +24,8 @@ public class RezervacijaController {
     private final RezervacijaService rezervacijaService;
 
     @PostMapping("/create")
-    public ResponseEntity<RezervacijaDetailsDto> createRezervacija(@Valid @RequestBody RezervacijaCreateDto rezervacijaCreateDto, @AuthenticationPrincipal AppUserPrincipal user){ //i Authentication auth
+    public ResponseEntity<RezervacijaDetailsDto> createRezervacija(@Valid @RequestBody RezervacijaCreateDto rezervacijaCreateDto,
+                                                                   @AuthenticationPrincipal AppUserPrincipal user){
         RezervacijaDetailsDto RezervacijaDetailsDto = rezervacijaService.createRezervacija(rezervacijaCreateDto, user);
         return new ResponseEntity<>(RezervacijaDetailsDto, HttpStatus.OK);
     }
@@ -66,5 +67,18 @@ public class RezervacijaController {
                                                                     @RequestBody RezervacijaUpdateDto novaRezervacija) {
         RezervacijaDetailsDto rezervacijaDetailsDto = rezervacijaService.updateRezervacija(user.getId(), idRezervacija, novaRezervacija);
         return new ResponseEntity<>(rezervacijaDetailsDto, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/admin/delete/{id}")
+    public ResponseEntity<Void> adminDeleteRezervacija (@PathVariable("id") Long id) {
+        rezervacijaService.adminDelete(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/admin/update/{id}")
+    public ResponseEntity<RezervacijaDetailsDto> adminUpdateRezervacija (@PathVariable("id") Long idRezervacija,
+                                                                         @RequestBody RezervacijaUpdateDto novaRezervacija) {
+        RezervacijaDetailsDto rezervacija = rezervacijaService.adminUpdate(idRezervacija, novaRezervacija);
+        return new ResponseEntity<>(rezervacija, HttpStatus.OK);
     }
 }
