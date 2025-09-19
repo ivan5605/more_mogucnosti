@@ -2,6 +2,7 @@ package hr.moremogucnosti.more_mogucnosti_backend.service.impl;
 
 import hr.moremogucnosti.more_mogucnosti_backend.dto.Slika.SlikaCreateDto;
 import hr.moremogucnosti.more_mogucnosti_backend.dto.Slika.SlikaHotelResponseDto;
+import hr.moremogucnosti.more_mogucnosti_backend.dto.Slika.SlikaResponseDto;
 import hr.moremogucnosti.more_mogucnosti_backend.entity.Hotel;
 import hr.moremogucnosti.more_mogucnosti_backend.entity.HotelSlika;
 import hr.moremogucnosti.more_mogucnosti_backend.exception.DuplicateException;
@@ -15,6 +16,8 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -51,6 +54,58 @@ public class SlikaHotelServiceImpl implements SlikaHotelService {
         } catch (DataIntegrityViolationException e) {
             throw new DuplicateException("Ovaj hotel već ima glavnu sliku");
         }
+    }
+
+    @Override
+    @Transactional
+    @PreAuthorize("hasRole('ADMIN')")
+    public void deleteSlikaHotel(Long idSlika) {
+        HotelSlika slika = repository.findById(idSlika)
+                .orElseThrow(() -> new ResourceNotFoundException("Slika ne postoji."));
+
+        Hotel hotel = slika.getHotel();
+        Long hotelId = hotel.getId();
+
+        if (slika.isGlavnaSlika()) {
+            Optional<HotelSlika> nova = repository.findFirstByHotelIdAndGlavnaSlikaFalseOrderByIdAsc(slika.getHotel().getId());
+
+            if (nova.isPresent()) {
+                repository.ocistiGlavnu(hotelId);
+                HotelSlika s = nova.get();
+                s.setGlavnaSlika(true);
+                repository.save(s);
+                repository.flush();
+            }
+        }
+
+        repository.delete(slika);
+    }
+
+    @Override
+    @Transactional
+    @PreAuthorize("hasRole('ADMIN')")
+    public SlikaResponseDto setGlavna(Long idSlika) {
+        HotelSlika slika = repository.findById(idSlika)
+                .orElseThrow(() -> new ResourceNotFoundException("Slika ne postoji."));
+
+        Hotel hotel = slika.getHotel();
+        Long hotelId = hotel.getId();
+
+        if (slika.isGlavnaSlika()) {
+            return mapper.toResponseDto(slika);
+        }
+
+        repository.ocistiGlavnu(hotelId);
+
+        try {
+            slika.setGlavnaSlika(true);
+            repository.save(slika);
+            repository.flush();
+        } catch (DataIntegrityViolationException ex) {
+            throw new DuplicateException("Ovaj hotel već ima glavnu sliku");
+        }
+
+        return mapper.toResponseDto(slika);
     }
 }
 

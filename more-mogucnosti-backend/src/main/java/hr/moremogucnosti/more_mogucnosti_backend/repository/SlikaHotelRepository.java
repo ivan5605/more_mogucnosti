@@ -13,10 +13,14 @@ public interface SlikaHotelRepository extends JpaRepository<HotelSlika, Long> {
     Optional<HotelSlika> findByHotelIdAndGlavnaSlikaTrue(Long hotelId);
 
     //oznacava da je update/delete/insert a ne select
-    @Modifying
+    @Modifying(clearAutomatically = true) //da ne ostane s "ustajalim" entitetima u memotiji, garantira da iduci find ucita svjeze iz DBa
     @Query("""
             update HotelSlika s
             set s.glavnaSlika = false
             where s.hotel.id = :hotelId and s.glavnaSlika = true""")
     int ocistiGlavnu(@Param("hotelId") Long hotelId); //broj pogodjenih redaka
+
+    Optional<HotelSlika> findFirstByHotelIdAndGlavnaSlikaFalseOrderByIdAsc(Long hotelId);
+
+    Optional<HotelSlika> findByIdAndHotelId(Long id, Long hotelId);
 }

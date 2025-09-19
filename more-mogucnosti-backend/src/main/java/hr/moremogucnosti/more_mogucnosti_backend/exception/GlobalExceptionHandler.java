@@ -5,6 +5,7 @@ import hr.moremogucnosti.more_mogucnosti_backend.api.ValidationErrorResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -16,17 +17,17 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> handleGenericException(Exception ex, HttpServletRequest req){
-        var status = HttpStatus.INTERNAL_SERVER_ERROR;
-        return new ResponseEntity<>(
-                ErrorResponse.of(
-                        status,
-                        "Dogodila se neočekivana greška.",
-                        req.getRequestURI()),
-                status
-        );
-    }
+//    @ExceptionHandler(Exception.class)
+//    public ResponseEntity<ErrorResponse> handleGenericException(Exception ex, HttpServletRequest req){
+//        var status = HttpStatus.INTERNAL_SERVER_ERROR;
+//        return new ResponseEntity<>(
+//                ErrorResponse.of(
+//                        status,
+//                        "Dogodila se neočekivana greška.",
+//                        req.getRequestURI()),
+//                status
+//        );
+//    }
 
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleResourceNotFound(ResourceNotFoundException ex, HttpServletRequest req){
@@ -117,6 +118,18 @@ public class GlobalExceptionHandler {
                 ErrorResponse.of(
                         status,
                         ex.getMessage(),
+                        req.getRequestURI()),
+                status
+        );
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ErrorResponse> handleEmptyBodyException(HttpMessageNotReadableException ex, HttpServletRequest req) {
+        var status = HttpStatus.BAD_REQUEST;
+        return new ResponseEntity<>(
+                ErrorResponse.of(
+                        status,
+                        "Request body je obavezan!",
                         req.getRequestURI()),
                 status
         );

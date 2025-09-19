@@ -29,4 +29,4 @@ export const updateKorisnik = (azuriraniKor) => api.put(REST_API_BASE_URL + "/up
 
 export const updateLozinka = (promjenaLozinkaDto) => api.put(REST_API_BASE_URL + "/updateLozinka", promjenaLozinkaDto);
 
-export const adminDeleteKorisnik = (idKorisnik) => api.delete(REST_API_BASE_URL + `/adminDelete/${idKorisnik}`)
+export const adminDeleteKorisnik = (idKorisnik) => api.delete(REST_API_BASE_URL + `/admin/delete/${idKorisnik}`)
