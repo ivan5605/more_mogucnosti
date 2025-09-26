@@ -615,7 +615,7 @@ const ProfilComponent = () => {
   }
 
   return (
-    <div className="container py-5 mt-5">
+    <div className="container py-5 ">
       {/* Korisnički podaci */}
       <div className="d-flex justify-content-between align-items-start mb-4">
         <div className='d-flex align-items-center'>

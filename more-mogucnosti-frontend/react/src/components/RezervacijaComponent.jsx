@@ -211,7 +211,7 @@ const RezervacijaComponent = () => {
   ];
 
   return (
-    <div className="container py-5 mt-5">
+    <div className="container py-4">
       <h2 className="text-center mb-4 fw-bold display-5">
         Rezervacija - {soba.hotel.naziv}
       </h2>

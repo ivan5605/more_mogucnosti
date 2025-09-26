@@ -44,7 +44,7 @@ public class Soba {
     private boolean petFriendly = true;
 
     @Column(name = "aktivno")
-    private boolean aktivno = true;
+    private boolean aktivno = false;
 
     @OneToMany(mappedBy = "soba", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<SobaSlika> slike;

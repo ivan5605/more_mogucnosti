@@ -1,9 +1,6 @@
 package hr.moremogucnosti.more_mogucnosti_backend.controller;
 
-import hr.moremogucnosti.more_mogucnosti_backend.dto.soba.SobaCreateDto;
-import hr.moremogucnosti.more_mogucnosti_backend.dto.soba.SobaResponseDto;
-import hr.moremogucnosti.more_mogucnosti_backend.dto.soba.SobaDetailsDto;
-import hr.moremogucnosti.more_mogucnosti_backend.dto.soba.SobaUpdateDto;
+import hr.moremogucnosti.more_mogucnosti_backend.dto.soba.*;
 import hr.moremogucnosti.more_mogucnosti_backend.service.SobaService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -41,9 +38,9 @@ public class SobaController {
     }
 
     @PostMapping("/admin/create/{id}")
-    public ResponseEntity<SobaResponseDto> createSoba(@PathVariable("id") Long hotelId ,@RequestBody @Valid SobaCreateDto sobaDto) {
-        SobaResponseDto sobaResponseDto = sobaService.createSoba(hotelId, sobaDto);
-        return new ResponseEntity<>(sobaResponseDto, HttpStatus.OK);
+    public ResponseEntity<SobaViewDto> createSoba(@PathVariable("id") Long hotelId , @RequestBody @Valid SobaCreateDto sobaDto) {
+        SobaViewDto sobaViewDto = sobaService.createSoba(hotelId, sobaDto);
+        return new ResponseEntity<>(sobaViewDto, HttpStatus.OK);
     }
 
     @PutMapping("/admin/softDelete/{id}")
@@ -56,5 +53,11 @@ public class SobaController {
     public ResponseEntity<SobaResponseDto> updateSoba(@PathVariable("id") Long idSoba, @Valid @RequestBody SobaUpdateDto sobaDto) {
         SobaResponseDto soba = sobaService.updateSoba(idSoba, sobaDto);
         return new ResponseEntity<>(soba, HttpStatus.OK);
+    }
+
+    @PutMapping("/admin/aktiviraj/{id}")
+    public ResponseEntity<Void> aktivirajSoba(@PathVariable("id") Long id) {
+        sobaService.aktivirajSoba(id);
+        return ResponseEntity.noContent().build();
     }
 }

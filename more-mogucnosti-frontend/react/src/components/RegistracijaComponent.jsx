@@ -24,6 +24,8 @@ const RegistracijaComponent = () => {
     lozinkaPotvrda: ''
   })
 
+  const [error, setError] = useState(null);
+
   function provjeriIme(ime) {
     if (!ime.trim()) {
       return "Unesite ime!";
@@ -119,10 +121,12 @@ const RegistracijaComponent = () => {
 
           if (status === 409) {
             //409 - Conflict - vec postoji email adresa
-            setErrors(prev => ({ ...prev, email: poruka }))
+            setError(poruka)
           } else {
             console.error("Greška kod registracije!", poruka);
           }
+        } else {
+          setError("Greška na serveru. Molimo pokušajte ponovno kasnije.");
         }
 
       })
@@ -217,6 +221,7 @@ const RegistracijaComponent = () => {
                           {errors.lozinkaPotvrda && <div className='invalid-feedback'>{errors.lozinkaPotvrda}</div>}
                         </div>
                       </div>
+                      {error && <div className='alert alert-danger'>{error}</div>}
 
                       <div className='form-check d-flex justify-content-center mb-5'>
                         <input type="checkbox" className='form-check-input me-2' value={""} id='check' />
@@ -224,6 +229,7 @@ const RegistracijaComponent = () => {
                           Pristajem na sve <a href="#">Terms of service</a>
                         </label>
                       </div>
+
 
                       <div className='d-flex justify-content-center mx-4 mb-3 mb-lg-4'>
                         <button type='button' className='btn btn-primary btn-lg' onClick={(dogadaj) => registrajKorisnik(dogadaj)}>Registracija</button>

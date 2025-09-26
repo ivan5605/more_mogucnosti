@@ -52,7 +52,7 @@ public class AuthServiceImpl implements AuthService {
         String email = request.email().trim().toLowerCase();
 
         if (korisnikRepository.existsByEmail(email)){
-            throw new DuplicateException("Ova email adresa već je zauzeta!");
+            throw new DuplicateException("Ova email adresa već se koristi!");
         } else if (!request.lozinka().equals(request.lozinkaPotvrda())) {
            throw new BadRequestException("Lozinke se ne podudaraju!");
         }

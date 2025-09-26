@@ -68,7 +68,7 @@ const HotelComponent = () => {
           parking: !!h.parking,
           wifi: !!h.wifi,
           bazen: !!h.bazen,
-          slike: [...glavna, ...sporedne],
+          slike: [...glavna, ...sporedne]
         });
       } else {
         console.error('Greška kod hotela:', hotelRes.reason);
@@ -174,7 +174,7 @@ const HotelComponent = () => {
   };
 
   return (
-    <div className='container py-5 mt-5'>
+    <div className='container py-4'>
       <h2 className='text-center mb-2 fw-bold display-4' style={{ fontFamily: 'Segoe UI, sans-serif' }}>
         {hotel.naziv}
       </h2>

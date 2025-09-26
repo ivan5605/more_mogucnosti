@@ -13,6 +13,8 @@ public interface RezervacijaRepository extends JpaRepository<Rezervacija, Long> 
 
     List<Rezervacija> findAllBySobaId(Long sobaId);
 
+    List<Rezervacija> findAllBySoba_Hotel_Id(Long hotelId);
+
     @Query("""
         select count(r) > 0
         from Rezervacija r

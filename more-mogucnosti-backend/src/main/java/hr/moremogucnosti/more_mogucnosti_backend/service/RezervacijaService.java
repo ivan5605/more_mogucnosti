@@ -23,4 +23,6 @@ public interface RezervacijaService {
     void adminDelete(Long idRezervacija);
 
     RezervacijaDetailsDto adminUpdate(Long idRezervacija, RezervacijaUpdateDto novaRezervacija);
+
+    List<RezervacijaDetailsDto> findAllByHotelId(Long idHotel);
 }

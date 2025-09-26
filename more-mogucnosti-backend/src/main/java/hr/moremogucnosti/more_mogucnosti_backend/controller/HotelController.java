@@ -55,4 +55,10 @@ public class HotelController {
         HotelResponseDto hotel = hotelService.updateHotel(id, hotelDto);
         return new ResponseEntity<>(hotel, HttpStatus.OK);
     }
+
+    @PutMapping("/admin/aktiviraj/{id}")
+    public ResponseEntity<Void> aktivirajHotel(@PathVariable("id") Long id) {
+        hotelService.aktivirajHotel(id);
+        return ResponseEntity.noContent().build();
+    }
 }

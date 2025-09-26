@@ -19,4 +19,6 @@ public interface HotelService {
     void softDeleteHotel(Long idHotel);
 
     HotelResponseDto updateHotel(Long idHotel, HotelUpdateDto hotelDto);
+
+    void aktivirajHotel(Long idHotel);
 }

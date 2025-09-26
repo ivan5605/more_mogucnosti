@@ -72,6 +72,11 @@ public class SecurityConfig { //mozak Spring Security-a
                                 "/api/slikaSoba/admin/**")
                         .hasRole("ADMIN")
 
+                        .requestMatchers(
+                                "/api/recenzija/moja/hotel/**",
+                                "/api/recenzija/delete/**"
+                        ).hasRole("USER")
+
                         // sve ostalo je javno
                         .anyRequest().permitAll() //ovo ide na kraju
                 )

@@ -14,6 +14,7 @@ import hr.moremogucnosti.more_mogucnosti_backend.service.HotelService;
 import hr.moremogucnosti.more_mogucnosti_backend.service.KorisnikService;
 import hr.moremogucnosti.more_mogucnosti_backend.service.RecenzijaService;
 import lombok.AllArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -52,6 +53,7 @@ public class RecenzijaServiceImpl implements RecenzijaService {
 
     @Override
     @Transactional
+    @PreAuthorize("hasRole('USER')")
     public RecenzijaDetailsDto editOrCreateRecenzija(Long userId, Long idHotel, RecenzijaCreateDto recenzijaCreateDto) {
         Korisnik korisnik = korisnikService.loadEntity(userId);
         Hotel hotel = hotelService.loadEntity(idHotel);
@@ -99,6 +101,7 @@ public class RecenzijaServiceImpl implements RecenzijaService {
 
     @Override
     @Transactional
+    @PreAuthorize("hasRole('USER')")
     public void deleteById(Long idRecenzija, Long userId) {
         int izbrisano = repository.deleteByIdAndKorisnik_Id(idRecenzija, userId);
         if (izbrisano == 0){

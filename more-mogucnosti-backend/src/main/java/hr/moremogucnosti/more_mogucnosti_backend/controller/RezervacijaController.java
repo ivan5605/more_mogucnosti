@@ -81,4 +81,10 @@ public class RezervacijaController {
         RezervacijaDetailsDto rezervacija = rezervacijaService.adminUpdate(idRezervacija, novaRezervacija);
         return new ResponseEntity<>(rezervacija, HttpStatus.OK);
     }
+
+    @GetMapping("/admin/hotel/{hotelId}")
+    public ResponseEntity<List<RezervacijaDetailsDto>> getAllRezervacijeHotela (@PathVariable("hotelId") Long hotelId) {
+        List<RezervacijaDetailsDto> rezervacije = rezervacijaService.findAllByHotelId(hotelId);
+        return new ResponseEntity<>(rezervacije, HttpStatus.OK);
+    }
 }

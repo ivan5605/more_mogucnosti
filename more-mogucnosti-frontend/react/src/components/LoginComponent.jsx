@@ -82,6 +82,8 @@ const LoginComponent = () => {
           } else {
             console.error("Greška kod prijave!", poruka);
           }
+        } else {
+          setErrors(prev => ({ ...prev, podaci: "Greška na serveru. Molimo pokušajte ponovno kasnije." }))
         }
 
       })
@@ -92,7 +94,7 @@ const LoginComponent = () => {
   }
 
   return (
-    <section className='py-5 mt-5 h-100' style={{ backgroundColor: '#eee' }}>
+    <section className='h-100' style={{ backgroundColor: '#eee' }}>
       <div className='container h-100 mb-5'>
         <div className='row d-flex justify-content-center align-items-center h-100'>
           <div className='col-lg-12 col-xl-11'>

@@ -26,7 +26,7 @@ const AdminComponent = () => {
     `${(ime[0] || '').toUpperCase()}${(prezime[0] || '').toUpperCase()}`;
 
   return (
-    <div className="container py-5 mt-5">
+    <div className="container py-5">
       <div className="card shadow-sm border-0">
         <div className="card-body">
           <h5 className="fw-bold mb-3">Korisnički podaci</h5>

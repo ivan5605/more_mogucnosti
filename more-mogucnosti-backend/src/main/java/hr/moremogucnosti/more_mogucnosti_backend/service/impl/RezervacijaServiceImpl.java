@@ -153,4 +153,14 @@ public class RezervacijaServiceImpl implements RezervacijaService {
 
         return rezervacijaMapper.toDetailsDto(spremljena);
     }
+
+    @Override
+    @PreAuthorize("hasRole('ADMIN')")
+    public List<RezervacijaDetailsDto> findAllByHotelId(Long idHotel) {
+        List<RezervacijaDetailsDto> rezervacije = rezervacijaRepository.findAllBySoba_Hotel_Id(idHotel)
+                .stream()
+                .map(rezervacijaMapper::toDetailsDto)
+                .toList();
+        return rezervacije;
+    }
 }

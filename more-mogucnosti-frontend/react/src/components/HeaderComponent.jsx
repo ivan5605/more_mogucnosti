@@ -24,7 +24,7 @@ const HeaderComponent = () => {
 
   return (
     <div className="container-fluid">
-      <header className="position-fixed top-0 start-0 w-100 bg-white border-bottom z-3">
+      <header className="sticky-top top-0 start-0 w-100 bg-white border-bottom z-3">
         <div className='d-flex align-items-center py-3 px-3 position-relative'>
 
           <div className="d-flex align-items-center">

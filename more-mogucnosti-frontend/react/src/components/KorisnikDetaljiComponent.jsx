@@ -287,7 +287,7 @@ const KorisnikDetaljiComponent = () => {
   };
 
   return (
-    <div className="container py-5 mt-5">
+    <div className="container py-5">
       <div className="d-flex justify-content-between align-items-center mb-4">
         <div className="d-flex align-items-center">
           <div

@@ -7,6 +7,15 @@ import { useNavigate } from 'react-router-dom';
 const PocetnaComponent = () => {
   const navigate = useNavigate();
 
+  const DEFAULT_SLIKA = 'https://res.cloudinary.com/dcolr4yi2/image/upload/v1758037557/0ae34d64f5299aa8dd6d77e28a51680d_oeyree.png';
+
+  const getHotelSlika = (h) => h?.glavnaSlika?.putanja || DEFAULT_SLIKA;
+
+  const onSlikaErr = (e) => {
+    e.currentTarget.onerror = null;
+    e.currentTarget.src = DEFAULT_SLIKA;
+  }
+
   function detaljiHotel(idHotel) {
     navigate(`/hotel/${idHotel}`);
   }
@@ -100,7 +109,8 @@ const PocetnaComponent = () => {
                 <div className="card h-100 border-0 shadow-sm">
                   <div className="ratio ratio-16x9">
                     <img
-                      src={hotel.glavnaSlika?.putanja}
+                      src={getHotelSlika(hotel)}
+                      onError={onSlikaErr}
                       alt="Slika hotela"
                       className="w-100 h-100"
                       style={{ objectFit: 'cover', borderTopLeftRadius: '0.5rem', borderTopRightRadius: '0.5rem' }}

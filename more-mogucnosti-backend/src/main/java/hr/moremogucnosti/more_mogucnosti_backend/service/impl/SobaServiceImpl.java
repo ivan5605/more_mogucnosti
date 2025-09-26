@@ -1,9 +1,6 @@
 package hr.moremogucnosti.more_mogucnosti_backend.service.impl;
 
-import hr.moremogucnosti.more_mogucnosti_backend.dto.soba.SobaCreateDto;
-import hr.moremogucnosti.more_mogucnosti_backend.dto.soba.SobaDetailsDto;
-import hr.moremogucnosti.more_mogucnosti_backend.dto.soba.SobaResponseDto;
-import hr.moremogucnosti.more_mogucnosti_backend.dto.soba.SobaUpdateDto;
+import hr.moremogucnosti.more_mogucnosti_backend.dto.soba.*;
 import hr.moremogucnosti.more_mogucnosti_backend.entity.Hotel;
 import hr.moremogucnosti.more_mogucnosti_backend.entity.Soba;
 import hr.moremogucnosti.more_mogucnosti_backend.exception.DuplicateException;
@@ -69,7 +66,7 @@ public class SobaServiceImpl implements SobaService {
     @Override
     @Transactional
     @PreAuthorize("hasRole('ADMIN')")
-    public SobaResponseDto createSoba(Long idHotel, SobaCreateDto sobaDto) {
+    public SobaViewDto createSoba(Long idHotel, SobaCreateDto sobaDto) {
         Hotel hotel = hotelRepository.findById(idHotel)
                 .orElseThrow(() -> new ResourceNotFoundException("Hotel ne postoji."));
 
@@ -87,7 +84,9 @@ public class SobaServiceImpl implements SobaService {
         soba.setPetFriendly(sobaDto.petFriendly());
         soba.setKapacitet(sobaDto.kapacitet());
 
-        return sobaMapper.toResponseDto(soba);
+        Soba saved = sobaRepository.save(soba);
+
+        return sobaMapper.toViewDto(saved);
     }
 
     @Override
@@ -120,5 +119,16 @@ public class SobaServiceImpl implements SobaService {
         Soba saved = sobaRepository.save(soba);
 
         return sobaMapper.toResponseDto(saved);
+    }
+
+    @Override
+    @Transactional
+    @PreAuthorize("hasRole('ADMIN')")
+    public void aktivirajSoba(Long idSoba) {
+        Soba soba = sobaRepository.findById(idSoba)
+                .orElseThrow(() -> new ResourceNotFoundException("Soba ne postoji."));
+
+        soba.setAktivno(true);
+        sobaRepository.save(soba);
     }
 }

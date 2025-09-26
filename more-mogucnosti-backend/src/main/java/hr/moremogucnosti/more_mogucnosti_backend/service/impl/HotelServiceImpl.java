@@ -122,4 +122,15 @@ public class HotelServiceImpl implements HotelService {
         Hotel savedHotel = hotelRepository.save(hotel);
         return hotelMapper.toResponseDto(savedHotel);
     }
+
+    @Override
+    @Transactional
+    @PreAuthorize("hasRole('ADMIN')")
+    public void aktivirajHotel(Long idHotel) {
+        Hotel hotel = hotelRepository.findById(idHotel)
+                .orElseThrow(() -> new ResourceNotFoundException("Hotel ne postoji."));
+
+        hotel.setAktivno(true);
+        hotelRepository.save(hotel);
+    }
 }

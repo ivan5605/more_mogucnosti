@@ -45,7 +45,7 @@ public class Hotel {
     private List<HotelSlika> slike;
 
     @Column(name = "aktivno")
-    private boolean aktivno;
+    private boolean aktivno = false;
 
     //lista Soba???
 

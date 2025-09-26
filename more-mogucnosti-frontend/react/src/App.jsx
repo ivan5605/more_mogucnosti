@@ -19,6 +19,8 @@ import KorisnikDetaljiComponent from './components/KorisnikDetaljiComponent';
 import { AuthProvider } from './auth/AuthContext';
 import RecenzijaComponent from './components/RecenzijaComponent';
 import AdminComponent from './components/AdminComponent';
+import UrediHotel from './components/UrediHotel';
+import UrediSoba from './components/UrediSoba';
 
 
 function App() {
@@ -60,6 +62,9 @@ function App() {
 
               {/* http://localhost:3000/korisnik/detalji/idKorisnik */}
               <Route path='/korisnik/detalji/:idKorisnik' element={<KorisnikDetaljiComponent />}></Route>
+
+              {/* http://localhost:3000/admin/urediHotel/idHotel */}
+              <Route path='/admin/urediHotel/:idHotel' element={<UrediHotel />}></Route>
             </Routes>
           </main>
           <FooterComponent />

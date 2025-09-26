@@ -31,3 +31,5 @@ export const deleteRezervacija = (idRezervacija) => api.delete(REST_API_BASE_URL
 export const adminDeleteRezervacija = (idRezervacija) => api.delete(REST_API_BASE_URL + `/admin/delete/${idRezervacija}`);
 
 export const adminUpdateRezervacija = (idRezervacija, rezervacijaDto) => api.put(REST_API_BASE_URL + `/admin/update/${idRezervacija}`, rezervacijaDto);
+
+export const getRezervacijaHotela = (idHotel) => api.get(REST_API_BASE_URL + `/admin/hotel/${idHotel}`);
