@@ -8,6 +8,11 @@ import hr.moremogucnosti.more_mogucnosti_backend.dto.korisnik.KorisnikViewDto;
 import hr.moremogucnosti.more_mogucnosti_backend.security.AppUserPrincipal;
 import hr.moremogucnosti.more_mogucnosti_backend.security.JwtService;
 import hr.moremogucnosti.more_mogucnosti_backend.service.AuthService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -18,13 +23,20 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/api/v1/auth")
 @AllArgsConstructor
+
+@Tag(name = "Authentication")
 public class AuthController {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
     private final AuthService authService;
 
+    @Operation(summary = "Kreiraj korisnika", description = "Vraća novog korisnik")
+    @ApiResponses({
+            @ApiResponse(responseCode = "201", description = "Created"),
+            @ApiResponse(responseCode = "400", description = "Validacija nesupješna")
+    })
     @PostMapping("/register")
     public ResponseEntity<?> registracija(@RequestBody @Valid AuthRegistracijaRequest registracijaZahtjev) {
         return ResponseEntity.ok(authService.registracija(registracijaZahtjev));
@@ -35,12 +47,14 @@ public class AuthController {
         return ResponseEntity.ok(authService.prijava(loginZahtjev));
     }
 
+    @SecurityRequirement(name = "bearerAuth")
     @GetMapping("/me")
     public ResponseEntity<KorisnikViewDto> me(@AuthenticationPrincipal AppUserPrincipal user){ //uzmi trenutno autentificiranog korisnika iz SecurityContext i injektaj ga u ovu metodu kao argument
         KorisnikViewDto viewDto = authService.getUserInfo(user);
         return new ResponseEntity<>(viewDto, HttpStatus.OK);
     }
 
+    @SecurityRequirement(name = "bearerAuth")
     @GetMapping("/expAt")
     public ResponseEntity<AuthExpResponse> getExpAt(HttpServletRequest request){
         AuthExpResponse response = authService.getExp(request);

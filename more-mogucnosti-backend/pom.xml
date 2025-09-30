@@ -6,26 +6,14 @@
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>3.5.4</version>
-		<relativePath/> <!-- lookup parent from repository -->
+		<relativePath/>
 	</parent>
 	<groupId>hr.moremogucnosti</groupId>
 	<artifactId>more-mogucnosti-backend</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>more-mogucnosti-backend</name>
 	<description>Rezervacija hotela na Jadranu</description>
-	<url/>
-	<licenses>
-		<license/>
-	</licenses>
-	<developers>
-		<developer/>
-	</developers>
-	<scm>
-		<connection/>
-		<developerConnection/>
-		<tag/>
-		<url/>
-	</scm>
+
 	<properties>
 		<java.version>17</java.version>
 	</properties>
@@ -66,6 +54,12 @@
 <!--			<scope>runtime</scope>-->
 <!--			<optional>true</optional>-->
 <!--		</dependency>-->
+
+		<dependency>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+			<version>2.8.13</version>
+		</dependency>
 
 		<dependency>
 			<groupId>com.mysql</groupId>

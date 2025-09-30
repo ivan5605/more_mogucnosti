@@ -8,7 +8,8 @@ import org.springframework.stereotype.Component;
 
 @Component
 @AllArgsConstructor
-public class UniqueEmailValidator implements ConstraintValidator<UniqueEmail, String>
+
+public class UniqueEmailValidator implements ConstraintValidator<UniqueEmail, String> //validira String polja označena sa UniqueEmail
 {
 
     private final KorisnikRepository korisnikRepository;
@@ -18,6 +19,6 @@ public class UniqueEmailValidator implements ConstraintValidator<UniqueEmail, St
         if (email == null || email.isEmpty()){
             return true;
         }
-        return !korisnikRepository.existsByEmail(email);
+        return !korisnikRepository.existsByEmail(email); //provjera jel u bazi ima vec taj email
     }
 }

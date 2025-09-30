@@ -65,7 +65,9 @@ const HeaderComponent = () => {
                     <i className="bi bi-list"></i>
                   </button>
                   <ul className='dropdown-menu' aria-labelledby='dropdownBtn'>
-                    <li><a className='dropdown-item' href="/admin">Panel</a></li>
+                    <li><a className='dropdown-item' href="/admin">Korisnici</a></li>
+                    <li><a href="/adminHoteli" className='dropdown-item'>Hoteli</a></li>
+                    <li><a href="/profil" className='dropdown-item'>Profil</a></li>
                     <li><button className='dropdown-item' onClick={handleLogout}>Odjava</button></li>
                   </ul>
                 </div>

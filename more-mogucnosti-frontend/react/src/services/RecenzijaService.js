@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const REST_API_BASE_URL = "http://localhost:8080/api/recenzija"
+const REST_API_BASE_URL = "http://localhost:8080/api/v1/recenzija"
 
 const api = axios.create({
   baseURL: REST_API_BASE_URL

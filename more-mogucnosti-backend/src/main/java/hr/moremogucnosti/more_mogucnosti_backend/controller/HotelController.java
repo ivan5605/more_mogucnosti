@@ -2,6 +2,8 @@ package hr.moremogucnosti.more_mogucnosti_backend.controller;
 
 import hr.moremogucnosti.more_mogucnosti_backend.dto.hotel.*;
 import hr.moremogucnosti.more_mogucnosti_backend.service.HotelService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -11,11 +13,12 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/hotel")
+@RequestMapping("/api/v1/hotel")
 @CrossOrigin("http://localhost:3000")
 
 @AllArgsConstructor
 
+@Tag(name = "Hoteli")
 public class HotelController {
 
     private final HotelService hotelService;
@@ -38,24 +41,28 @@ public class HotelController {
         return hotelService.findRandom();
     }
 
+    @SecurityRequirement(name = "bearerAuth")
     @PostMapping("/admin/create")
     public ResponseEntity<HotelResponseDto> createHotel(@RequestBody @Valid HotelCreateDto hotelDto) {
         HotelResponseDto hotel = hotelService.createHotel(hotelDto);
         return new ResponseEntity<>(hotel, HttpStatus.CREATED);
     }
 
+    @SecurityRequirement(name = "bearerAuth")
     @PutMapping("/admin/softDelete/{id}")
     public ResponseEntity<Void> deleteHotel(@PathVariable("id") Long id){
         hotelService.softDeleteHotel(id);
         return ResponseEntity.noContent().build();
     }
 
+    @SecurityRequirement(name = "bearerAuth")
     @PutMapping("/admin/update/{id}")
     public ResponseEntity<HotelResponseDto> updateHotel(@PathVariable("id") Long id, @RequestBody @Valid HotelUpdateDto hotelDto) {
         HotelResponseDto hotel = hotelService.updateHotel(id, hotelDto);
         return new ResponseEntity<>(hotel, HttpStatus.OK);
     }
 
+    @SecurityRequirement(name = "bearerAuth")
     @PutMapping("/admin/aktiviraj/{id}")
     public ResponseEntity<Void> aktivirajHotel(@PathVariable("id") Long id) {
         hotelService.aktivirajHotel(id);
