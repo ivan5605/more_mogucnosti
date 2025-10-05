@@ -38,7 +38,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
         try {
             String subject = jwtService.validateAndGetSubject(token);
-            UserDetails userDetails;
+            UserDetails userDetails; //spring security interface koji opisuje priajvljenog korisnika (principal)
 
             Long userId = Long.valueOf(subject);
             userDetails = userDetailsService.loadUserById(userId);

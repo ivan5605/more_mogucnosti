@@ -38,12 +38,12 @@ public class SlikaSobaServiceImpl implements SlikaSobaService {
     @Transactional
     @PreAuthorize("hasRole('ADMIN')")
     public SlikaSobaResponseDto addSlikaSoba(Long sobaId, SlikaCreateDto createDto) {
+        Soba soba = sobaRepository.findById(sobaId)
+                .orElseThrow(() -> new ResourceNotFoundException("Soba ne postoji."));
+
         if (createDto.glavna()){
             repository.ocistiGlavnu(sobaId);
         }
-
-        Soba soba = sobaRepository.findById(sobaId)
-                .orElseThrow(() -> new ResourceNotFoundException("Soba ne postoji."));
 
         SobaSlika slika = new SobaSlika();
 

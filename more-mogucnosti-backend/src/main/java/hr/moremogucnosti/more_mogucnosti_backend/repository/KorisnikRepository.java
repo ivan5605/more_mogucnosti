@@ -36,7 +36,7 @@ public interface KorisnikRepository extends JpaRepository<Korisnik, Long> {
                 (select count (rc) from Recenzija rc where rc.korisnik = k),
                 k.aktivan
             )
-            from Korisnik k where uloga.idUloga = 2
+            from Korisnik k where uloga.nazivUloga = "USER"
             """)
     List<KorisnikAdminDto> findKorisnikWithCount();
 }

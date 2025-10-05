@@ -23,10 +23,4 @@ INSERT INTO recenzija (korisnik_id, hotel_id, ocjena, tekst, datum) VALUES
 (6, 1, 5, 'Sve je bilo odlično.', '2024-01-12'),
 (6, 2, 4, 'Dobar hotel s bazenom.', '2024-02-19'),
 (6, 4, 5, 'Ponovno bih došao!', '2024-04-18'),
-(6, 5, 4, 'Smještaj na super lokaciji.', '2024-05-11'),
-
-(7, 1, 4, 'Ugodan boravak.', '2024-02-14'),
-(7, 3, 5, 'Sobe prostrane i čiste.', '2024-03-22'),
-
-(8, 2, 3, 'Očekivao sam više.', '2024-01-28'),
-(8, 5, 5, 'Izvrsno iskustvo!', '2024-04-09');
+(6, 5, 4, 'Smještaj na super lokaciji.', '2024-05-11');

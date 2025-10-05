@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 @Configuration
-@EnableWebSecurity //ja želim kontrolirati pravila ne koristi default
+@EnableWebSecurity //spring security, moja konfiguracija
 @AllArgsConstructor
 @EnableMethodSecurity //za @PreAuthorize, ADMIN ili USER
 public class SecurityConfig { //mozak Spring Security-a
@@ -29,59 +29,56 @@ public class SecurityConfig { //mozak Spring Security-a
     private final JwtFilter jwtFilter;
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{ //primjeni se na svaki http zahtjev
         http
-                .csrf(csrf -> csrf.disable()) //gasim jer radim stateless REST API koji koristi Bearer token u headeru (ne cookie sesije)
+                .csrf(csrf -> csrf.disable()) //gasim jer radim stateless REST API koji koristi Bearer token u headeru (ne server-side sesije)
                 //browse nemre sam od sebe dodati header Authorization, taj header more postaviti sam moj JavaScript na mojoj domeni
 
-                //problem je samo XSS (cross-site scripting) - ako neko uspe ubrizgati JS u moj frontend
+                //problem je samo XSS (cros2s-site scripting) - ako neko uspe ubrizgati JS u moj frontend
 
-                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                .cors(cors -> cors.configurationSource(corsConfiguration()))
 
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                //spring ne kreira HTTP sesije i ništa ne sprema na server-side
-                //svaki request se autentificira samostalno preko JWT-a
+                //security ne kreira http sesije, jwt svaki zahtjev
 
                 .authorizeHttpRequests(auth -> auth
                         // auth/ je javno (login, register, refresh...)
-                        .requestMatchers("/api/auth/register",
-                                "/api/auth/login")
+                        .requestMatchers("/api/v1/auth/register",
+                                "/api/v1/auth/login")
                         .permitAll()
 
                         // autentikacija obavezna:
-                        .requestMatchers("/api/rezervacija/create",
-                                "/api/korisnik/delete",
-                                "/api/korisnik/update",
-                                "/api/korisnik/updateLozinka",
-                                "/api/rezervacija/korisnik",
-                                "/api/rezervacija/update/**",
-                                "/api/rezervacija/delete/**",
-                                "/api/auth/me",
-                                "/api/recenzija/moja/hotel/**",
-                                "/api/recenzija/korisnik",
-                                "/api/recenzija/delete/**")
+                        .requestMatchers("/api/v1/rezervacija/create",
+                                "/api/v1/korisnik/delete",
+                                "/api/v1/korisnik/update",
+                                "/api/v1/korisnik/updateLozinka",
+                                "/api/v1/rezervacija/korisnik",
+                                "/api/v1/rezervacija/update/**",
+                                "/api/v1/rezervacija/delete/**",
+                                "/api/v1/auth/me",
+                                "/api/v1/recenzija/korisnik")
                         .authenticated()
 
                         .requestMatchers(
-                                "/api/rezervacija/admin/**",
-                                "/api/korisnik/admin/**",
-                                "/api/recenzija/admin/**",
-                                "/api/hotel/admin/**",
-                                "/api/soba/admin/**",
-                                "/api/slikaHotel/admin/**",
-                                "/api/slikaSoba/admin/**")
+                                "/api/v1/rezervacija/admin/**",
+                                "/api/v1/korisnik/admin/**",
+                                "/api/v1/recenzija/admin/**",
+                                "/api/v1/hotel/admin/**",
+                                "/api/v1/soba/admin/**",
+                                "/api/v1/slikaHotel/admin/**",
+                                "/api/v1/slikaSoba/admin/**")
                         .hasRole("ADMIN")
 
                         .requestMatchers(
-                                "/api/recenzija/moja/hotel/**",
-                                "/api/recenzija/delete/**"
+                                "/api/v1/recenzija/moja/hotel/**",
+                                "/api/v1/recenzija/delete/**"
                         ).hasRole("USER")
 
                         // sve ostalo je javno
                         .anyRequest().permitAll() //ovo ide na kraju
                 )
-                .exceptionHandling(e -> e
-                        .authenticationEntryPoint((req, res, ex) -> {        // 401
+                .exceptionHandling(e -> e //neautentificiran korisnik
+                        .authenticationEntryPoint((req, res, ex) -> {
                             res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                             res.setContentType("application/json");
                             var body = Map.of(
@@ -93,7 +90,7 @@ public class SecurityConfig { //mozak Spring Security-a
                             );
                             res.getWriter().write(new ObjectMapper().writeValueAsString(body));
                         })
-                        .accessDeniedHandler((req, res, ex) -> {             // 403
+                        .accessDeniedHandler((req, res, ex) -> { //kriva uloga
                             res.setStatus(HttpServletResponse.SC_FORBIDDEN);
                             res.setContentType("application/json");
                             var body = Map.of(
@@ -107,19 +104,19 @@ public class SecurityConfig { //mozak Spring Security-a
                         })
                 )
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
-                //u lanac sam dodal Jwtfilter i to prije standardnog username/password filtra
+                //u lanac sam dodal Jwtfilter, "usidril" ga pije ovog
                 //za svaki request filter pokuša pročitati i validirati JWT te postaviti Authentication
 
         return http.build();
     }
 
     @Bean //za svaku metodu označenu s @Bean, spring je poozve i zabilježi rezultat u ApplicationContext
-    CorsConfigurationSource corsConfigurationSource() { //kak da odgovara na zahtjeve sa frontenda
+    CorsConfigurationSource corsConfiguration() { //kak da odgovara na zahtjeve sa frontenda
         var c = new CorsConfiguration();
         c.setAllowedOrigins(List.of("http://localhost:3000"));
         c.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         c.setAllowedHeaders(List.of("*"));
-        c.setAllowCredentials(true);
+        c.setAllowCredentials(true); //nepotrebno jer ne koristim cookie
 
         var s = new UrlBasedCorsConfigurationSource();
         s.registerCorsConfiguration("/**", c);

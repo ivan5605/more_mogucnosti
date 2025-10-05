@@ -23,7 +23,7 @@ public class SobaController {
 
     private final SobaService sobaService;
 
-    @GetMapping("{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<SobaResponseDto> getSoba(@PathVariable("id") Long id){
         SobaResponseDto sobaDto = sobaService.findById(id);
         return new ResponseEntity<>(sobaDto, HttpStatus.OK);

@@ -47,7 +47,7 @@ public class JwtService {
                 .parseClaimsJws(token)
                 .getBody()
                 .getSubject();
-    } //ako potpis ne paše - SignatureException, ako je istekel ExpiredJwtException makni ne treba
+    } //ako potpis ne paše - SignatureException, ako je istekel ExpiredJwtException
 
     private Claims extractAllClaims(String token) {
         return Jwts.parserBuilder()

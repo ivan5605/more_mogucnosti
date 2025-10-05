@@ -12,7 +12,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME) //dostupna u runtimeu da bi je validatori mogli čitati
 @Constraint(validatedBy = UniqueEmailValidator.class) //ta je klasa zadužena za provjeru
 public @interface UniqueEmail {
-    String message() default "Ova email adresa se već koristi!"; //defaultna poruka
+    String message() default "Ova email adresa se već koristi."; //defaultna poruka
 
     Class<?>[] groups() default {}; //omogucava da isti model validiram u različitim situacijama
     //dok pozivam validaciju, napisem koju grupu validiram, samo validacije koje imaju tu klasu

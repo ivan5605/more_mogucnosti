@@ -20,5 +20,6 @@ public class UniqueEmailValidator implements ConstraintValidator<UniqueEmail, St
             return true;
         }
         return !korisnikRepository.existsByEmail(email); //provjera jel u bazi ima vec taj email
+        // vracam false, stvara se ConstraintViolation i uzima defaultni message, field type pa se sama veze za to polje
     }
 }

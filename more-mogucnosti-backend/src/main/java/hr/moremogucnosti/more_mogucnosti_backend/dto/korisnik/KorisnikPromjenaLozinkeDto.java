@@ -1,9 +1,15 @@
 package hr.moremogucnosti.more_mogucnosti_backend.dto.korisnik;
 
+import hr.moremogucnosti.more_mogucnosti_backend.validation.LozinkeMatch;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
+@LozinkeMatch(
+        lozinka = "novaLozinka",
+        lozinkaPotvrda = "novaLozinkaPotvrda",
+        message = "Lozinke se ne podudaraju."
+)
 public record KorisnikPromjenaLozinkeDto(
         @NotBlank(message = "Unesite staru lozinku!")
         String staraLozinka,

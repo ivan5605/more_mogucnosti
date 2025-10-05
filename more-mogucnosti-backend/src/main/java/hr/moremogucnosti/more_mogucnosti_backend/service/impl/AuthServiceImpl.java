@@ -10,14 +10,10 @@ import hr.moremogucnosti.more_mogucnosti_backend.exception.BadRequestException;
 import hr.moremogucnosti.more_mogucnosti_backend.exception.DuplicateException;
 import hr.moremogucnosti.more_mogucnosti_backend.exception.InvalidLoginException;
 import hr.moremogucnosti.more_mogucnosti_backend.exception.ResourceNotFoundException;
-import hr.moremogucnosti.more_mogucnosti_backend.mapper.RecenzijaMapper;
-import hr.moremogucnosti.more_mogucnosti_backend.mapper.RezervacijaMapper;
 import hr.moremogucnosti.more_mogucnosti_backend.repository.KorisnikRepository;
 import hr.moremogucnosti.more_mogucnosti_backend.security.AppUserPrincipal;
 import hr.moremogucnosti.more_mogucnosti_backend.security.JwtService;
 import hr.moremogucnosti.more_mogucnosti_backend.service.AuthService;
-import hr.moremogucnosti.more_mogucnosti_backend.service.RecenzijaService;
-import hr.moremogucnosti.more_mogucnosti_backend.service.RezervacijaService;
 import hr.moremogucnosti.more_mogucnosti_backend.service.UlogaService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
@@ -41,10 +37,6 @@ public class AuthServiceImpl implements AuthService {
     private final PasswordEncoder encoder;
     private final JwtService jwtService;
     private final AuthenticationManager authManager;
-    private final RezervacijaMapper rezervacijaMapper;
-    private final RecenzijaMapper recenzijaMapper;
-    private final RezervacijaService rezervacijaService;
-    private final RecenzijaService recenzijaService;
 
     @Override
     @Transactional

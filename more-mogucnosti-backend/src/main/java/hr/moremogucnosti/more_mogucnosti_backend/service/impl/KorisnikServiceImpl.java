@@ -65,7 +65,7 @@ public class KorisnikServiceImpl implements KorisnikService {
         String noviEmail = updateDto.email().trim().toLowerCase();
 
         Korisnik korisnik = korisnikRepository.findById(user.getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Korisnik sa email-om " + user.getId() + " ne postoji!"));
+                .orElseThrow(() -> new ResourceNotFoundException("Korisnik sa ID-jem " + user.getId() + " ne postoji!"));
 
         if (korisnikRepository.existsByEmailAndIdNot(noviEmail, korisnik.getId())){
             throw new DuplicateException("Ova se email adresa već koristi!");
@@ -82,7 +82,7 @@ public class KorisnikServiceImpl implements KorisnikService {
     @Transactional
     public void korisnikDeleteProfil(AppUserPrincipal user, String lozinka) {
         Korisnik korisnik = korisnikRepository.findByIdWUloga(user.getId()).
-                orElseThrow(() -> new ResourceNotFoundException("Korisnik sa email " + user.getUsername() + " ne postoji"));
+                orElseThrow(() -> new ResourceNotFoundException("Korisnik sa ID-jem " + user.getId() + " ne postoji"));
 
 //        if (!encoder.matches(lozinka, korisnik.getLozinka())){
 //            throw new LozinkeNePodudarajuException("Netočna lozinka!");

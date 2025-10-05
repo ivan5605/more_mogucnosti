@@ -24,7 +24,7 @@ public class AppUserDetailsService implements UserDetailsService {
         Korisnik korisnik = korisnikRepository.findByEmailWUloga(email).
                 orElseThrow(() -> new UsernameNotFoundException("Korisnik sa email " + email + " ne postoji!"));
 
-        String role = korisnik.getUloga() != null ? korisnik.getUloga().getNazivUloga() : "USER";
+        String role = korisnik.getUloga().getNazivUloga();
 
         return User.withUsername(korisnik.getEmail())
                 .password(korisnik.getLozinka())

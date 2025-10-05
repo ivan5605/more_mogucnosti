@@ -33,12 +33,12 @@ public class SlikaHotelServiceImpl implements SlikaHotelService {
     @Transactional
     @PreAuthorize("hasRole('ADMIN')")
     public SlikaHotelResponseDto addSlikaHotel(Long hotelId, SlikaCreateDto createDto) {
+        Hotel hotel = hotelRepository.findById(hotelId)
+                .orElseThrow(() -> new ResourceNotFoundException("Hotel ne postoji"));
+
         if (createDto.glavna()){
             repository.ocistiGlavnu(hotelId);
         }
-
-        Hotel hotel = hotelRepository.findById(hotelId)
-                .orElseThrow(() -> new ResourceNotFoundException("Hotel ne postoji"));
 
         HotelSlika slika = new HotelSlika();
 
