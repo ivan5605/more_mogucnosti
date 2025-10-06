@@ -14,10 +14,13 @@ import lombok.Setter;
 @AllArgsConstructor
 
 @Entity
-@Table(name = "hotel_slika")
+@Table(
+        name = "hotel_slika",
+        indexes = @Index(name = "ix_hotelSlika_hotel", columnList = "hotel_id")
+)
 public class HotelSlika extends Slika{
-    @ManyToOne(fetch = FetchType.LAZY) //fetch - kada se poodaci iz povezanih entiteta učitavaju
-    @JoinColumn(name = "hotel_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false) //fetch - kada se poodaci iz povezanih entiteta učitavaju
+    @JoinColumn(name = "hotel_id", nullable = false, foreignKey = @ForeignKey(name = "fk_hotelSlika_hotel"))
     @JsonIgnore
     private Hotel hotel;
     //FetchType.EAGER - standard, povezani entitet se odmah učitava - s.getHotel() - već je učitan iz baze

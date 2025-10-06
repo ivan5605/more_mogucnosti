@@ -95,27 +95,27 @@ class RezervacijaRepositoryTest {
     }
 
     @Test
-    void existsOverlappingRezervacija_false() {
+    void postojiPreklapanje_false() {
         Rezervacija rz1 = setRezervacija(3, LocalDate.of(2025, 10, 10), LocalDate.of(2025, 11, 11));
         entityManager.persist(rz1);
 
         entityManager.flush();
         entityManager.clear();
 
-        var rezultat = repository.existsOverlappingRezervacija(soba.getId(), LocalDate.of(2025, 12, 12), LocalDate.of(2025, 12, 20));
+        var rezultat = repository.postojiPreklapanje(soba.getId(), LocalDate.of(2025, 12, 12), LocalDate.of(2025, 12, 20));
 
         assertFalse(rezultat);
     }
 
     @Test
-    void existsOverlappingRezervacija_true() {
+    void postojiPreklapanje_true() {
         Rezervacija rz1 = setRezervacija(3, LocalDate.of(2025, 10, 10), LocalDate.of(2025, 11, 11));
         entityManager.persist(rz1);
 
         entityManager.flush();
         entityManager.clear();
 
-        var rezultat = repository.existsOverlappingRezervacija(soba.getId(), LocalDate.of(2025, 10, 12), LocalDate.of(2025, 12, 20));
+        var rezultat = repository.postojiPreklapanje(soba.getId(), LocalDate.of(2025, 10, 12), LocalDate.of(2025, 12, 20));
 
         assertTrue(rezultat);
     }

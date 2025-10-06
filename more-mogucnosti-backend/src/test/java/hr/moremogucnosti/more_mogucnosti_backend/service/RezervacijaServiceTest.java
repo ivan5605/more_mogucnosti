@@ -89,7 +89,7 @@ class RezervacijaServiceTest {
         when(sobaService.loadEntity(dto.sobaId())).thenReturn(soba);
         when(korisnikService.loadEntity(principal.getId())).thenReturn(korisnik);
         when(mapper.fromCreateDto(dto, soba, korisnik)).thenReturn(rez);
-        when(repository.existsOverlappingRezervacija(soba.getId(), dto.datumPocetak(), dto.datumKraj())).thenReturn(false);
+        when(repository.postojiPreklapanje(soba.getId(), dto.datumPocetak(), dto.datumKraj())).thenReturn(false);
         when(repository.save(rez)).thenReturn(saved);
         when(mapper.toDetailsDto(saved)).thenReturn(expected);
 
@@ -100,7 +100,7 @@ class RezervacijaServiceTest {
         assertEquals(1L, rezultat.id());
         verify(sobaService).loadEntity(dto.sobaId());
         verify(korisnikService).loadEntity(principal.getId());
-        verify(repository).existsOverlappingRezervacija(soba.getId(), dto.datumPocetak(), dto.datumKraj());
+        verify(repository).postojiPreklapanje(soba.getId(), dto.datumPocetak(), dto.datumKraj());
         verify(repository).save(rez);
         verify(mapper).fromCreateDto(dto, soba, korisnik);
         verify(mapper).toDetailsDto(saved);
@@ -127,11 +127,11 @@ class RezervacijaServiceTest {
         when(sobaService.loadEntity(dto.sobaId())).thenReturn(soba);
         when(korisnikService.loadEntity(principal.getId())).thenReturn(korisnik);
         when(mapper.fromCreateDto(dto, soba, korisnik)).thenReturn(rez);
-        when(repository.existsOverlappingRezervacija(soba.getId(), dto.datumPocetak(), dto.datumKraj())).thenReturn(true);
+        when(repository.postojiPreklapanje(soba.getId(), dto.datumPocetak(), dto.datumKraj())).thenReturn(true);
 
         assertThrows(DuplicateException.class, () -> service.createRezervacija(dto, principal));
 
-        verify(repository).existsOverlappingRezervacija(soba.getId(), dto.datumPocetak(), dto.datumKraj());
+        verify(repository).postojiPreklapanje(soba.getId(), dto.datumPocetak(), dto.datumKraj());
         verify(repository, never()).save(any());
         verify(mapper).fromCreateDto(dto, soba, korisnik);
     }

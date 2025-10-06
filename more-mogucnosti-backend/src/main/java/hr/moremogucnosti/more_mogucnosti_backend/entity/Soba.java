@@ -1,7 +1,10 @@
 package hr.moremogucnosti.more_mogucnosti_backend.entity;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,24 +19,35 @@ import java.util.List;
 @AllArgsConstructor
 
 @Entity
-@Table(name = "soba")
+@Table(name = "soba",
+        uniqueConstraints = {
+            @UniqueConstraint(name = "uq_soba_hotel_broj", columnNames = {"hotel_id", "broj_sobe"})
+        },
+        indexes = {
+            @Index(name = "ix_soba_hotel", columnList = "hotel_id")
+        }
+)
 public class Soba {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_soba")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "hotel_id", nullable = false)
-    @JsonManagedReference
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "hotel_id", nullable = false, foreignKey = @ForeignKey(name = "fk_soba_hotel"))
+    @JsonIgnore
     private Hotel hotel;
 
+    @Positive
     @Column(name = "kapacitet", nullable = false)
     private int kapacitet;
 
-    @Column(name = "cijena_nocenja", nullable = false)
+    @NotNull
+    @DecimalMin(value = "0.00", inclusive = true)
+    @Column(name = "cijena_nocenja", nullable = false, precision = 10, scale = 2)
     private BigDecimal cijenaNocenja;
 
+    @Positive
     @Column(name = "broj_sobe", nullable = false)
     private int brojSobe;
 
@@ -47,6 +61,7 @@ public class Soba {
     private boolean aktivno = false;
 
     @OneToMany(mappedBy = "soba", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @JsonIgnore
     private List<SobaSlika> slike;
     //mappedBy = "soba" - ja nisam vlasnik veze, druga strana (SobaSlika) drži strani ključ
     //soba je ime varijable u entitetu SobaSlika koji ima strani ključ

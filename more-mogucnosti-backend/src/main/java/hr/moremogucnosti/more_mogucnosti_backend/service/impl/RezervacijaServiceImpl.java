@@ -51,7 +51,7 @@ public class RezervacijaServiceImpl implements RezervacijaService {
 
         Rezervacija rezervacija = rezervacijaMapper.fromCreateDto(rezervacijaCreateDto, soba, korsnik);
 
-        if (rezervacijaRepository.existsOverlappingRezervacija(soba.getId(), rezervacija.getDatumPocetak(), rezervacija.getDatumKraj())){
+        if (rezervacijaRepository.postojiPreklapanje(soba.getId(), rezervacija.getDatumPocetak(), rezervacija.getDatumKraj())){
             throw new DuplicateException("Soba je već rezervirana u tom rasponu datuma!");
         }
 

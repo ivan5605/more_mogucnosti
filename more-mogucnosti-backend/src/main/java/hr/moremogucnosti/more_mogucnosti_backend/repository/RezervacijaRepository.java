@@ -22,9 +22,9 @@ public interface RezervacijaRepository extends JpaRepository<Rezervacija, Long> 
         and r.datumPocetak < :noviKraj  
         and r.datumKraj    > :noviPocetak 
     """)
-    boolean existsOverlappingRezervacija(@Param("sobaId") Long sobaId,
-                                         @Param("noviPocetak") LocalDate noviPocetak,
-                                         @Param("noviKraj") LocalDate noviKraj);
+    boolean postojiPreklapanje(@Param("sobaId") Long sobaId,
+                               @Param("noviPocetak") LocalDate noviPocetak,
+                               @Param("noviKraj") LocalDate noviKraj);
 
     @Query("""
             select r from Rezervacija r

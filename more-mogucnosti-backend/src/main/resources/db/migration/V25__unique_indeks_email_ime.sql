@@ -1,0 +1,1 @@
+ALTER TABLE korisnik RENAME INDEX email to uq_korisnik_email;

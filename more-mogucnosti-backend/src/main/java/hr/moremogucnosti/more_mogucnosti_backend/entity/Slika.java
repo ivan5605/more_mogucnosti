@@ -1,6 +1,8 @@
 package hr.moremogucnosti.more_mogucnosti_backend.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,7 +19,9 @@ public abstract class Slika {
     @Column(name = "id_slika")
     private Long id;
 
-    @Column(nullable = false, name = "putanja")
+    @NotBlank
+    @Size(max = 255)
+    @Column(nullable = false, name = "putanja", length = 255)
     private String putanja;
 
     @Column(nullable = false, name = "glavna_slika")
