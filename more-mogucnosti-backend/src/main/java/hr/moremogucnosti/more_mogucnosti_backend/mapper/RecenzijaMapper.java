@@ -7,7 +7,6 @@ import hr.moremogucnosti.more_mogucnosti_backend.dto.recenzija.RecenzijaZaKorisn
 import hr.moremogucnosti.more_mogucnosti_backend.entity.Hotel;
 import hr.moremogucnosti.more_mogucnosti_backend.entity.Korisnik;
 import hr.moremogucnosti.more_mogucnosti_backend.entity.Recenzija;
-import hr.moremogucnosti.more_mogucnosti_backend.exception.ResourceNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -21,7 +20,7 @@ public class RecenzijaMapper {
 
     public Recenzija fromCreateDto (RecenzijaCreateDto recenzijaCreateDto, Korisnik korisnik, Hotel hotel){
         if (recenzijaCreateDto == null){
-            throw new ResourceNotFoundException("Nema rezervacije za mapiranje!"); //iznimka nije idealna za null izlaz, bolje IllegalArgumentException
+            throw new IllegalArgumentException("Nema recenzije za mapiranje!"); //iznimka nije idealna za null izlaz, bolje IllegalArgumentException
         }
         Recenzija recenzija = new Recenzija();
         recenzija.setKorisnik(korisnik);
@@ -33,7 +32,7 @@ public class RecenzijaMapper {
 
     public RecenzijaDetailsDto toDetailsDto (Recenzija recenzija){
         if (recenzija == null){
-            throw new ResourceNotFoundException("Nema rezervacije za mapiranje!");
+            throw new IllegalArgumentException("Nema recenzije za mapiranje!");
         }
         return new RecenzijaDetailsDto(
                 recenzija.getId(),
@@ -47,7 +46,7 @@ public class RecenzijaMapper {
 
     public RecenzijaZaKorisnikDto toZaKorisnikaDto (Recenzija recenzija){
         if (recenzija == null) {
-            throw new ResourceNotFoundException("Nema rezervacije za mapiranje!");
+            throw new IllegalArgumentException("Nema recenzije za mapiranje!");
         }
         return new RecenzijaZaKorisnikDto(
                 recenzija.getId(),
@@ -60,7 +59,7 @@ public class RecenzijaMapper {
 
     public RecenzijaZaHotelDto toZaHotelDto (Recenzija recenzija) {
         if (recenzija == null) {
-            throw new ResourceNotFoundException("Nema rezervacije za mapiranje!");
+            throw new IllegalArgumentException("Nema recenzije za mapiranje!");
         }
         return new RecenzijaZaHotelDto(
                 recenzija.getId(),

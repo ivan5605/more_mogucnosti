@@ -18,6 +18,10 @@ export const createRezervacija = (rezervacija) => api.post(REST_API_BASE_URL + '
 
 export const getZauzetiDatumi = (idSoba) => axios.get(REST_API_BASE_URL + `/datumi/${idSoba}`);
 
+export const getZauzetiDatumiOsim = (idSoba, idRez) => axios.get(REST_API_BASE_URL + `/datumi/${idSoba}`, {
+  params: { idRez }
+});
+
 export const getRezervacijeKorisnika = () => api.get(REST_API_BASE_URL + '/korisnik');
 
 export const getAktivneRezervacije = (idKorisnik) => api.get(REST_API_BASE_URL + `/admin/korisnikAkt/${idKorisnik}`);

@@ -48,6 +48,15 @@ public class RezervacijaController {
         return new ResponseEntity<>(zauzetiDatumi, HttpStatus.OK);
     }
 
+    @GetMapping("/datumi/osimRez/{idSoba}")
+    public ResponseEntity<List<RezervacijaDatumDto>> getZauzetiDatumiOsim(
+            @PathVariable("idSoba") Long idSoba,
+            @RequestParam("idRez") Long idRez
+    ){
+        List<RezervacijaDatumDto> zauzetiDatumi = rezervacijaService.findAllZauzetiDatumiOsim(idSoba, idRez);
+        return new ResponseEntity<>(zauzetiDatumi, HttpStatus.OK);
+    }
+
     @SecurityRequirement(name = "bearerAuth")
     @GetMapping("/admin/korisnikAkt/{id}")
     public ResponseEntity<List<RezervacijaDetailsDto>> getAktRezervacije (@PathVariable("id") Long idKorisnik) {

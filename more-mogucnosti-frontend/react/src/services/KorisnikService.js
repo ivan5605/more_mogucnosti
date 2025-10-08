@@ -20,10 +20,7 @@ export const getKorisniciWithCount = () => api.get(REST_API_BASE_URL + '/admin/c
 
 export const getKorisnik = (idKorisnik) => axios.get(REST_API_BASE_URL + `/${idKorisnik}`);
 
-export const deleteKorisnik = (lozinka) => api.delete(REST_API_BASE_URL + '/delete', {
-  data: lozinka,
-  headers: { 'Content-Type': 'text/plain' }
-});
+export const deleteKorisnik = (deleteDto) => api.delete(REST_API_BASE_URL + '/delete', { data: deleteDto });
 
 export const updateKorisnik = (azuriraniKor) => api.put(REST_API_BASE_URL + "/update", azuriraniKor);
 

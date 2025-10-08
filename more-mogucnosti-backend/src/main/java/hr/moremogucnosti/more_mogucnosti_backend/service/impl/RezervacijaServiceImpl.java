@@ -45,15 +45,13 @@ public class RezervacijaServiceImpl implements RezervacijaService {
         Soba soba = sobaService.loadEntity(rezervacijaCreateDto.sobaId());
         Korisnik korsnik = korisnikService.loadEntity(user.getId());
 
-        if (rezervacijaCreateDto.brojOsoba() > soba.getKapacitet()){
-            throw new BadRequestException("Broj osoba ne smije biti veći od kapaciteta sobe (" + soba.getKapacitet() + ")");
+        provjeriDatumIKapacitet(soba, rezervacijaCreateDto.brojOsoba(), rezervacijaCreateDto.datumPocetak(), rezervacijaCreateDto.datumKraj());
+
+        if (rezervacijaRepository.postojiPreklapanje(soba.getId(), rezervacijaCreateDto.datumPocetak(), rezervacijaCreateDto.datumKraj())){
+            throw new DuplicateException("Soba je već rezervirana u tom rasponu datuma!");
         }
 
         Rezervacija rezervacija = rezervacijaMapper.fromCreateDto(rezervacijaCreateDto, soba, korsnik);
-
-        if (rezervacijaRepository.postojiPreklapanje(soba.getId(), rezervacija.getDatumPocetak(), rezervacija.getDatumKraj())){
-            throw new DuplicateException("Soba je već rezervirana u tom rasponu datuma!");
-        }
 
         Rezervacija savedRezervacija = rezervacijaRepository.save(rezervacija);
         return rezervacijaMapper.toDetailsDto(savedRezervacija);
@@ -66,6 +64,14 @@ public class RezervacijaServiceImpl implements RezervacijaService {
                 .map(rezervacijaMapper::toDatumDto)
                 .collect(Collectors.toList());
         return zauzetiDatumi;
+    }
+
+    @Override
+    public List<RezervacijaDatumDto> findAllZauzetiDatumiOsim(Long idSoba, Long rezervacijaId) {
+        return rezervacijaRepository.findAllBySobaIdOsimRezervacija(idSoba, rezervacijaId)
+                .stream()
+                .map(rezervacijaMapper::toDatumDto)
+                .toList();
     }
 
     @Override
@@ -121,6 +127,13 @@ public class RezervacijaServiceImpl implements RezervacijaService {
         Rezervacija rezervacija = rezervacijaRepository.findByIdAndKorisnikId(rezervacijaId, userId)
                 .orElseThrow(() -> new ResourceNotFoundException("Rezervacija ne postoji."));
 
+        Soba soba = rezervacija.getSoba();
+
+        if (rezervacijaRepository.postojiPreklapanjeOsim(
+                soba.getId(), rezervacija.getId(),
+                novaRezervacija.datumPocetak(), novaRezervacija.datumKraj()))
+            throw new DuplicateException("Soba je već rezervirana u tom rasponu datuma!");
+
         rezervacija.setBrojOsoba(novaRezervacija.brojOsoba());
         rezervacija.setDatumPocetak(novaRezervacija.datumPocetak());
         rezervacija.setDatumKraj(novaRezervacija.datumKraj());
@@ -163,4 +176,11 @@ public class RezervacijaServiceImpl implements RezervacijaService {
                 .toList();
         return rezervacije;
     }
+
+    private void provjeriDatumIKapacitet(Soba soba, int brojOsoba, LocalDate pocetak, LocalDate kraj) {
+        if (pocetak.isBefore(kraj)) throw new BadRequestException("Datum početka mora biti prije datuma kraja.");
+        if (brojOsoba < 1 || brojOsoba > soba.getKapacitet())
+            throw new BadRequestException("Broj osoba mora biti 1–" + soba.getKapacitet() + ".");
+    }
+
 }

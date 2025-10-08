@@ -9,3 +9,4 @@ public record SlikaSobaResponseDto(
         SobaBasicDto soba
 ) {
 }
+

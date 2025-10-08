@@ -50,7 +50,7 @@ public class KorisnikServiceImpl implements KorisnikService {
 
     @Override
     public Korisnik loadEntityByEmail(String email) {
-        return korisnikRepository.findByEmailWUloga(email)
+        return korisnikRepository.findByEmail(email)
                 .orElseThrow(() -> new ResourceNotFoundException("Korisnik sa email-om " + email + " ne postoji!"));
     }
 
@@ -75,7 +75,8 @@ public class KorisnikServiceImpl implements KorisnikService {
         korisnik.setPrezime(updateDto.prezime().trim());
         korisnik.setEmail(updateDto.email().trim().toLowerCase());
 
-        return korisnikMapper.toViewDto(korisnik);
+        Korisnik spremljen = korisnikRepository.save(korisnik);
+        return korisnikMapper.toViewDto(spremljen);
     }
 
     @Override
@@ -128,7 +129,7 @@ public class KorisnikServiceImpl implements KorisnikService {
     @Override
     @Transactional
     @PreAuthorize("hasRole('ADMIN')")
-    public void adminSoftDeleteKorisnik(Long idKorisnik) {
+    public void adminDeleteKorisnik(Long idKorisnik) {
         Korisnik korisnik = korisnikRepository.findById(idKorisnik)
                 .orElseThrow(() -> new ResourceNotFoundException("Korisnik sa ID-jem " + idKorisnik + " ne postoji!"));
 

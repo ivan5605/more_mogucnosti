@@ -27,6 +27,29 @@ public interface RezervacijaRepository extends JpaRepository<Rezervacija, Long> 
                                @Param("noviKraj") LocalDate noviKraj);
 
     @Query("""
+        select count(r) > 0
+        from Rezervacija r
+        where r.soba.id = :sobaId
+        and r.id <> :rezId
+        and r.datumPocetak < :noviKraj
+        and r.datumKraj    > :noviPocetak
+    """)
+    boolean postojiPreklapanjeOsim(@Param("sobaId") Long sobaId,
+                                   @Param("rezId") Long rezId,
+                                   @Param("noviPocetak") LocalDate pocetak,
+                                   @Param("noviKraj") LocalDate kraj);
+
+    @Query("""
+        select r
+        from Rezervacija r
+        where r.soba.id = :sobaId
+        and r.id <> :rezId
+    """)
+    List<Rezervacija> findAllBySobaIdOsimRezervacija(@Param("sobaId") Long sobaId,
+                                                       @Param("rezId") Long rezId);
+
+
+    @Query("""
             select r from Rezervacija r
             join fetch r.soba s
             join fetch s.hotel h

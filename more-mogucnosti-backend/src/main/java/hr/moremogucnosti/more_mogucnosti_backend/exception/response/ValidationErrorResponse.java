@@ -1,4 +1,4 @@
-package hr.moremogucnosti.more_mogucnosti_backend.api;
+package hr.moremogucnosti.more_mogucnosti_backend.exception.response;
 
 import org.springframework.http.HttpStatus;
 

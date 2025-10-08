@@ -44,7 +44,7 @@ public interface SobaRepository extends JpaRepository<Soba, Long> {
             LEFT JOIN FETCH s.hotel h
             LEFT JOIN FETCH h.grad
             WHERE s.id = :id""")
-    Optional<Soba> getSobaByIdWithHotelAndSlike(@Param("id") Long id);
+    Optional<Soba> findSobaByIdWithHotelAndSlike(@Param("id") Long id);
 
     boolean existsByHotelIdAndBrojSobe(Long hotelId, Integer brojSobe);
 

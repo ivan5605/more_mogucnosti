@@ -77,7 +77,7 @@ public class AuthServiceImpl implements AuthService {
                     new UsernamePasswordAuthenticationToken(request.email(), request.lozinka())
             );
 
-            Korisnik k = korisnikRepository.findByEmailWUloga(request.email()).
+            Korisnik k = korisnikRepository.findByEmail(request.email()).
                     orElseThrow(() -> new ResourceNotFoundException("Korisnik za email adresom " + request.email() + " ne postoji!"));
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -101,7 +101,7 @@ public class AuthServiceImpl implements AuthService {
         if (user == null){
             throw new ResourceNotFoundException("Niste prijavljeni!");
         }
-        Korisnik korisnik = korisnikRepository.findByEmailWUloga(user.getUsername())
+        Korisnik korisnik = korisnikRepository.findByEmail(user.getUsername())
                 .orElseThrow(() -> new ResourceNotFoundException("Korisnik sa email-om " + user.getUsername() + " ne postoji!"));
 
         return new KorisnikViewDto(

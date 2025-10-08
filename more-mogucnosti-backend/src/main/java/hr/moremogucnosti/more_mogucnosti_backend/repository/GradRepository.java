@@ -6,7 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
 public interface GradRepository extends JpaRepository<Grad, Long> {
-    Optional<Grad> findByImeGrad(String imeGrad);
 
     Optional<Grad> findBySlug(String slug);
 }

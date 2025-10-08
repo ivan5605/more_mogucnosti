@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { prijavljeni } from '../services/AuthService';
 import { getRecenzijeKorisnika, upsertRecenzija, deleteRecenzija } from '../services/RecenzijaService';
-import { getRezervacijeKorisnika, getZauzetiDatumi, updateRezervacija, deleteRezervacija } from '../services/RezervacijaService';
+import { getRezervacijeKorisnika, getZauzetiDatumi, updateRezervacija, deleteRezervacija, getZauzetiDatumiOsim } from '../services/RezervacijaService';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { deleteKorisnik, updateKorisnik, updateLozinka } from '../services/KorisnikService';
@@ -167,7 +167,7 @@ const ProfilComponent = () => {
 
     (async () => {
       try {
-        const res = await getZauzetiDatumi(odabranaRez.soba.id);
+        const res = await getZauzetiDatumiOsim(odabranaRez.soba.id, odabranaRez.id);
         const termini = Array.isArray(res.data) ? res.data : [];
         const bezMoje = termini.filter(t => (t.idRezervacija ?? t.id) !== odabranaRez.id);
         setZauzetiTermini(bezMoje);
@@ -382,7 +382,10 @@ const ProfilComponent = () => {
     e.preventDefault();
 
     if (provjeriLozinkaBrisanje(lozinkaZaBrisanje)) {
-      deleteKorisnik(lozinkaZaBrisanje).then(response => {
+      const deleteDto = {
+        lozinka: lozinkaZaBrisanje
+      };
+      deleteKorisnik(deleteDto).then(response => {
         logout();
       }).catch(error => {
         setBrisanjeErr(error.response.data.message);

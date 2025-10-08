@@ -1,12 +1,11 @@
 package hr.moremogucnosti.more_mogucnosti_backend.mapper;
 
+import hr.moremogucnosti.more_mogucnosti_backend.dto.hotel.HotelDetailsDto;
 import hr.moremogucnosti.more_mogucnosti_backend.dto.hotel.HotelPreviewDto;
 import hr.moremogucnosti.more_mogucnosti_backend.dto.hotel.HotelResponseDto;
 import hr.moremogucnosti.more_mogucnosti_backend.dto.hotel.HotelViewDto;
-import hr.moremogucnosti.more_mogucnosti_backend.dto.hotel.HotelDetailsDto;
 import hr.moremogucnosti.more_mogucnosti_backend.entity.Hotel;
 import hr.moremogucnosti.more_mogucnosti_backend.entity.Slika;
-import hr.moremogucnosti.more_mogucnosti_backend.exception.ResourceNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -22,7 +21,7 @@ public class HotelMapper {
 
     public HotelDetailsDto toDetailsDto(Hotel hotel){
         if (hotel==null){
-            throw new ResourceNotFoundException("Nema hotela za mapiranje u DTO objekt");
+            throw new IllegalArgumentException("Nema hotela za mapiranje u DTO objekt");
         }
         HotelDetailsDto hotelDto = new HotelDetailsDto(
                 hotel.getId(),
@@ -53,7 +52,7 @@ public class HotelMapper {
 
     public HotelViewDto toViewDto(Hotel hotel){
         if (hotel==null){
-            throw new ResourceNotFoundException("Nema hotela za mapiranje u prikazDTO objekt");
+            throw new IllegalArgumentException("Nema hotela za mapiranje u prikazDTO objekt");
         }
         HotelViewDto hotelPrikazDto = new HotelViewDto(
                 hotel.getId(),
@@ -64,7 +63,7 @@ public class HotelMapper {
 
     public HotelPreviewDto toPreviewDto(Hotel hotel){
         if (hotel==null){
-            throw new ResourceNotFoundException("Nema hotela za mapiranje u previewDTO objekt");
+            throw new IllegalArgumentException("Nema hotela za mapiranje u previewDTO objekt");
         }
         return new HotelPreviewDto(
                 hotel.getId(),
@@ -72,8 +71,9 @@ public class HotelMapper {
                 gradMapper.toResponseDto(hotel.getGrad()),
                 hotel.getAdresa(),
                 hotel.isParking(),
-                hotel.isBazen(),
                 hotel.isWifi(),
+                hotel.isBazen(),
+
 
                 hotel.getSlike()
                         .stream()
@@ -88,7 +88,7 @@ public class HotelMapper {
 
     public HotelResponseDto toResponseDto(Hotel hotel) {
         if (hotel==null){
-            throw new ResourceNotFoundException("Nema hotela za mapiranje u responseDTO objekt");
+            throw new IllegalArgumentException("Nema hotela za mapiranje u responseDTO objekt");
         }
         HotelResponseDto hotelResponseDto = new HotelResponseDto(
                 hotel.getId(),

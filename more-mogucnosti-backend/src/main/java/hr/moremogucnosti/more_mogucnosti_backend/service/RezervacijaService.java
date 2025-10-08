@@ -10,6 +10,8 @@ public interface RezervacijaService {
 
     List<RezervacijaDatumDto> findAllZauzetiDatumi(Long idSoba);
 
+    List<RezervacijaDatumDto> findAllZauzetiDatumiOsim(Long idSoba, Long rezervacijaId);
+
     List<RezervacijaZaKorisnikDto> findAll(Long userId);
 
     List<RezervacijaDetailsDto> findAllAktivneKorisnika(Long idKorisnik);

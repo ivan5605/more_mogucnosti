@@ -1,12 +1,11 @@
 package hr.moremogucnosti.more_mogucnosti_backend.mapper;
 
-import hr.moremogucnosti.more_mogucnosti_backend.dto.soba.SobaResponseDto;
 import hr.moremogucnosti.more_mogucnosti_backend.dto.soba.SobaDetailsDto;
+import hr.moremogucnosti.more_mogucnosti_backend.dto.soba.SobaResponseDto;
 import hr.moremogucnosti.more_mogucnosti_backend.dto.soba.SobaViewDto;
 import hr.moremogucnosti.more_mogucnosti_backend.entity.Hotel;
 import hr.moremogucnosti.more_mogucnosti_backend.entity.Slika;
 import hr.moremogucnosti.more_mogucnosti_backend.entity.Soba;
-import hr.moremogucnosti.more_mogucnosti_backend.exception.ResourceNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -22,7 +21,7 @@ public class SobaMapper {
 
     public SobaResponseDto toResponseDto(Soba soba){
         if (soba==null){
-            throw new ResourceNotFoundException("Nema sobe za mapiranje u DTO objekt");
+            throw new IllegalArgumentException("Nema sobe za mapiranje u DTO objekt");
         }
         SobaResponseDto sobaDto = new SobaResponseDto(
                 soba.getId(),
@@ -52,7 +51,7 @@ public class SobaMapper {
 
     public SobaDetailsDto toDetailsDto(Soba soba) {
         if (soba == null){
-            throw new ResourceNotFoundException("Nema sobe za mapiranje u ZaRezervacijuDTO objekt");
+            throw new IllegalArgumentException("Nema sobe za mapiranje u detailsDTO objekt");
         }
 
         Hotel hotel = soba.getHotel();
@@ -88,7 +87,7 @@ public class SobaMapper {
 
     public SobaViewDto toViewDto(Soba soba){
         if (soba == null){
-            throw new ResourceNotFoundException("Nema soba za mapiranje u viewDto objekt!");
+            throw new IllegalArgumentException("Nema soba za mapiranje u viewDto objekt!");
         }
         return new SobaViewDto(
                 soba.getId(),

@@ -12,19 +12,6 @@ import java.util.Optional;
 
 public interface RecenzijaRepository extends JpaRepository<Recenzija, Long> {
 
-//    public interface RecenzijaKorisnikView {
-//        Long getId();
-//        Integer getOcjena();
-//        String getTekst();
-//        LocalDate getDatum();
-//        HotelView getHotel();
-//
-//        interface HotelView {
-//            Long getId();
-//            String getNaziv();
-//        }
-//    }
-
     @Query("""
             SELECT r from Recenzija r
             left join fetch r.korisnik k
@@ -38,11 +25,12 @@ public interface RecenzijaRepository extends JpaRepository<Recenzija, Long> {
     Optional<Recenzija> findByKorisnikIdAndHotelId(Long korisnikId, Long hotelId);
 
     @Query("""
-            SELECT count(r) as brojRecenzija,
-                AVG(r.ocjena) as prosjekRecenzija
+            select new hr.moremogucnosti.more_mogucnosti_backend.dto.recenzija.RecenzijaHotelStatusDto(
+            count(r), coalesce(avg(r.ocjena), 0)
+            )
             from Recenzija r
             where r.hotel.id = :hotelId
-            """)
+    """)
     RecenzijaHotelStatusDto recenzijeInfoByHotelId(@Param("hotelId") Long hotelId);
 
 //    @EntityGraph(attributePaths = {"hotel"})

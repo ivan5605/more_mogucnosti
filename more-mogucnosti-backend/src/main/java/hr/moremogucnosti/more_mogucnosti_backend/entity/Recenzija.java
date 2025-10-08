@@ -23,10 +23,11 @@ import java.util.Objects;
 @Table(
         name = "recenzija",
         indexes = {
-                @Index(name = "ix_recenzija_hotel", columnList = "hotel_id")
+                @Index(name = "ix_recenzija_hotel", columnList = "hotel_id"),
+                @Index(name = "ix_recenzija_korisnik", columnList = "korisnik_id")
         },
         uniqueConstraints = {
-                @UniqueConstraint(name = "uq_recenzija_korisnik_hotel", columnNames = "korisnik_id, hotel_id")
+                @UniqueConstraint(name = "uq_recenzija_korisnik_hotel", columnNames = {"korisnik_id", "hotel_id"})
         }
 )
 public class Recenzija {

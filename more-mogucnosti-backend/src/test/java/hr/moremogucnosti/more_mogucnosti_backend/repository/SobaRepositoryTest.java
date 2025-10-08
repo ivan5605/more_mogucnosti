@@ -101,7 +101,7 @@ class SobaRepositoryTest {
     }
 
     @Test
-    void getSobaByIdWithHotelAndSlike() {
+    void findSobaByIdWithHotelAndSlike() {
         // arrange
         Soba s1 = setSoba(100, 2, BigDecimal.valueOf(200));
         entityManager.persist(s1);
@@ -110,7 +110,7 @@ class SobaRepositoryTest {
         entityManager.clear();
 
         // act
-        Soba r = repository.getSobaByIdWithHotelAndSlike(s1.getId())
+        Soba r = repository.findSobaByIdWithHotelAndSlike(s1.getId())
                 .orElseThrow(() -> new AssertionError("Soba nije pronadjena"));
 
         // assert
@@ -123,8 +123,8 @@ class SobaRepositoryTest {
     }
 
     @Test
-    void getSobaByIdWithHotelAndSlike_notFound() {
-        var rezultat = repository.getSobaByIdWithHotelAndSlike(99L);
+    void findSobaByIdWithHotelAndSlike_notFound() {
+        var rezultat = repository.findSobaByIdWithHotelAndSlike(99L);
         assertTrue(rezultat.isEmpty());
     }
 

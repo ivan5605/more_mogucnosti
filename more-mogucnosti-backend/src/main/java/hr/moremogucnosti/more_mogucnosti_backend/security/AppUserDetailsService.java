@@ -21,7 +21,7 @@ public class AppUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        Korisnik korisnik = korisnikRepository.findByEmailWUloga(email).
+        Korisnik korisnik = korisnikRepository.findByEmail(email).
                 orElseThrow(() -> new UsernameNotFoundException("Korisnik sa email " + email + " ne postoji!"));
 
         String role = korisnik.getUloga().getNazivUloga();

@@ -145,13 +145,13 @@ class KorisnikServiceTest {
     }
 
     @Test
-    void adminSoftDeleteKorisnik() {
+    void adminDeleteKorisnik() {
         Long id = 1L;
         Korisnik k = setKorisnik(id, "Ivo", "Ivić", "ivo@gmail.com");
 
         when(korisnikRepository.findById(id)).thenReturn(Optional.of(new Korisnik()));
 
-        korisnikService.adminSoftDeleteKorisnik(id);
+        korisnikService.adminDeleteKorisnik(id);
 
         verify(korisnikRepository).findById(1L);
         verify(korisnikRepository).deleteById(1L);
@@ -159,11 +159,11 @@ class KorisnikServiceTest {
     }
 
     @Test
-    void adminSoftDeleteKorisnik_notFound() {
+    void adminDeleteKorisnik_notFound() {
         when(korisnikRepository.findById(1L)).thenReturn(Optional.empty());
 
         assertThrows(ResourceNotFoundException.class,
-                () -> korisnikService.adminSoftDeleteKorisnik(1L));
+                () -> korisnikService.adminDeleteKorisnik(1L));
 
         verify(korisnikRepository).findById(1L);
         verify(korisnikRepository, never()).deleteById(anyLong());

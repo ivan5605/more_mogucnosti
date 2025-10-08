@@ -5,6 +5,7 @@ import hr.moremogucnosti.more_mogucnosti_backend.security.AppUserPrincipal;
 import hr.moremogucnosti.more_mogucnosti_backend.service.RecenzijaService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,7 +33,7 @@ public class RecenzijaController {
 
     @SecurityRequirement(name = "bearerAuth")
     @PutMapping("/moja/hotel/{id}")
-    public ResponseEntity<RecenzijaDetailsDto> upsertRecenzija (@PathVariable("id") Long hotelId, @AuthenticationPrincipal AppUserPrincipal user, @RequestBody RecenzijaCreateDto createDto){
+    public ResponseEntity<RecenzijaDetailsDto> upsertRecenzija (@PathVariable("id") Long hotelId, @AuthenticationPrincipal AppUserPrincipal user, @RequestBody @Valid RecenzijaCreateDto createDto){
         RecenzijaDetailsDto recenzijaDetailsDto = recenzijaService.editOrCreateRecenzija(user.getId(), hotelId, createDto);
         return new ResponseEntity<>(recenzijaDetailsDto, HttpStatus.OK);
     }

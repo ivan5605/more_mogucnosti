@@ -119,7 +119,7 @@ class AuthServiceTest {
         k.setUloga(u);
         k.setIme("Ivo");
 
-        when(korisnikRepository.findByEmailWUloga("ivo@gmail.com")).thenReturn(Optional.of(k));
+        when(korisnikRepository.findByEmail("ivo@gmail.com")).thenReturn(Optional.of(k));
         when(jwtService.generateToken(k)).thenReturn("jwt");
         when(jwtService.getExpirationMs("jwt")).thenReturn(999L);
 
@@ -132,7 +132,7 @@ class AuthServiceTest {
         assertEquals(999L, res.expAt());
 
         verify(authManager).authenticate(new UsernamePasswordAuthenticationToken("ivo@gmail.com", "lozinka"));
-        verify(korisnikRepository).findByEmailWUloga("ivo@gmail.com");
+        verify(korisnikRepository).findByEmail("ivo@gmail.com");
         verify(jwtService).generateToken(k);
         verify(jwtService).getExpirationMs("jwt");
         verifyNoMoreInteractions(authManager, korisnikRepository, jwtService);
@@ -161,7 +161,7 @@ class AuthServiceTest {
         k.setIme("Ivo");
         k.setPrezime("Ivić");
 
-        when(korisnikRepository.findByEmailWUloga("ivo@gmail.com")).thenReturn(Optional.of(k));
+        when(korisnikRepository.findByEmail("ivo@gmail.com")).thenReturn(Optional.of(k));
 
         KorisnikViewDto dto = service.getUserInfo(principal);
 
@@ -170,18 +170,18 @@ class AuthServiceTest {
         assertEquals("Ivić", dto.prezime());
         assertEquals("ivo@gmail.com", dto.email());
 
-        verify(korisnikRepository).findByEmailWUloga("ivo@gmail.com");
+        verify(korisnikRepository).findByEmail("ivo@gmail.com");
         verifyNoMoreInteractions(korisnikRepository);
     }
 
     @Test
     void getUserInfo_NotFound() {
         AppUserPrincipal principal = new AppUserPrincipal(1L, "nepostoji@gmail.com", "N/A", java.util.List.of());
-        when(korisnikRepository.findByEmailWUloga("nepostoji@gmail.com")).thenReturn(Optional.empty());
+        when(korisnikRepository.findByEmail("nepostoji@gmail.com")).thenReturn(Optional.empty());
 
         assertThrows(ResourceNotFoundException.class, () -> service.getUserInfo(principal));
 
-        verify(korisnikRepository).findByEmailWUloga("nepostoji@gmail.com");
+        verify(korisnikRepository).findByEmail("nepostoji@gmail.com");
         verifyNoMoreInteractions(korisnikRepository);
     }
 

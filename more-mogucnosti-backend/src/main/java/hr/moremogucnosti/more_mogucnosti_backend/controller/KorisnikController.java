@@ -1,9 +1,6 @@
 package hr.moremogucnosti.more_mogucnosti_backend.controller;
 
-import hr.moremogucnosti.more_mogucnosti_backend.dto.korisnik.KorisnikAdminDto;
-import hr.moremogucnosti.more_mogucnosti_backend.dto.korisnik.KorisnikPromjenaLozinkeDto;
-import hr.moremogucnosti.more_mogucnosti_backend.dto.korisnik.KorisnikUpdateDto;
-import hr.moremogucnosti.more_mogucnosti_backend.dto.korisnik.KorisnikViewDto;
+import hr.moremogucnosti.more_mogucnosti_backend.dto.korisnik.*;
 import hr.moremogucnosti.more_mogucnosti_backend.security.AppUserPrincipal;
 import hr.moremogucnosti.more_mogucnosti_backend.service.KorisnikService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -44,9 +41,9 @@ public class KorisnikController {
 
     @SecurityRequirement(name = "bearerAuth")
     @DeleteMapping("/delete")
-    public ResponseEntity<String> deleteKorisnik(@AuthenticationPrincipal AppUserPrincipal user, @RequestBody String lozinka) {
-        korisnikService.korisnikDeleteProfil(user, lozinka);
-        return new ResponseEntity<>("Profil je izbrisan!", HttpStatus.OK);
+    public ResponseEntity<Void> deleteKorisnik(@AuthenticationPrincipal AppUserPrincipal user, @RequestBody @Valid KorisnikDeleteDto dto) {
+        korisnikService.korisnikDeleteProfil(user, dto.lozinka());
+        return ResponseEntity.noContent().build();
     }
 
     @SecurityRequirement(name = "bearerAuth")
@@ -66,7 +63,7 @@ public class KorisnikController {
     @SecurityRequirement(name = "bearerAuth")
     @DeleteMapping("/admin/delete/{id}")
     public ResponseEntity<Void> adminDeleteKorisnik(@PathVariable("id") Long idKorisnik) {
-        korisnikService.adminSoftDeleteKorisnik(idKorisnik);
+        korisnikService.adminDeleteKorisnik(idKorisnik);
         return ResponseEntity.noContent().build();
     }
 }

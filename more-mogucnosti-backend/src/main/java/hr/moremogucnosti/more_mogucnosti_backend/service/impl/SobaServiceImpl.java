@@ -51,7 +51,7 @@ public class SobaServiceImpl implements SobaService {
 
     @Override
     public SobaDetailsDto findDetailsById(Long idSoba) {
-        Soba soba = sobaRepository.getSobaByIdWithHotelAndSlike(idSoba)
+        Soba soba = sobaRepository.findSobaByIdWithHotelAndSlike(idSoba)
                 .orElseThrow(() -> new ResourceNotFoundException("Hotel sa ID-jem " +  idSoba + " ne postoji!"));
         return sobaMapper.toDetailsDto(soba);
     }
