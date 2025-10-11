@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import pozadina from '../assets/pocetna3.jpg';
-import './PocetnaComponent.css';
+import './PocetnaPage.css';
 import { getRandomHoteli } from '../services/HotelService';
 import { useNavigate } from 'react-router-dom';
 
-const PocetnaComponent = () => {
+const PocetnaPage = () => {
   const navigate = useNavigate();
 
   const DEFAULT_SLIKA = 'https://res.cloudinary.com/dcolr4yi2/image/upload/v1758037557/0ae34d64f5299aa8dd6d77e28a51680d_oeyree.png';
@@ -143,4 +143,4 @@ const PocetnaComponent = () => {
   );
 };
 
-export default PocetnaComponent;
+export default PocetnaPage;

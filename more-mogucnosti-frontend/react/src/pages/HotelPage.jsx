@@ -5,7 +5,7 @@ import { getSobeHotela } from '../services/SobaService';
 import { getRecenzijeHotela, getInfoRecenzija } from '../services/RecenzijaService';
 import { useAuth } from '../auth/AuthContext';
 import { toast } from 'react-toastify';
-import RecenzijaComponent from './RecenzijaComponent';
+import RecenzijaComponent from '../components/RecenzijaComponent';
 
 const HotelComponent = () => {
 
