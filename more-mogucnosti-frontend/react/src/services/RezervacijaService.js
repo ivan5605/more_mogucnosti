@@ -1,39 +1,27 @@
-import axios from "axios";
+import { apiPublic, apiAuth } from "./Config";
 
-const REST_API_BASE_URL = "http://localhost:8080/api/v1/rezervacija"
+const base = "/rezervacija";
 
-const api = axios.create({
-  baseURL: REST_API_BASE_URL
-});
 
-api.interceptors.request.use((config) => {
-  const token = localStorage.getItem("token");
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-  return config; //vraćam config inace request nejde dalje
-})
+export const createRezervacija = (rezervacija) => apiAuth.post(`${base}/create`, rezervacija);
 
-export const createRezervacija = (rezervacija) => api.post(REST_API_BASE_URL + '/create', rezervacija);
+export const getZauzetiDatumi = (idSoba) => apiPublic.get(`${base}/datumi/${idSoba}`);
 
-export const getZauzetiDatumi = (idSoba) => axios.get(REST_API_BASE_URL + `/datumi/${idSoba}`);
+export const getZauzetiDatumiOsim = (idSoba, idRez) => apiPublic.get(`${base}/datumi/${idSoba}`,
+  { params: { idRez } });
 
-export const getZauzetiDatumiOsim = (idSoba, idRez) => axios.get(REST_API_BASE_URL + `/datumi/${idSoba}`, {
-  params: { idRez }
-});
+export const getRezervacijeKorisnika = () => apiAuth.get(`${base}/korisnik`);
 
-export const getRezervacijeKorisnika = () => api.get(REST_API_BASE_URL + '/korisnik');
+export const getAktivneRezervacije = (idKorisnik) => apiAuth.get(`${base}/admin/korisnikAkt/${idKorisnik}`);
 
-export const getAktivneRezervacije = (idKorisnik) => api.get(REST_API_BASE_URL + `/admin/korisnikAkt/${idKorisnik}`);
+export const getStareRezervacije = (idKorisnik) => apiAuth.get(`${base}/admin/korisnikSt/${idKorisnik}`);
 
-export const getStareRezervacije = (idKorisnik) => api.get(REST_API_BASE_URL + `/admin/korisnikSt/${idKorisnik}`);
+export const updateRezervacija = (idRezervacija, rezervacija) => apiAuth.put(`${base}/update/${idRezervacija}`, rezervacija);
 
-export const updateRezervacija = (idRezervacija, rezervacija) => api.put(REST_API_BASE_URL + `/update/${idRezervacija}`, rezervacija);
+export const deleteRezervacija = (idRezervacija) => apiAuth.delete(`${base}/delete/${idRezervacija}`);
 
-export const deleteRezervacija = (idRezervacija) => api.delete(REST_API_BASE_URL + `/delete/${idRezervacija}`);
+export const adminDeleteRezervacija = (idRezervacija) => apiAuth.delete(`${base}/admin/delete/${idRezervacija}`);
 
-export const adminDeleteRezervacija = (idRezervacija) => api.delete(REST_API_BASE_URL + `/admin/delete/${idRezervacija}`);
+export const adminUpdateRezervacija = (idRezervacija, rezervacijaDto) => apiAuth.put(`${base}/admin/update/${idRezervacija}`, rezervacijaDto);
 
-export const adminUpdateRezervacija = (idRezervacija, rezervacijaDto) => api.put(REST_API_BASE_URL + `/admin/update/${idRezervacija}`, rezervacijaDto);
-
-export const getRezervacijaHotela = (idHotel) => api.get(REST_API_BASE_URL + `/admin/hotel/${idHotel}`);
+export const getRezervacijaHotela = (idHotel) => apiAuth.get(`${base}/admin/hotel/${idHotel}`);

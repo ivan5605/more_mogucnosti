@@ -4,7 +4,7 @@ import { prijava } from '../services/AuthService';
 import { toast } from 'react-toastify';
 import { useAuth } from '../auth/AuthContext';
 
-const LoginComponent = () => {
+const LoginPage = () => {
 
   const { login } = useAuth();
 
@@ -45,7 +45,7 @@ const LoginComponent = () => {
 
     setErrors(errorsCopy);
 
-    // Vraća true ako nema nijedne greške
+    //vraca true ako nema greske
     return Object.values(errorsCopy).every(error => error === "");
   }
 
@@ -152,4 +152,4 @@ const LoginComponent = () => {
   )
 }
 
-export default LoginComponent
+export default LoginPage

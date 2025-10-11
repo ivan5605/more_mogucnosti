@@ -17,7 +17,6 @@ import ProfilPage from "../pages/ProfilPage";
 import KorisnikDetaljiPage from "../pages/KorisnikDetaljiPage";
 import AdminPage from "../pages/AdminPage";
 import UrediHotelPage from "../pages/UrediHotelPage";
-import UrediSobaPage from "../pages/UrediSobaPage";
 import { AuthProvider } from "../auth/AuthContext";
 
 const NotFound = () => (
@@ -63,9 +62,6 @@ export default function AppRouter() {
 
             {/* http://localhost:3000/admin/urediHotel/:idHotel */}
             <Route path="/admin/urediHotel/:idHotel" element={<UrediHotelPage />} />
-
-            {/* http://localhost:3000/admin/urediSoba/:idSoba (ako koristiš) */}
-            <Route path="/admin/urediSoba/:idSoba" element={<UrediSobaPage />} />
 
             {/* 404 */}
             <Route path="*" element={<NotFound />} />

@@ -1,27 +1,15 @@
-import axios from "axios";
+import { apiPublic, apiAuth } from "./Config";
 
-const REST_API_BASE_URL = "http://localhost:8080/api/v1/recenzija"
+const base = "/recenzija";
 
-const api = axios.create({
-  baseURL: REST_API_BASE_URL
-});
+export const getRecenzijeHotela = (idHotel) => apiPublic.get(`${base}/hotel/${idHotel}`);
 
-api.interceptors.request.use((config) => {
-  const token = localStorage.getItem("token");
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-  return config;
-})
+export const upsertRecenzija = (idHotel, recenzija) => apiAuth.put(`${base}/moja/hotel/${idHotel}`, recenzija);
 
-export const getRecenzijeHotela = (idHotel) => axios.get(REST_API_BASE_URL + `/hotel/${idHotel}`);
+export const getInfoRecenzija = (idHotel) => apiPublic.get(`${base}/hotel/info/${idHotel}`);
 
-export const upsertRecenzija = (idHotel, recenzija) => api.put(REST_API_BASE_URL + `/moja/hotel/${idHotel}`, recenzija);
+export const getRecenzijeKorisnika = () => apiAuth.get(`${base}/korisnik`);
 
-export const getInfoRecenzija = (idHotel) => axios.get(REST_API_BASE_URL + `/hotel/info/${idHotel}`);
+export const getRecenzijeByIdKorisnik = (idKorisnik) => apiAuth.get(`${base}/admin/korisnik/${idKorisnik}`);
 
-export const getRecenzijeKorisnika = () => api.get(REST_API_BASE_URL + '/korisnik');
-
-export const getRecenzijeByIdKorisnik = (idKorisnik) => api.get(REST_API_BASE_URL + `/admin/korisnik/${idKorisnik}`);
-
-export const deleteRecenzija = (idRecenzija) => api.delete(REST_API_BASE_URL + `/delete/${idRecenzija}`)
+export const deleteRecenzija = (idRecenzija) => apiAuth.delete(`${base}/delete/${idRecenzija}`);

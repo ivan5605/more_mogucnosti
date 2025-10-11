@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 import { registracija } from '../services/AuthService';
 
 
-const RegistracijaComponent = () => {
+const RegistracijaPage = () => {
 
   const navigator = useNavigate();
 
@@ -95,7 +95,6 @@ const RegistracijaComponent = () => {
 
     setErrors(errorsCopy);
 
-    // Vraća true ako nema nijedne greške
     return Object.values(errorsCopy).every(error => error === "");
   }
 
@@ -247,4 +246,4 @@ const RegistracijaComponent = () => {
   )
 }
 
-export default RegistracijaComponent
+export default RegistracijaPage

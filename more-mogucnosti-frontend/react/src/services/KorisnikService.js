@@ -1,29 +1,15 @@
-import axios from 'axios';
+import { apiAuth } from "./Config";
 
-const REST_API_BASE_URL = 'http://localhost:8080/api/v1/korisnik';
+const base = "/korisnik";
 
-const api = axios.create({
-  baseURL: REST_API_BASE_URL
-});
+export const getKorisniciWithCount = () => apiAuth.get(`${base}/admin/count`);
 
-api.interceptors.request.use((config) => {
-  const token = localStorage.getItem("token");
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-  return config;
-})
+export const getKorisnik = (idKorisnik) => apiAuth.get(`${base}/${idKorisnik}`);
 
-export const addKorisnik = (korisnik) => axios.post(REST_API_BASE_URL, korisnik);
+export const deleteKorisnik = (deleteDto) => apiAuth.delete(`${base}/delete`, { data: deleteDto });
 
-export const getKorisniciWithCount = () => api.get(REST_API_BASE_URL + '/admin/count');
+export const updateKorisnik = (azuriraniKor) => apiAuth.put(`${base}/update`, azuriraniKor);
 
-export const getKorisnik = (idKorisnik) => axios.get(REST_API_BASE_URL + `/${idKorisnik}`);
+export const updateLozinka = (promjenaLozinkaDto) => apiAuth.put(`${base}/updateLozinka`, promjenaLozinkaDto);
 
-export const deleteKorisnik = (deleteDto) => api.delete(REST_API_BASE_URL + '/delete', { data: deleteDto });
-
-export const updateKorisnik = (azuriraniKor) => api.put(REST_API_BASE_URL + "/update", azuriraniKor);
-
-export const updateLozinka = (promjenaLozinkaDto) => api.put(REST_API_BASE_URL + "/updateLozinka", promjenaLozinkaDto);
-
-export const adminDeleteKorisnik = (idKorisnik) => api.delete(REST_API_BASE_URL + `/admin/delete/${idKorisnik}`)
+export const adminDeleteKorisnik = (idKorisnik) => apiAuth.delete(`${base}/admin/delete/${idKorisnik}`);

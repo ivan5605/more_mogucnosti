@@ -45,10 +45,10 @@ const RecenzijaComponent = ({ onSaved, onCancel }) => {
     upsertRecenzija(idHotel, recenzija)
       .then(() => {
         toast.success('Recenzija spremljena!', { autoClose: 2000, position: 'bottom-left' });
-        // očisti formu
+
         setRecenzija({ ocjena: '', tekst: '' });
         setErrors({ ocjena: '', tekst: '' });
-        // zatvori formu
+
         if (onSaved) onSaved();
       })
       .catch((error) => {
@@ -158,7 +158,6 @@ const RecenzijaComponent = ({ onSaved, onCancel }) => {
                       type='button'
                       className='btn btn-outline-secondary btn-lg px-4'
                       onClick={() => {
-                        // očisti i zatvori
                         setRecenzija({ ocjena: '', tekst: '' });
                         setErrors({ ocjena: '', tekst: '' });
                         if (onCancel) onCancel();
@@ -169,7 +168,7 @@ const RecenzijaComponent = ({ onSaved, onCancel }) => {
                   </div>
 
                   <p className='text-muted small text-center mt-3 mb-0'>
-                    Polja označena <span className='text-danger'>*</span> su obavezna.
+                    Polja označena sa <span className='text-danger'>*</span> su obavezna.
                   </p>
 
                 </form>
