@@ -1,21 +1,9 @@
-import axios from "axios";
+import { apiAuth } from "./Config";
 
-const REST_API_BASE_URL = 'http://localhost:8080/api/v1/slikaHotel'
+const base = "/slikaHotel";
 
-const api = axios.create({
-  baseURL: REST_API_BASE_URL
-});
+export const addSlikaH = (idHotel, slikaDto) => apiAuth.post(`${base}/admin/create/${idHotel}`, slikaDto);
 
-api.interceptors.request.use((config) => {
-  const token = localStorage.getItem("token");
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-  return config;
-})
+export const deleteSlikaH = (idSlika) => apiAuth.delete(`${base}/admin/delete/${idSlika}`);
 
-export const addSlikaH = (idHotel, slikaDto) => api.post(REST_API_BASE_URL + `/admin/create/${idHotel}`, slikaDto);
-
-export const deleteSlikaH = (idSlika) => api.delete(REST_API_BASE_URL + `/admin/delete/${idSlika}`);
-
-export const setGlavnaH = (idSlika) => api.put(REST_API_BASE_URL + `/admin/setGlavna/${idSlika}`);
+export const setGlavnaH = (idSlika) => apiAuth.put(`${base}/admin/setGlavna/${idSlika}`);

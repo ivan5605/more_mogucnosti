@@ -30,7 +30,6 @@ const ProfilComponent = () => {
 
   const [promjenaRez, setPromjenaRez] = useState(false);
 
-  // forma u modalu (uređivanje rezervacije)
   const [formaRez, setFormaRez] = useState({
     brojOsoba: 1,
     datumPocetak: '',
@@ -301,7 +300,7 @@ const ProfilComponent = () => {
     return Object.values(e).every((msg) => msg === '');
   }
 
-  // intervali za blokadu u DatePickeru (checkout dan je slobodan → kraj - 1 dan)
+  // intervali za blokadu u DatePickeru
   const zabranjeniIntervali = zauzetiTermini.map(t => {
     const start = uLokalniDatum(t.datumPocetak);
     const endExclusive = uLokalniDatum(t.datumKraj);
@@ -309,7 +308,6 @@ const ProfilComponent = () => {
     return { start, end: endInclusive };
   });
 
-  // UPDATE — poziv na backend + lokalno ažuriranje
   const urediRezervaciju = async () => {
     if (!provjeriUnos()) return;
 
@@ -335,7 +333,6 @@ const ProfilComponent = () => {
         )
       };
 
-      // lokalno ažuriraj listu i odabranu
       setRezervacije(stare =>
         stare.map(r => (r.id === odabranaRez.id ? { ...r, ...updateDto } : r))
       );
@@ -347,13 +344,10 @@ const ProfilComponent = () => {
     }
   };
 
-  // DELETE — poziv na backend + lokalno uklanjanje
   const obrisiRezervaciju = async () => {
     if (!odabranaRez) return;
     try {
       await deleteRezervacija(odabranaRez.id);
-
-      // makni iz liste i zatvori modal
       setRezervacije(stare => stare.filter(r => r.id !== odabranaRez.id));
 
       toast.success("Rezervacija izbrisana!", {

@@ -12,7 +12,6 @@ const PocetnaPage = () => {
   const getHotelSlika = (h) => h?.glavnaSlika?.putanja || DEFAULT_SLIKA;
 
   const onSlikaErr = (e) => {
-    e.currentTarget.onerror = null;
     e.currentTarget.src = DEFAULT_SLIKA;
   }
 
@@ -20,11 +19,11 @@ const PocetnaPage = () => {
     navigate(`/hotel/${idHotel}`);
   }
 
-  const goPonuda = () => navigate('/nasiHoteli');
+  const idiNaPonuda = () => navigate('/nasiHoteli');
 
   const handleScrollIstaknuti = () => {
-    const el = document.getElementById('istaknutiHoteli');
-    if (el) el.scrollIntoView({ behavior: 'smooth' });
+    const hoteli = document.getElementById('istaknutiHoteli');
+    if (hoteli) hoteli.scrollIntoView({ behavior: 'smooth' });
   };
 
   const [hoteli, setHoteli] = useState([]);
@@ -63,7 +62,7 @@ const PocetnaPage = () => {
           <p className="lead mb-4 fst-italic">Rezerviraj hotel brzo, jednostavno i sigurno.</p>
 
           <div className="d-flex gap-3 justify-content-center flex-wrap">
-            <button className="btn btn-primary btn-lg" onClick={goPonuda}>
+            <button className="btn btn-primary btn-lg" onClick={idiNaPonuda}>
               Pogledaj ponudu hotela
             </button>
             <button className="btn btn-outline-light btn-lg" onClick={handleScrollIstaknuti}>
@@ -76,7 +75,7 @@ const PocetnaPage = () => {
       <div id="istaknutiHoteli" className="container my-5">
         <div className="d-flex align-items-center justify-content-between mb-3">
           <h2 className="m-0">Istaknuti hoteli</h2>
-          <button className="btn btn-link text-decoration-none" onClick={goPonuda}>
+          <button className="btn btn-link text-decoration-none" onClick={idiNaPonuda}>
             Pogledaj sve &rarr;
           </button>
         </div>
@@ -84,22 +83,7 @@ const PocetnaPage = () => {
         {greska && <div className="alert alert-danger">{greska}</div>}
 
         {ucitavanje ? (
-          <div className="row g-4">
-            {Array.from({ length: 6 }).map((_, i) => (
-              <div className="col-12 col-sm-6 col-lg-4" key={i}>
-                <div className="card border-0 shadow-sm placeholder-card">
-                  <div className="placeholder-img w-100"></div>
-                  <div className="card-body">
-                    <div className="placeholder-glow">
-                      <span className="placeholder col-7"></span>
-                      <span className="placeholder col-5"></span>
-                      <span className="placeholder col-4"></span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
+          <div className='container py-5 mt-5'>Učitavanje...</div>
         ) : hoteli.length === 0 ? (
           <div className="alert alert-light">Trenutno nema istaknutih hotela.</div>
         ) : (
@@ -127,10 +111,13 @@ const PocetnaPage = () => {
                     </div>
 
                     <div className="mt-auto d-flex gap-2">
-                      <button type="button" className="btn btn-outline-secondary w-100" onClick={() => detaljiHotel(hotel.id)}>
+                      <button
+                        type="button"
+                        className="btn btn-outline-secondary w-100"
+                        onClick={() => detaljiHotel(hotel.id)}
+                      >
                         Detalji
                       </button>
-
                     </div>
                   </div>
                 </div>
@@ -138,6 +125,7 @@ const PocetnaPage = () => {
             ))}
           </div>
         )}
+
       </div>
     </div>
   );

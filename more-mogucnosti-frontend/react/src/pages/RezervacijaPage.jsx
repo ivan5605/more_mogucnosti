@@ -37,7 +37,6 @@ const RezervacijaComponent = () => {
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
 
-  // “skriveni” okidači za modal (otvori/zatvori) – bez Bootstrap JS importa ovdje
   const openModalBtnRef = useRef(null);
   const closeModalBtnRef = useRef(null);
 
@@ -160,7 +159,6 @@ const RezervacijaComponent = () => {
     e.preventDefault();
     setZauzeto({ greska: '' });
     if (!provjeriUnos()) return;
-    // otvori modal “klikom” na skriveni gumb s data-bs-toggle
     openModalBtnRef.current?.click();
   }
 
@@ -170,7 +168,7 @@ const RezervacijaComponent = () => {
 
     createRezervacija(rezervacija)
       .then(() => {
-        // zatvori modal “klikom” na X (data-bs-dismiss)
+
         closeModalBtnRef.current?.click();
         toast.success('Rezervacija izrađena!', {
           autoClose: 2000,
@@ -340,7 +338,6 @@ const RezervacijaComponent = () => {
                   Odustani
                 </button>
 
-                {/* Skriveni okidač za otvaranje modala */}
                 <button
                   type="button"
                   ref={openModalBtnRef}
@@ -385,7 +382,6 @@ const RezervacijaComponent = () => {
                     </div>
                   </div>
                 </div>
-                {/* /Modal */}
               </div>
             </form>
           </div>

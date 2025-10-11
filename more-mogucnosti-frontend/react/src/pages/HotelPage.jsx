@@ -7,7 +7,7 @@ import { useAuth } from '../auth/AuthContext';
 import { toast } from 'react-toastify';
 import RecenzijaComponent from '../components/RecenzijaComponent';
 
-const HotelComponent = () => {
+const HotelPage = () => {
 
   const { loggedIn, logout } = useAuth();
 
@@ -41,7 +41,6 @@ const HotelComponent = () => {
   });
 
   useEffect(() => {
-    let alive = true;
     (async () => {
       setUcitavanje(true);
 
@@ -52,11 +51,9 @@ const HotelComponent = () => {
         getInfoRecenzija(idHotel),
       ]);
 
-      if (!alive) return;
-
       const [hotelRes, recRes, sobeRes, infoRes] = results;
 
-      // HOTEL
+      //hotel
       if (hotelRes.status === 'fulfilled') {
         const h = hotelRes.value.data;
         const glavna = h.glavnaSlika?.putanja ? [{ putanja: h.glavnaSlika.putanja }] : [];
@@ -74,7 +71,7 @@ const HotelComponent = () => {
         console.error('Greška kod hotela:', hotelRes.reason);
       }
 
-      // RECENZIJE
+      //recenzije
       if (recRes.status === 'fulfilled') {
         const arr = Array.isArray(recRes.value.data) ? [...recRes.value.data] : [];
         arr.sort((a, b) => new Date(b.datum) - new Date(a.datum));
@@ -84,7 +81,7 @@ const HotelComponent = () => {
         setRecenzija([]); // fallback
       }
 
-      // SOBE
+      //sobe
       if (sobeRes.status === 'fulfilled') {
         setSobe(sobeRes.value.data ?? []);
       } else {
@@ -92,7 +89,7 @@ const HotelComponent = () => {
         setSobe([]); // fallback
       }
 
-      // INFO RECENZIJA (prosjek/broj)
+      //info recenzije
       if (infoRes.status === 'fulfilled') {
         const d = infoRes.value.data || {};
         setInfoRec({
@@ -106,8 +103,6 @@ const HotelComponent = () => {
 
       setUcitavanje(false);
     })();
-
-    return () => { alive = false; };
   }, [idHotel]);
 
   if (ucitavanje) {
@@ -161,16 +156,14 @@ const HotelComponent = () => {
     }
   };
 
-  // kad je spremanje gotovo: refetch + zatvori formu
   const handleRecSaved = async () => {
     await Promise.all([refreshRecenzije(), refreshInfoRec()]);
     setPrikaziFormaRecenzije(false);
   };
 
-  // helper za zvjezdice
-  const renderStars = (avg) => {
-    const rounded = Math.round(avg || 0);
-    return '★'.repeat(rounded) + '☆'.repeat(5 - rounded);
+  const renderZv = (avg) => {
+    const prosjek = Math.round(avg || 0);
+    return '★'.repeat(prosjek) + '☆'.repeat(5 - prosjek);
   };
 
   return (
@@ -183,7 +176,7 @@ const HotelComponent = () => {
         {infoRec.broj > 0 ? (
           <div className="d-inline-flex align-items-center gap-3">
             <span className="fs-5" aria-label={`Prosjek ${infoRec.prosjek?.toFixed?.(2) ?? '0.00'} od 5`}>
-              {renderStars(infoRec.prosjek)}
+              {renderZv(infoRec.prosjek)}
             </span>
             <span className="text-muted">
               {Number(infoRec.prosjek).toFixed(2)} / 5 · {infoRec.broj} recenzij{infoRec.broj === 1 ? 'a' : (infoRec.broj >= 2 && infoRec.broj <= 4 ? 'e' : 'a')}
@@ -335,7 +328,7 @@ const HotelComponent = () => {
       </div>
 
 
-      {/* Forma za recenziju – prikazuje se kad korisnik klikne na gumb */}
+      {/* Forma za recenziju – korisnik klikne na gumb */}
       {prikaziFormaRecenzije && (
         <div className="mt-4">
           <RecenzijaComponent onSaved={handleRecSaved} onCancel={() => setPrikaziFormaRecenzije(false)} />
@@ -346,7 +339,7 @@ const HotelComponent = () => {
         {sobe.map((soba, index) => (
           <div key={index} className='col-md-4'>
             <div className='card h-100 shadow-lg border-0' style={{ borderRadius: '15px', overflow: 'hidden' }}>
-              {/* Glavna slika */}
+
               {soba.glavnaSlika && (
                 <div className='overflow-hidden' style={{ height: '250px' }}>
                   <img
@@ -365,7 +358,6 @@ const HotelComponent = () => {
                 </div>
               )}
 
-              {/* Sadržaj kartice */}
               <div className='card-body d-flex flex-column'>
                 <h4 className='card-title text-center fw-bold mb-3'>
                   Soba {soba.brojSobe}
@@ -392,7 +384,6 @@ const HotelComponent = () => {
                   </li>
                 </ul>
 
-                {/* Sporedne slike */}
                 {soba.sporedneSlike?.length > 0 && (
                   <div className='row g-2 mb-3'>
                     {soba.sporedneSlike.map((slika, i) => (
@@ -412,7 +403,6 @@ const HotelComponent = () => {
                   </div>
                 )}
 
-                {/* Gumb Rezerviraj */}
                 <button
                   className="btn btn-outline-secondary mt-auto"
                   onClick={() => handleRezerviraj(soba.id)}
@@ -429,4 +419,4 @@ const HotelComponent = () => {
   )
 }
 
-export default HotelComponent;
+export default HotelPage;

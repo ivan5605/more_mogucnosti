@@ -2,7 +2,6 @@
   background-size: cover;
   background-position: center;
   height: 95vh;
-  /* malo niže da se vidi da ima sadržaja ispod */
   width: 100%;
   position: relative;
   display: flex;
@@ -15,7 +14,6 @@
 .pocetnaOverlay {
   position: absolute;
   inset: 0;
-  /* malo jači gradijent za čitljivost teksta */
   background: linear-gradient(180deg, rgba(0, 0, 0, 0.55) 0%, rgba(0, 0, 0, 0.35) 50%, rgba(0, 0, 0, 0.55) 100%);
   z-index: 1;
 }
@@ -29,23 +27,4 @@
 .pocetnaBaza:hover {
   filter: brightness(1.06);
   transition: filter 0.3s ease;
-}
-
-/* Skeleton */
-.placeholder-card {
-  border-radius: 8px;
-  overflow: hidden;
-}
-
-.placeholder-img {
-  background: #e9ecef;
-  height: 180px;
-}
-
-.placeholder-glow .placeholder {
-  display: inline-block;
-  height: 1rem;
-  margin: 0.25rem 0;
-  background-color: #e9ecef;
-  border-radius: 0.25rem;
 }

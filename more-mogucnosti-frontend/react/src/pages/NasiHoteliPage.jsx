@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../auth/AuthContext';
 
 
-const NasiHoteliComponent = () => {
+const NasiHoteliPage = () => {
   const { loggedIn } = useAuth();
   const uloga = localStorage.getItem("uloga");
 
@@ -21,7 +21,6 @@ const NasiHoteliComponent = () => {
   const getHotelSlika = (h) => h?.glavnaSlika?.putanja || DEFAULT_SLIKA;
 
   const onSlikaErr = (e) => {
-    e.currentTarget.onerror = null;
     e.currentTarget.src = DEFAULT_SLIKA;
   }
 
@@ -68,7 +67,6 @@ const NasiHoteliComponent = () => {
                   <div className='card shadow-lg border-0' style={{ borderRadius: '15px' }}>
                     <div className='row g-0 align-items-stretch'>
 
-                      {/* Image left or right */}
                       {index % 2 === 0 ? (
                         <>
                           <div className='col-md-5'>
@@ -187,4 +185,4 @@ const NasiHoteliComponent = () => {
   )
 }
 
-export default NasiHoteliComponent
+export default NasiHoteliPage

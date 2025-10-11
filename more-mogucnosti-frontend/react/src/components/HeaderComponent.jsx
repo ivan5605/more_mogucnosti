@@ -6,12 +6,12 @@ import { useAuth } from '../auth/AuthContext';
 
 const HeaderComponent = () => {
   const navigate = useNavigate();
-  const { pathname } = useLocation();
+  const { aktivna } = useLocation();
   const { loggedIn, logout } = useAuth();
   const uloga = localStorage.getItem("uloga");
 
   const linkClass = (to) =>
-    pathname === to ? 'nav-link px-2 link-secondary' : 'nav-link px-2 link-dark';
+    aktivna === to ? 'nav-link px-2 link-secondary' : 'nav-link px-2 link-dark';
   //koja je aktivna
 
   const handleLogout = () => {
