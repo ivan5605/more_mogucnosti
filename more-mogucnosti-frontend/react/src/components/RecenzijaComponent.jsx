@@ -73,7 +73,6 @@ const RecenzijaComponent = ({ onSaved, onCancel }) => {
               <div className='card-body p-4 p-md-5'>
                 <div className='text-center mb-4'>
                   <div className='d-inline-flex align-items-center gap-2'>
-                    <i className='fas fa-pen-alt fa-lg text-primary'></i>
                     <h1 className='h3 fw-bold m-0'>Napišite recenziju</h1>
                   </div>
                   <p className='text-muted mt-2 mb-0'>Ocijenite smještaj i podijelite svoje iskustvo.</p>
@@ -84,7 +83,7 @@ const RecenzijaComponent = ({ onSaved, onCancel }) => {
                   {/* Ocjena */}
                   <div className='mb-4'>
                     <label className='form-label fw-semibold d-flex align-items-center'>
-                      <i className='fas fa-star me-2 text-warning'></i> Ocjena <span className='text-danger ms-1'>*</span>
+                      <i className='me-2 text-warning'></i> Ocjena <span className='text-danger ms-1'>*</span>
                     </label>
 
                     <div role='radiogroup' aria-label='Ocjena' className='mb-2'>

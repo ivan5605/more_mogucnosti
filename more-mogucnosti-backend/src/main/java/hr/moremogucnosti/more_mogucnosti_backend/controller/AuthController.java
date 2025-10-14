@@ -38,13 +38,15 @@ public class AuthController {
             @ApiResponse(responseCode = "400", description = "Validacija nesupješna")
     })
     @PostMapping("/register")
-    public ResponseEntity<?> registracija(@RequestBody @Valid AuthRegistracijaRequest registracijaZahtjev) {
-        return ResponseEntity.ok(authService.registracija(registracijaZahtjev));
+    public ResponseEntity<AuthResponse> registracija(@RequestBody @Valid AuthRegistracijaRequest registracijaZahtjev) {
+        AuthResponse response = authService.registracija(registracijaZahtjev);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> prijava(@RequestBody @Valid AuthLoginRequest loginZahtjev){
-        return ResponseEntity.ok(authService.prijava(loginZahtjev));
+        AuthResponse response = authService.prijava(loginZahtjev);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @SecurityRequirement(name = "bearerAuth")

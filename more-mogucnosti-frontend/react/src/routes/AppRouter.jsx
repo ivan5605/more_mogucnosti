@@ -1,12 +1,9 @@
-// src/AppRouter.jsx
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-// Layout
 import HeaderComponent from "../components/HeaderComponent";
 import FooterComponent from "../components/FooterComponent";
 
-// PAGES (preimenovano na *Page)
 import PocetnaPage from "../pages/PocetnaPage";
 import RegistracijaPage from "../pages/RegistracijaPage";
 import NasiHoteliPage from "../pages/NasiHoteliPage";
@@ -17,11 +14,13 @@ import ProfilPage from "../pages/ProfilPage";
 import KorisnikDetaljiPage from "../pages/KorisnikDetaljiPage";
 import AdminPage from "../pages/AdminPage";
 import UrediHotelPage from "../pages/UrediHotelPage";
+import OnamaPage from "../pages/OnamaPage";
+import KontaktPage from "../pages/KontaktPage";
 import { AuthProvider } from "../auth/AuthContext";
 
 const NotFound = () => (
   <div className="container py-5 mt-5">
-    <h1 className="display-6">404</h1>
+    <h1>404</h1>
     <p>Stranica nije pronađena.</p>
   </div>
 );
@@ -62,6 +61,12 @@ export default function AppRouter() {
 
             {/* http://localhost:3000/admin/urediHotel/:idHotel */}
             <Route path="/admin/urediHotel/:idHotel" element={<UrediHotelPage />} />
+
+            {/* http://localhost:3000/onama */}
+            <Route path="/onama" element={<OnamaPage />} />
+
+            {/* http://localhost:3000/kontakt */}
+            <Route path="/kontakt" element={<KontaktPage />} />
 
             {/* 404 */}
             <Route path="*" element={<NotFound />} />

@@ -102,8 +102,6 @@ const RegistracijaPage = () => {
     dogadaj.preventDefault();
 
     if (provjeriUnos()) {
-      console.log("Korisnik podaci: ", korisnik);
-
       registracija(korisnik).then(response => {
         console.log("Korisnik uspješno registriran!", response.data);
         toast.success('Registracija uspješna!', {
@@ -221,13 +219,6 @@ const RegistracijaPage = () => {
                         </div>
                       </div>
                       {error && <div className='alert alert-danger'>{error}</div>}
-
-                      <div className='form-check d-flex justify-content-center mb-5'>
-                        <input type="checkbox" className='form-check-input me-2' value={""} id='check' />
-                        <label className='form-check-label' htmlFor='check'>
-                          Pristajem na sve <a href="#">Terms of service</a>
-                        </label>
-                      </div>
 
 
                       <div className='d-flex justify-content-center mx-4 mb-3 mb-lg-4'>

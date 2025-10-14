@@ -7,5 +7,3 @@ export const registracija = (registracijaRequest) => apiPublic.post(`${base}/reg
 export const prijava = (prijavaRequest) => apiPublic.post(`${base}/login`, prijavaRequest);
 
 export const prijavljeni = () => apiAuth.get(`${base}/me`);
-
-export const getExpAt = () => apiAuth.get(`${base}/expAt`);

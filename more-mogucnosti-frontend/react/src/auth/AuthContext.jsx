@@ -8,7 +8,7 @@ const AuthCtx = createContext(null);
 export function AuthProvider({ children }) {
   const navigate = useNavigate();
   const [loggedIn, setLoggedIn] = useState(false); //boolean koji posle koristim
-  const timerRef = useRef(null); //cuva ID timera
+  const timerRef = useRef(null);
 
   const startTimer = (expAt) => {
     clearTimeout(timerRef.current); //makni stari timer
@@ -20,7 +20,7 @@ export function AuthProvider({ children }) {
     }, delay);
   };
 
-  //ucitaj stanje iz localStorage na mount
+  //ucitaj stanje iz localStorage
   useEffect(() => {
     const token = localStorage.getItem('token');
     const expStr = localStorage.getItem('expAt');
@@ -55,8 +55,8 @@ export function AuthProvider({ children }) {
     <AuthCtx.Provider value={{ loggedIn, login, logout }}>
       {children}
     </AuthCtx.Provider>
-  ); //izlozi svoje vrijednosti (loggedIn, login, logout) svim komponentama ispod sebe u stablu
-  //bilo koja komponenta unutar tog providera može pozvati useAtuh() i dobiti kontekst
+  ); //izlozi svoje vrijednosti (loggedIn, login, logout) svim komponentama ispod sebe
+  //bilo koja komponenta unutar tog providera mozi - useAtuh() i dobiti kontekst
 }
 
 export function useAuth() {

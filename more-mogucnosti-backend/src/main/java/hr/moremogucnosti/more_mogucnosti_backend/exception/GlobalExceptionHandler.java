@@ -24,18 +24,6 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-//    @ExceptionHandler(Exception.class)
-//    public ResponseEntity<ErrorResponse> handleGenericException(Exception ex, HttpServletRequest req){
-//        var status = HttpStatus.INTERNAL_SERVER_ERROR;
-//        return new ResponseEntity<>(
-//                ErrorResponse.of(
-//                        status,
-//                        "Dogodila se neočekivana greška.",
-//                        req.getRequestURI()),
-//                status
-//        );
-//    }
-
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleResourceNotFound(ResourceNotFoundException ex, HttpServletRequest req){
         var status = HttpStatus.NOT_FOUND;

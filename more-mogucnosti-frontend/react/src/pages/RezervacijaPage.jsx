@@ -366,8 +366,8 @@ const RezervacijaComponent = () => {
                       </div>
                       <div className='modal-body'>
                         <p><strong>Broj osoba:</strong> {rezervacija.brojOsoba} osoba/e</p>
-                        <p><strong>Datum početka:</strong> {rezervacija.datumPocetak}</p>
-                        <p><strong>Datum kraja:</strong> {rezervacija.datumKraj}</p>
+                        <p><strong>Datum dolaska:</strong> {rezervacija.datumPocetak}</p>
+                        <p><strong>Datum odlaska:</strong> {rezervacija.datumKraj}</p>
                         <hr />
                         <p><strong>Ukupna cijena:</strong> {cijenaRezervacije(rezervacija.datumPocetak, rezervacija.datumKraj, soba.cijenaNocenja)} €</p>
                         <p><strong>Plaćanje:</strong> pri dolasku</p>

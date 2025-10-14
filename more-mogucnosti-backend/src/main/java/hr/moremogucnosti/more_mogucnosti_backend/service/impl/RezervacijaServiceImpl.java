@@ -178,7 +178,7 @@ public class RezervacijaServiceImpl implements RezervacijaService {
     }
 
     private void provjeriDatumIKapacitet(Soba soba, int brojOsoba, LocalDate pocetak, LocalDate kraj) {
-        if (pocetak.isBefore(kraj)) throw new BadRequestException("Datum početka mora biti prije datuma kraja.");
+        if (kraj.isBefore(pocetak)) throw new BadRequestException("Datum početka mora biti prije datuma kraja.");
         if (brojOsoba < 1 || brojOsoba > soba.getKapacitet())
             throw new BadRequestException("Broj osoba mora biti 1–" + soba.getKapacitet() + ".");
     }
